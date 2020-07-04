@@ -24,6 +24,7 @@ void RocketRobz::Draw(void) const {
 			GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0, 0.5, 1, (gfxIsWide() ? GPU_LINEAR : GPU_NEAREST));
 		}
 		Gui::Draw_Rect(0, 238, 400, 2, C2D_Color32(0, 0, 0, 255));	// Hide line from other texture(s)
+		Gui::DrawString(8, (cinemaWide ? 182 : 218)-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, this->yearText);
 	} else {
 		GFX::DrawSprite(sprites_logo_savvymanager_idx, 56, 58);
 	}

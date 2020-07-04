@@ -1,6 +1,6 @@
 #include "photoStudio.hpp"
 #include "screenvars.h"
-#include "titleScreen.hpp"
+#include "settings.hpp"
 
 #include "savedata.h"
 #include "file_browse.h"
@@ -16,8 +16,6 @@
 #include "import_ss4bgnames.h"
 
 #include <unistd.h>
-
-extern int orgHighlightedGame;
 
 PhotoStudio::PhotoStudio() {
 	this->getList();
@@ -179,14 +177,14 @@ void PhotoStudio::loadChrImage(bool Robz) {
 	gspWaitForVBlank();
 	if (char_highlightedGame == 4) {
 		if (numberOfExportedCharacters > 0) {
-			sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", highlightedGame+1, getExportedCharacterName(this->importCharacterList_cursorPosition));	// All Seasons
+			sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", 4, getExportedCharacterName(this->importCharacterList_cursorPosition));	// All Seasons
 		} else {
 			sprintf(this->chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
 		}
 		this->previewCharacterFound = GFX::loadCharSprite(this->chrFilePath, this->chrFilePath);
 	} else {
-		sprintf(this->chrFilePath, "romfs:/gfx/ss%i_%s.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()));				// All Seasons
-		sprintf(this->chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", highlightedGame+1, (Robz ? "Robz" : import_characterName()), this->seasonNo);	// One Season
+		sprintf(this->chrFilePath, "romfs:/gfx/ss%i_%s.t3x", 4, (Robz ? "Robz" : import_characterName()));				// All Seasons
+		sprintf(this->chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, (Robz ? "Robz" : import_characterName()), this->seasonNo);	// One Season
 		this->previewCharacterFound = GFX::loadCharSprite(this->chrFilePath, this->chrFilePath2);
 	}
 	this->previewCharacter = true;
@@ -361,11 +359,6 @@ void PhotoStudio::Draw(void) const {
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		Gui::DrawString(32, i2, 0.65, BLACK, "Change character");
 	}
-
-	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
-	GFX::DrawSprite(sprites_button_red_idx, 5, 195);
-	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
-	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
 
 	GFX::drawCursor(this->cursorX, this->cursorY);
 
@@ -667,7 +660,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		}
 
 		if (hDown & KEY_A) {
-			highlightedGame = 3;	// Use SS4 character renders
 			if (this->characterChangeMenu_cursorPosition == 0) {
 				sndSelect();
 				this->subScreenMode = 1;
@@ -704,7 +696,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if ((this->subScreenMode == 2) && (this->char_highlightedGame == 4) && !this->exportedCharListGotten[highlightedGame]) {
 					gspWaitForVBlank();
 					getExportedCharacterContents();
-					this->exportedCharListGotten[highlightedGame] = true;
+					this->exportedCharListGotten[3] = true;
 				}
 				this->getMaxChars();
 				this->displayNothing = false;
@@ -712,12 +704,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				this->characterPicked = true;
 			}
 		}
-
-		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
-			sndBack();
-			highlightedGame = orgHighlightedGame;
-			Gui::setScreen(std::make_unique<titleScreen>(), true);
-		}
 	
+		if (hDown & KEY_SELECT) {
+			sndSelect();
+			Gui::setScreen(std::make_unique<Settings>(), true);
+		}
 	}
 }

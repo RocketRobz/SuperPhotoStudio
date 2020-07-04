@@ -9,7 +9,7 @@
 #include "common.hpp"
 #include "screenMode.h"
 #include "dumpdsp.h"
-#include "titleScreen.hpp"
+#include "photoStudio.hpp"
 #include "inifile.h"
 #include "rocketRobz.hpp"
 #include "savedata.h"
@@ -22,8 +22,7 @@ bool isInit = true;
 int delay = 0;
 Handle threadRequest;
 
-#define settingsIni "sdmc:/3ds/SavvyManager/settings.ini"
-#define CONFIG_3D_SLIDERSTATE (*(float *)0x1FF81080)
+#define settingsIni "sdmc:/3ds/RocketPhotoShoot/settings.ini"
 
 char verText[32];
 int studioBg = 0;
@@ -52,21 +51,17 @@ static bool screenon_ran = true;
 void loadSettings(void) {
 	CIniFile settingsini(settingsIni);
 
-	//studioBg = settingsini.GetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
-	cinemaWide = settingsini.GetInt("SAVVY-MANAGER", "CINEMA_WIDE", cinemaWide);
-	iFps = settingsini.GetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
-
-	currentMusicPack = settingsini.GetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
+	//studioBg = settingsini.GetInt("RocketPhotoShoot", "STUDIO_BG", studioBg);
+	cinemaWide = settingsini.GetInt("RocketPhotoShoot", "CINEMA_WIDE", cinemaWide);
+	iFps = settingsini.GetInt("RocketPhotoShoot", "FRAME_RATE", iFps);
 }
 
 void saveSettings(void) {
 	CIniFile settingsini(settingsIni);
 
-	//settingsini.SetInt("SAVVY-MANAGER", "STUDIO_BG", studioBg);
-	settingsini.SetInt("SAVVY-MANAGER", "CINEMA_WIDE", cinemaWide);
-	settingsini.SetInt("SAVVY-MANAGER", "FRAME_RATE", iFps);
-
-	settingsini.SetString("SS2", "CURRENT_MUSIC_PACK", currentMusicPack);
+	//settingsini.SetInt("RocketPhotoShoot", "STUDIO_BG", studioBg);
+	settingsini.SetInt("RocketPhotoShoot", "CINEMA_WIDE", cinemaWide);
+	settingsini.SetInt("RocketPhotoShoot", "FRAME_RATE", iFps);
 
 	settingsini.SaveIniFileModified(settingsIni);
 }
@@ -135,21 +130,11 @@ void screenon(void)
 
 u8 sysRegion = CFG_REGION_USA;
 u64 appID = 0;
-int orgHighlightedGame = 1;
-int highlightedGame = 1;
 
 float bg_xPos = 0.0f;
 float bg_yPos = 0.0f;
 bool showCursor = false;
 int cursorAlpha = 0;
-
-int ss1Logo = gameSelSprites_title1_idx;
-int ss2Screenshot = gameShotSprites_title2_screenshot_idx;
-int ss2Logo = gameSelSprites_title2_idx;
-int ss1LogoXpos = 0;
-int ssLogoXpos = 0;
-int ss3Logo = gameSelSprites_title3_idx;
-int ss4Logo = gameSelSprites_title4_idx;
 
 u32 hDown = 0;
 u32 hHeld = 0;
@@ -213,47 +198,7 @@ int main()
 
 	// make folders if they don't exist
 	mkdir("sdmc:/3ds", 0777);
-	mkdir("sdmc:/3ds/SavvyManager", 0777);
-	mkdir("sdmc:/3ds/SavvyManager/emblems", 0777);
-	mkdir("sdmc:/3ds/SavvyManager/SS2", 0777);
-	mkdir("sdmc:/3ds/SavvyManager/SS2/characters", 0777);
-	mkdir("sdmc:/3ds/SavvyManager/SS2/musicPacks", 0777);
-	mkdir("sdmc:/3ds/SavvyManager/SS3", 0777);
-	mkdir("sdmc:/3ds/SavvyManager/SS3/characters", 0777);
-	mkdir("sdmc:/3ds/SavvyManager/SS4", 0777);
-	mkdir("sdmc:/3ds/SavvyManager/SS4/characters", 0777);
-
-	mkdir("sdmc:/luma", 0777);
-	mkdir("sdmc:/luma/titles", 0777);
-
-	switch (sysRegion) {
-		default:
-			// Style Savvy: Trendsetters folders
-			mkdir("sdmc:/luma/titles/00040000000A9100", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9100/romfs", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound", 0777);
-			break;
-		case CFG_REGION_EUR:
-		case CFG_REGION_AUS:
-			// New Style Boutique folders
-			mkdir("sdmc:/luma/titles/00040000000A9000", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9000/romfs", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9000/romfs/Common", 0777);
-			mkdir("sdmc:/luma/titles/00040000000A9000/romfs/Common/Sound", 0777);
-			break;
-		case CFG_REGION_JPN:
-			// Wagamama Fashion: Girls Mode - Yokubari Sengen folders
-			mkdir("sdmc:/luma/titles/000400000005D100", 0777);
-			mkdir("sdmc:/luma/titles/000400000005D100/romfs", 0777);
-			mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common", 0777);
-			mkdir("sdmc:/luma/titles/000400000005D100/romfs/Common/Sound", 0777);
-			break;
-	}
-	//mkdir("sdmc:/luma/titles/00040000000A9100/romfs/Common/Sound/stream", 0777);
-
- 	// Style Savvy: Fashion Forward folders
-	//mkdir("sdmc:/luma/titles/0004000000196500", 0777);
+	mkdir("sdmc:/3ds/RocketPhotoShoot", 0777);
 
 	if ( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
 		ndspInit();
@@ -291,69 +236,6 @@ int main()
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);
 	}
 
-	u32 ss2Id = 0x000A9100;
-	u32 ss3Id = 0x00196500;
-	u32 ss4Id = 0x00001C25;
-
-	switch (sysRegion) {
-		case CFG_REGION_EUR:
-		case CFG_REGION_AUS:
-			ss2Id = 0x000A9000;
-			ss3Id = 0x0016A100;
-			ss4Id = 0x00001C26;
-			//ss2Screenshot = gameShotSprites_title2_screenshotE_idx;
-			ss1Logo = gameSelSprites_title1_E_idx;
-			ss2Logo = gameSelSprites_title2_E_idx;
-			ss3Logo = gameSelSprites_title3_E_idx;
-			ss4Logo = gameSelSprites_title4_E_idx;
-			ss1LogoXpos = 32;
-			ssLogoXpos = 32;
-			break;
-		case CFG_REGION_JPN:
-			ss2Id = 0x0005D100;
-			ss3Id = 0x0012D800;
-			ss4Id = 0x000019F6;
-			//ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
-			ss1Logo = gameSelSprites_title1_J_idx;
-			ss2Logo = gameSelSprites_title2_J_idx;
-			ss3Logo = gameSelSprites_title3_J_idx;
-			ss4Logo = gameSelSprites_title4_J_idx;
-			break;
-		case CFG_REGION_KOR:
-			ss2Id = 0x0005D100;
-			//ss2Screenshot = gameShotSprites_title2_screenshotJ_idx;
-			ss1Logo = gameSelSprites_title1_K_idx;
-			ss2Logo = gameSelSprites_title2_K_idx;
-			ss1LogoXpos = 64;
-			break;
-		default:
-			break;
-	}
-
-	const u32 path2[3] = {MEDIATYPE_SD, ss2Id, 0x00040000};
-	const u32 path2card[3] = {MEDIATYPE_GAME_CARD, ss2Id, 0x00040000};
-	const u32 path3[3] = {MEDIATYPE_SD, ss3Id, 0x00040000};
-	const u32 path3card[3] = {MEDIATYPE_GAME_CARD, ss3Id, 0x00040000};
-	const u32 path4[3] = {MEDIATYPE_SD, ss4Id, 0};
-
-	res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2}, "ss2");	// Read from digital version
-	if (R_FAILED(res)) {
-		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path2card}, "ss2");	// Read from game card
-	}
-
-	res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3}, "ss3");	// Read from digital version
-	if (R_FAILED(res)) {
-		res = archiveMount(ARCHIVE_USER_SAVEDATA, {PATH_BINARY, 12, path3card}, "ss3");	// Read from game card
-	}
-
-	//archiveMount(ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4}, "ss4");
-	FSUSER_OpenArchive(&archive4, ARCHIVE_EXTDATA, {PATH_BINARY, 12, path4});
-	//FSUSER_OpenDirectory(&handle4, archive4, fsMakePath(PATH_UTF16, "/"));
-
-	ss2SaveFound = (access(ss2SavePath, F_OK) == 0);
-	ss3SaveFound = (access(ss3SavePath, F_OK) == 0);
-	ss4SaveFound = foundSS4Save();
-	
 	sprintf(verText, "Ver. %i.%i.%i", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
 	C3D_FrameRate(iFps);
@@ -394,7 +276,7 @@ int main()
 		if (isInit) {
 			delay++;
 			if (delay > iFps*10) {
-				Gui::setScreen(std::make_unique<titleScreen>(), true); // Set after delay to the title screen.
+				Gui::setScreen(std::make_unique<PhotoStudio>(), true); // Set after delay to the photo studio.
 				isInit = false;
 			}
 		}

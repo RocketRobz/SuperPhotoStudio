@@ -10,8 +10,6 @@ extern int cursorAlpha;
 extern int studioBg;
 extern bool cinemaWide;
 extern int iFps;
-extern std::string currentMusicPack;
-extern int highlightedGame;
 
 // List all common screen functions here.
 extern void sndBack(void);
