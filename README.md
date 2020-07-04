@@ -12,3 +12,4 @@ A photo studio for your Nintendo 3DS, in glorious Hori-HD (800px mode)!
 * Universal Team: Universal Core
 * joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)
 * Mike Dexter: Original MIDI sequence of the Sega CD Model 2 BIOS music
+* Freepik: [Camera icon](https://www.flaticon.com/free-icon/camera_2965705?term=camera&page=1&position=12)
