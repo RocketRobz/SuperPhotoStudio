@@ -1,3 +1,5 @@
+app/banner.bin
+app/icon.bin
 build/
 *.d
 *.o

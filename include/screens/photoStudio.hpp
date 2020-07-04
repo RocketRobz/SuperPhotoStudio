@@ -25,7 +25,6 @@ private:
 	const char* ss4Title(void) const;
 	void drawMsg(void) const;
 	void loadChrImage(bool Robz);
-	void addEveryone(void);
 
 	int subScreenMode = 0;
 	/*
@@ -78,7 +77,7 @@ private:
 
 	int import_bgShownFirst = 0;
 
-	bool exportedCharListGotten[4] = {false};
+	bool exportedCharListGotten = false;
 };
 
 #endif

@@ -129,9 +129,9 @@ static void Screenshot_GenerateFilename(int count, char *file_name) {
 	int month = localtime(&t)->tm_mon + 1;
 	int year = localtime(&t)->tm_year + 1900;
 	
-	mkdir("sdmc:/3ds/SavvyManager/screenshots", 0777);
+	mkdir("sdmc:/3ds/RocketPhotoShoots/photos", 0777);
 
-	sprintf(file_name, "sdmc:/3ds/SavvyManager/screenshots/Screenshot_%02d%02d%02d-%i.bmp", year, month, day, count);
+	sprintf(file_name, "sdmc:/3ds/RocketPhotoShoots/photos/Screenshot_%02d%02d%02d-%i.bmp", year, month, day, count);
 }
 
 void Screenshot_Capture(void) {

@@ -12,7 +12,6 @@
 #include "photoStudio.hpp"
 #include "inifile.h"
 #include "rocketRobz.hpp"
-#include "savedata.h"
 #include "screen.hpp"
 #include "screenshot.h"
 #include "sound.h"
@@ -351,9 +350,6 @@ int main()
 	runThreads = false;
 
 	saveSettings();
-
-	commitSaveData();
-	archiveUnmountAll();
 
 	//delete music;
 	//delete mus_logos;

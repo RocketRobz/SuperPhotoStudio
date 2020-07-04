@@ -2,7 +2,6 @@
 #include "screenvars.h"
 #include "settings.hpp"
 
-#include "savedata.h"
 #include "file_browse.h"
 
 #include "import_ss1charnames.h"
@@ -475,11 +474,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->import_characterShownFirst = 0;
 			if (this->char_highlightedGame == 4) {
 				this->previewCharacter = false;
-				if (!this->exportedCharListGotten[highlightedGame]) {
+				if (!this->exportedCharListGotten) {
 					this->displayNothing = true;
 					gspWaitForVBlank();
 					getExportedCharacterContents();
-					this->exportedCharListGotten[highlightedGame] = true;
+					this->exportedCharListGotten = true;
 					this->displayNothing = false;
 				}
 			}
@@ -693,10 +692,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndSelect();
 				this->displayNothing = true;
 				this->subScreenMode = 2;
-				if ((this->subScreenMode == 2) && (this->char_highlightedGame == 4) && !this->exportedCharListGotten[highlightedGame]) {
+				if ((this->subScreenMode == 2) && (this->char_highlightedGame == 4) && !this->exportedCharListGotten) {
 					gspWaitForVBlank();
 					getExportedCharacterContents();
-					this->exportedCharListGotten[3] = true;
+					this->exportedCharListGotten = true;
 				}
 				this->getMaxChars();
 				this->displayNothing = false;
