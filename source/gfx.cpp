@@ -415,7 +415,7 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 
 void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY, GPU_TEXTURE_FILTER_PARAM filter) {
 	float yPos = y;
-	if (shiftBySubPixel && img != sprites_logo_savvymanager_idx) {
+	if (shiftBySubPixel /*&& img != sprites_logo_savvymanager_idx*/) {
 		yPos -= 0.5f;
 	}
 

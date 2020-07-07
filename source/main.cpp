@@ -274,7 +274,7 @@ int main()
 
 		if (isInit) {
 			delay++;
-			if (delay > iFps*10) {
+			if (delay > iFps*((consoleModel != 3) ? 6 : 3)) {
 				Gui::setScreen(std::make_unique<PhotoStudio>(), true); // Set after delay to the photo studio.
 				isInit = false;
 			}
