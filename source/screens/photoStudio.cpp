@@ -359,6 +359,13 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawString(32, i2, 0.65, BLACK, "Change character");
 	}
 
+	if (this->subScreenMode != 0) {
+		GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
+		GFX::DrawSprite(sprites_button_red_idx, 5, 195);
+		GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
+		GFX::DrawSprite(sprites_button_b_idx, 44, 218);
+	}
+
 	GFX::drawCursor(this->cursorX, this->cursorY);
 
 	if (showMessage) {
