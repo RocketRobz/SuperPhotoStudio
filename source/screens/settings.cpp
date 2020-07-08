@@ -8,12 +8,7 @@ char txt_frameRate[24];
 void Settings::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
-	Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
-		}
-	}
+	GFX::DrawSprite(sprites_title_idx, 0, 0, 0.5);
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
@@ -24,17 +19,12 @@ void Settings::Draw(void) const {
 
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
-	Gui::Draw_Rect(0, 0, 320, 240, WHITE);	// Fill gaps of BG
-	for(int w = 0; w < 7; w++) {
-		for(int h = 0; h < 3; h++) {
-			GFX::DrawSprite(sprites_phone_bg_idx, -76+bg_xPos+w*72, bg_yPos+h*136);
-		}
-	}
+	GFX::DrawSprite(sprites_photo_bg_idx, 0, 0);
 
 	this->cursorX = 248;
 	this->cursorY = 64+(48*cursorPositionOnScreen);
 
-	Gui::DrawStringCentered(0, 8, 0.55, BLACK, "Settings");
+	Gui::DrawStringCentered(0, 8, 0.55, WHITE, "Settings");
 
 	int i2 = 48;
 	for (int i = settingShownFirst; i < settingShownFirst+3; i++) {
@@ -44,11 +34,11 @@ void Settings::Draw(void) const {
 		switch (i) {
 			case 0:
 				sprintf(txt_cinemaWide, "Aspect Ratio: %s", cinemaWide ? "Cinema" : "Normal");
-				Gui::DrawString(32, i2, 0.65, BLACK, txt_cinemaWide);
+				Gui::DrawString(32, i2, 0.65, WHITE, txt_cinemaWide);
 				break;
 			case 1:
 				sprintf(txt_frameRate, "Frame Rate: %iFPS", iFps);
-				Gui::DrawString(32, i2, 0.65, BLACK, txt_frameRate);
+				Gui::DrawString(32, i2, 0.65, WHITE, txt_frameRate);
 				break;
 			default:
 				break;

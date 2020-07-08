@@ -205,15 +205,10 @@ void PhotoStudio::Draw(void) const {
 
 	if (this->displayStudioBg) {
 		GFX::showBgSprite(zoomIn);
+	} else if (this->showScrollingBg) {
+		GFX::DrawSprite(sprites_title_idx, 0, 0, 0.5);
 	} else {
-		Gui::Draw_Rect(0, 0, 400, 240, WHITE);	// Fill gaps of BG
-		if (this->showScrollingBg) {
-			for(int w = 0; w < 7; w++) {
-				for(int h = 0; h < 3; h++) {
-					GFX::DrawSprite(sprites_phone_bg_idx, -72+bg_xPos+w*72, bg_yPos+h*136);
-				}
-			}
-		}
+		Gui::Draw_Rect(0, 0, 400, 240, WHITE);
 	}
 	if (this->previewCharacter) {
 		if (this->previewCharacterFound) {
@@ -246,29 +241,29 @@ void PhotoStudio::Draw(void) const {
 		// Game name
 		switch (this->char_highlightedGame) {
 			case 4:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Your character files");
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Your character files");
 				break;
 			case 3:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss4Title());
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss4Title());
 				break;
 			case 2:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss3Title());
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss3Title());
 				break;
 			case 1:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss2Title());
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss2Title());
 				break;
 			case 0:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss1Title());
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss1Title());
 				break;
 		}
-		Gui::DrawString(8, 8, 0.50, BLACK, "<");
-		Gui::DrawString(304, 8, 0.50, BLACK, ">");
+		Gui::DrawString(8, 8, 0.50, WHITE, "<");
+		Gui::DrawString(304, 8, 0.50, WHITE, ">");
 
 		if (char_highlightedGame != 4) {
 			// Selected season
-			Gui::DrawString(120-32, 208, 0.65, BLACK, "L");
-			Gui::DrawStringCentered(-32, 210, 0.50, BLACK, this->seasonName());
-			Gui::DrawString(192-32, 208, 0.65, BLACK, "R");
+			Gui::DrawString(120-32, 208, 0.65, WHITE, "L");
+			Gui::DrawStringCentered(-32, 210, 0.50, WHITE, this->seasonName());
+			Gui::DrawString(192-32, 208, 0.65, WHITE, "R");
 		}
 
 		Gui::DrawString(192, 208, 0.65, BLUE, "SELECT: Robz");
@@ -280,23 +275,23 @@ void PhotoStudio::Draw(void) const {
 				if (i >= numberOfExportedCharacters) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, BLACK, getExportedCharacterName(i));
+				Gui::DrawString(64, i2, 0.65, WHITE, getExportedCharacterName(i));
 			} else if (char_highlightedGame == 3) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, BLACK, import_ss4CharacterNames[i]);
+				Gui::DrawString(64, i2, 0.65, WHITE, import_ss4CharacterNames[i]);
 			} else if (char_highlightedGame == 2) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, BLACK, import_ss3CharacterNames[i]);
+				Gui::DrawString(64, i2, 0.65, WHITE, import_ss3CharacterNames[i]);
 			} else if (char_highlightedGame == 1) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)/*+import_ss2CharacterTieColors[i]*/, 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, BLACK, import_SS2CharacterNames(i));
+				Gui::DrawString(64, i2, 0.65, WHITE, import_SS2CharacterNames(i));
 			} else if (char_highlightedGame == 0) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, BLACK, import_ss1CharacterNames[i]);
+				Gui::DrawString(64, i2, 0.65, WHITE, import_ss1CharacterNames[i]);
 			}
 			i2 += 48;
 		}
@@ -307,23 +302,23 @@ void PhotoStudio::Draw(void) const {
 		// Game name
 		switch (this->photo_highlightedGame) {
 			case 4:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, "Your character files");
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Your character files");
 				break;
 			case 3:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss4Title());
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss4Title());
 				break;
 			case 2:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss3Title());
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss3Title());
 				break;
 			case 1:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss2Title());
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss2Title());
 				break;
 			case 0:
-				Gui::DrawStringCentered(0, 8, 0.50, BLACK, ss1Title());
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss1Title());
 				break;
 		}
-		Gui::DrawString(8, 8, 0.50, BLACK, "<");
-		Gui::DrawString(304, 8, 0.50, BLACK, ">");
+		Gui::DrawString(8, 8, 0.50, WHITE, "<");
+		Gui::DrawString(304, 8, 0.50, WHITE, ">");
 
 		/*if (photo_highlightedGame != 4) {
 			// Selected season
@@ -337,16 +332,16 @@ void PhotoStudio::Draw(void) const {
 		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
 			if (photo_highlightedGame == 3) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				Gui::DrawString(32, i2, 0.65, BLACK, import_ss4BgNames[i]);
+				Gui::DrawString(32, i2, 0.65, WHITE, import_ss4BgNames[i]);
 			} else if (photo_highlightedGame == 2) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				Gui::DrawString(32, i2, 0.65, BLACK, import_ss3BgNames[i]);
+				Gui::DrawString(32, i2, 0.65, WHITE, import_ss3BgNames[i]);
 			} else if (photo_highlightedGame == 1) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				Gui::DrawString(32, i2, 0.65, BLACK, import_ss2BgNames[i]);
+				Gui::DrawString(32, i2, 0.65, WHITE, import_ss2BgNames[i]);
 			} else if (photo_highlightedGame == 0) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				Gui::DrawString(32, i2, 0.65, BLACK, import_ss1BgNames[i]);
+				Gui::DrawString(32, i2, 0.65, WHITE, import_ss1BgNames[i]);
 			}
 			i2 += 48;
 		}
@@ -354,17 +349,17 @@ void PhotoStudio::Draw(void) const {
 	} else {
 		this->cursorY = 64+(48*this->characterChangeMenu_cursorPositionOnScreen);
 
-		Gui::DrawString(8, 8, 0.50, BLACK, "What do you want to do?");
+		Gui::DrawString(8, 8, 0.50, WHITE, "What do you want to do?");
 
-		Gui::DrawString(192, 206, 0.65, BLACK, ": Take photo");
+		Gui::DrawString(192, 206, 0.65, WHITE, ": Take photo");
 
 		int i2 = 0;
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-		Gui::DrawString(32, i2, 0.65, BLACK, "Change location");
+		Gui::DrawString(32, i2, 0.65, WHITE, "Change location");
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-		Gui::DrawString(32, i2, 0.65, BLACK, "Change character");
+		Gui::DrawString(32, i2, 0.65, WHITE, "Change character");
 	}
 
 	if (this->subScreenMode != 0) {
