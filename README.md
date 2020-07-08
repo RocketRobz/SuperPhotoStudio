@@ -1,5 +1,5 @@
 <p align="center">
- <img src="https://github.com/RocketRobz/RocketPhotoStudio/blob/master/resources/title.png"><br>
+ <img src="https://github.com/RocketRobz/RocketPhotoShoot/blob/master/resources/title.png"><br>
 </p>
 A photo studio for your Nintendo 3DS, in glorious Hori-HD (800px mode)!
 
