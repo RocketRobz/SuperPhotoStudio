@@ -13,7 +13,7 @@ void RocketRobz::Draw(void) const {
 	Gui::ScreenDraw(Top);
 
 	GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0, 0.5);
-	Gui::DrawString(8, 218, 0.50, WHITE, this->yearText);
+	Gui::DrawString(8, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, this->yearText);
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
@@ -51,7 +51,7 @@ void RocketRobz::Draw(void) const {
 		if (rr_fadeAlpha > 255) rr_fadeAlpha = 255;
 	}
 
-	if (delay > iFps*3 && gfxIsWide()) {
+	if (delay > iFps*9 && gfxIsWide()) {
 		if (prevSubMode != 0) {
 			rr_fadeType = false;
 		}

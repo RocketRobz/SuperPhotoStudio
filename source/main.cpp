@@ -11,6 +11,7 @@
 #include "dumpdsp.h"
 #include "photoStudio.hpp"
 #include "inifile.h"
+#include "productIdent.hpp"
 #include "rocketRobz.hpp"
 #include "screen.hpp"
 #include "screenshot.h"
@@ -18,6 +19,7 @@
 #include "thread.h"
 
 bool isInit = true;
+bool rocketRobzScreen = false;
 int delay = 0;
 Handle threadRequest;
 
@@ -27,9 +29,8 @@ char verText[32];
 int studioBg = 0;
 bool cinemaWide = false;
 int iFps = 60;
-std::string currentMusicPack = "";
 
-int titleSelection = 0;
+u8 consoleModel = 0;
 
 sound *music = NULL;
 sound *music_loop = NULL;
@@ -173,8 +174,6 @@ int main()
 	amInit();
 	romfsInit();
 
-	u8 consoleModel = 0;
-
 	Result res = cfguInit();
 	if (R_SUCCEEDED(res)) {
 		CFGU_SecureInfoGetRegion(&sysRegion);
@@ -193,7 +192,7 @@ int main()
 	Gui::init();
 	GFX::loadSheets();
 	fadein = true;
-	fadealpha = 255;
+	fadealpha = 0;
 
 	// make folders if they don't exist
 	mkdir("sdmc:/3ds", 0777);
@@ -241,7 +240,7 @@ int main()
 
 	screenon();
 
-	Gui::setScreen(std::make_unique<RocketRobz>(), false); // Set screen to RocketRobz's screen.
+	Gui::setScreen(std::make_unique<ProductIdent>(), false); // Set screen to product identification.
 	svcCreateEvent(&threadRequest,(ResetType)0);
 	createThread((ThreadFunc)controlThread);
 	//musLogos();
@@ -274,9 +273,17 @@ int main()
 
 		if (isInit) {
 			delay++;
-			if (delay > iFps*((consoleModel != 3) ? 6 : 3)) {
-				Gui::setScreen(std::make_unique<PhotoStudio>(), true); // Set after delay to the photo studio.
-				isInit = false;
+			if (rocketRobzScreen) {
+				if (delay > iFps*(gfxIsWide() ? 12 : 9)) {
+					Gui::setScreen(std::make_unique<PhotoStudio>(), true); // Set after delay to the photo studio.
+					isInit = false;
+				}
+			} else
+			if (delay > iFps*6) {
+				fadeout = true;
+				fadealpha = 255;
+				Gui::setScreen(std::make_unique<RocketRobz>(), true); // Set after delay to RocketRobz's screen.
+				rocketRobzScreen = true;
 			}
 		}
 
@@ -333,13 +340,13 @@ int main()
 		int fadeFPS;
 		switch (iFps) {
 			default:
-				fadeFPS = 6;
+				fadeFPS = 8;
 				break;
 			case 30:
-				fadeFPS = 12;
+				fadeFPS = 16;
 				break;
 			case 24:
-				fadeFPS = 14;
+				fadeFPS = 20;
 				break;
 		}
 

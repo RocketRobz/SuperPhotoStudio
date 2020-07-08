@@ -340,7 +340,7 @@ bool GFX::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSe
 
 void GFX::showBgSprite(int zoomIn) {
 	int yPos = -(240*zoomIn);
-	if (cinemaWide) yPos -= 16;
+	if (cinemaWide==true) yPos -= 16;
 
 	C2D_Image image = C2D_SpriteSheetGetImage(bgSprite, 0);
 	if (!gfxIsWide()) {
@@ -369,11 +369,11 @@ void GFX::animateBgSprite(void) {
 }
 
 void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
-	int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
-	if (cinemaWide) yPos += 36;
+	int yPos = -((cinemaWide==true ? 168 : 240)*zoomIn);
+	if (cinemaWide==true) yPos += 36;
 
 	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, 0);
-	if (!gfxIsWide() || cinemaWide) {
+	if (!gfxIsWide() || cinemaWide==true) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
@@ -406,10 +406,10 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 					break;
 			}
 		}
-		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
+		C2D_DrawImageAt(image, (cinemaWide==true ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide==true ? 0.35f : 0.5), (cinemaWide==true ? 0.7f : 1));
 	} else {
 		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_DrawImageAt(image, (cinemaWide ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
+		C2D_DrawImageAt(image, (cinemaWide==true ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide==true ? 0.35f : 0.5), (cinemaWide==true ? 0.7f : 1));
 	}
 }
 
