@@ -16,6 +16,8 @@
 
 #include <unistd.h>
 
+extern bool musicPlayStarted;
+
 PhotoStudio::PhotoStudio() {
 	this->getList();
 }
@@ -192,6 +194,12 @@ void PhotoStudio::loadChrImage(bool Robz) {
 
 void PhotoStudio::Draw(void) const {
 	animateBg = bgCanAnimate;
+
+	if (!musicPlayStarted) {
+		extern void Play_Music();
+		Play_Music();
+		musicPlayStarted = true;
+	}
 
 	Gui::ScreenDraw(Top);
 
