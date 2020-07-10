@@ -12,11 +12,21 @@ void RocketRobz::Draw(void) const {
 
 	Gui::ScreenDraw(Top);
 
-	GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0, 0.5);
-	Gui::DrawString(8, 218-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, this->yearText);
+	if (cinemaWide) {
+		GFX::DrawSprite(sprites_logo_rocketrobz_idx, 60, 36, 0.35f, 0.7f, GPU_LINEAR);
+	} else {
+		GFX::DrawSprite(sprites_logo_rocketrobz_idx, 0, 0, 0.5, 1, (gfxIsWide() ? GPU_NEAREST : GPU_LINEAR));
+	}
+	Gui::Draw_Rect(0, 238, 400, 2, C2D_Color32(0, 0, 0, 255));	// Hide line from other texture(s)
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
+	if (cinemaWide) {
+		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
+		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
+	}
+
+	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);
 	if (subMode == 0) {
 		GFX::DrawSprite(sprites_logo_UniversalCore_idx, 0, 26);
