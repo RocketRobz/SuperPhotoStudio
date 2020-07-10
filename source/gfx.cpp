@@ -3,11 +3,13 @@
 #include <unistd.h>
 
 static char bgSpriteMem[4][0x200000];
+static char charSpriteMem[2][0x80000];
 
 static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
 static bool chracterSpriteLoaded = false;
+static bool chracterSpriteFound[2] = {false};
 static bool bgSpriteLoaded = false;
 
 extern int studioBg;
@@ -30,6 +32,11 @@ static int bgAnimation[8] = {100};
 static int timeOutside = 0;	// 0 == Day, 1 == Sunset, 2 == Night
 
 bool shiftBySubPixel = false;
+
+void GFX::resetCharStatus(void) {
+	chracterSpriteFound[0] = false;
+	chracterSpriteFound[1] = false;
+}
 
 Result GFX::loadSheets() {
 	sprites			= C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
@@ -317,28 +324,47 @@ void GFX::reloadBgSprite() {
 	loadBgSprite();
 }
 
-bool GFX::loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
+bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
+	if (chracterSpriteLoaded) {
+		C2D_SpriteSheetFree(chracterSprite);
+		chracterSpriteLoaded = false;
+	}
+	chracterSpriteFound[num] = false;
+	bool allSeasons = true;
+	bool fileFound = false;
+	fileFound = (access(t3xPathAllSeasons, F_OK) == 0);
+	if (!fileFound) {
+		allSeasons = false;
+		fileFound = (access(t3xPathOneSeason, F_OK) == 0);
+	}
+
+	if (!fileFound) {
+		return false;
+	}
+
+	FILE* charFile = fopen((allSeasons ? t3xPathAllSeasons : t3xPathOneSeason), "rb");
+	fread((void*)charSpriteMem[num], 1, 0x80000, charFile);
+	fclose(charFile);
+
+	//chracterSprite		= C2D_SpriteSheetLoadFromMem(charSpriteMem[num], 0x80000);
+	chracterSpriteFound[num] = true;
+
+	return true;
+}
+
+void GFX::loadCharSpriteMem(int num) {
 	if (chracterSpriteLoaded) {
 		C2D_SpriteSheetFree(chracterSprite);
 	}
-	if (access(t3xPathAllSeasons, F_OK) == 0) {
-		chracterSprite = C2D_SpriteSheetLoad(t3xPathAllSeasons);
-		chracterSpriteLoaded = true;
-		return true;
-	} else {
-		chracterSpriteLoaded = false;
-	}
-	if (access(t3xPathOneSeason, F_OK) == 0) {
-		chracterSprite = C2D_SpriteSheetLoad(t3xPathOneSeason);
-		chracterSpriteLoaded = true;
-		return true;
-	} else {
-		chracterSpriteLoaded = false;
-	}
-	return false;
+
+	if (!chracterSpriteFound[num]) return;
+	chracterSprite		= C2D_SpriteSheetLoadFromMem(charSpriteMem[num], 0x80000);
+	chracterSpriteLoaded = true;
 }
 
 void GFX::showBgSprite(int zoomIn) {
+	if (!bgSpriteLoaded) return;
+
 	int yPos = -(240*zoomIn);
 	if (cinemaWide==true) yPos -= 16;
 
@@ -368,7 +394,31 @@ void GFX::animateBgSprite(void) {
 	}
 }
 
-void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
+void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffects) {
+	if (!chracterSpriteLoaded) return;
+
+	int xPos = (cinemaWide==true ? 60 : 0);
+	if (chracterSpriteFound[0] && chracterSpriteFound[1]) {
+		if (zoomIn == 1) {
+		switch (num) {
+			case 0:
+				xPos -= 80;
+				break;
+			case 1:
+				xPos += 80;
+				break;
+		}
+		} else {
+		switch (num) {
+			case 0:
+				xPos -= 32;
+				break;
+			case 1:
+				xPos += 32;
+				break;
+		}
+		}
+	}
 	int yPos = -((cinemaWide==true ? 168 : 240)*zoomIn);
 	if (cinemaWide==true) yPos += 36;
 
@@ -406,10 +456,10 @@ void GFX::showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects) {
 					break;
 			}
 		}
-		C2D_DrawImageAt(image, (cinemaWide==true ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide==true ? 0.35f : 0.5), (cinemaWide==true ? 0.7f : 1));
+		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide==true ? 0.35f : 0.5), (cinemaWide==true ? 0.7f : 1));
 	} else {
 		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_DrawImageAt(image, (cinemaWide==true ? 60 : 0), yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide==true ? 0.35f : 0.5), (cinemaWide==true ? 0.7f : 1));
+		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide==true ? 0.35f : 0.5), (cinemaWide==true ? 0.7f : 1));
 	}
 }
 

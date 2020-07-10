@@ -16,9 +16,14 @@
 
 #include <unistd.h>
 
+static int currentCharacterRendered = 0;
 extern bool musicPlayStarted;
+extern bool clearTop;
+extern bool renderTop;
 
 PhotoStudio::PhotoStudio() {
+	currentCharacterRendered = 0;
+	GFX::resetCharStatus();
 	this->getList();
 }
 
@@ -182,11 +187,14 @@ void PhotoStudio::loadChrImage(bool Robz) {
 		} else {
 			sprintf(this->chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
 		}
-		this->previewCharacterFound = GFX::loadCharSprite(this->chrFilePath, this->chrFilePath);
+		this->previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, this->chrFilePath, this->chrFilePath);
 	} else {
 		sprintf(this->chrFilePath, "romfs:/gfx/ss%i_%s.t3x", 4, (Robz ? "Robz" : import_characterName()));				// All Seasons
 		sprintf(this->chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, (Robz ? "Robz" : import_characterName()), this->seasonNo);	// One Season
-		this->previewCharacterFound = GFX::loadCharSprite(this->chrFilePath, this->chrFilePath2);
+		this->previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, this->chrFilePath, this->chrFilePath2);
+	}
+	if (previewCharacterFound[0] && !characterPicked[1]) {
+		GFX::loadCharSpriteMem(0);
 	}
 	this->previewCharacter = true;
 }
@@ -201,26 +209,47 @@ void PhotoStudio::Draw(void) const {
 		musicPlayStarted = true;
 	}
 
+  if (renderTop) {
 	Gui::ScreenDraw(Top);
-
-	if (this->displayStudioBg) {
-		GFX::showBgSprite(zoomIn);
-	} else if (this->showScrollingBg) {
-		GFX::DrawSprite(sprites_title_idx, 0, 0, 0.5);
-	} else {
-		Gui::Draw_Rect(0, 0, 400, 240, WHITE);
-	}
-	if (this->previewCharacter) {
-		if (this->previewCharacterFound) {
-			GFX::showCharSprite(this->zoomIn, this->charFadeAlpha, this->displayStudioBg);
-		} else {
-			Gui::DrawStringCentered(0, 104, 0.65, WHITE, (this->char_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
-		}
-	}
 
 	this->preview();
 
+	if (currentCharacterRendered == 0) {
+		if (this->displayStudioBg) {
+			GFX::showBgSprite(zoomIn);
+		} else if (this->showScrollingBg) {
+			GFX::DrawSprite(sprites_title_idx, 0, 0, 0.5);
+		} else {
+			Gui::Draw_Rect(0, 0, 400, 240, WHITE);
+		}
+		if (this->previewCharacter) {
+			if (this->previewCharacterFound[0]) {
+				if (characterPicked[1]) {
+					GFX::loadCharSpriteMem(0);
+				}
+				GFX::showCharSprite(0, this->zoomIn, this->charFadeAlpha, this->displayStudioBg);
+			} else {
+				Gui::DrawStringCentered(0, 104, 0.65, WHITE, (this->char_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
+			}
+		}
+	} else if (currentCharacterRendered == 1) {
+		if (characterPicked[1] && this->previewCharacterFound[1]) {
+			GFX::loadCharSpriteMem(1);
+			GFX::showCharSprite(1, this->zoomIn, this->charFadeAlpha, this->displayStudioBg);
+		}
+	}
+
+	if (renderTop && subScreenMode!=1 && previewCharacter && previewCharacterFound[0] && previewCharacterFound[1]) {
+		currentCharacterRendered++;
+		if (currentCharacterRendered > 1) {
+			currentCharacterRendered = 0;
+			renderTop = false;
+		}
+		clearTop = (currentCharacterRendered == 0);
+	}
+
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+  }
 
 	if (cinemaWide) {
 		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
@@ -359,7 +388,11 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawString(32, i2, 0.65, WHITE, "Change location");
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-		Gui::DrawString(32, i2, 0.65, WHITE, "Change character");
+		if (currentCharNum==1) {
+			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 2 >");
+		} else {
+			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 1 >");
+		}
 	}
 
 	if (this->subScreenMode != 0) {
@@ -379,7 +412,9 @@ void PhotoStudio::Draw(void) const {
 }
 
 void PhotoStudio::preview() const {
-	if (this->previewCharacter) {
+	if (characterPicked[1]) {
+		this->charFadeAlpha = 255;
+	} else if (this->previewCharacter) {
 		switch (iFps) {
 			default:
 				this->charFadeAlpha += 20;
@@ -400,14 +435,23 @@ void PhotoStudio::preview() const {
 
 
 void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if (this->subScreenMode==0 || this->subScreenMode==2) {
+	if ((this->subScreenMode==0 || this->subScreenMode==2)) {
+		int zoomLimit = characterPicked[1] ? 1 : 2;
 		if (hDown & KEY_CPAD_UP) {
 			this->zoomIn++;
-			if (this->zoomIn > 2) this->zoomIn = 2;
+			if (this->zoomIn > zoomLimit) {
+				this->zoomIn = zoomLimit;
+			} else {
+				renderTop = true;
+			}
 		}
 		if (hDown & KEY_CPAD_DOWN) {
 			this->zoomIn--;
-			if (this->zoomIn < 0) this->zoomIn = 0;
+			if (this->zoomIn < 0) {
+				this->zoomIn = 0;
+			} else {
+				renderTop = true;
+			}
 		}
 	}
 
@@ -431,6 +475,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (this->importCharacterList_cursorPositionOnScreen < 0) {
 					this->importCharacterList_cursorPositionOnScreen = 0;
 				}
+				renderTop = true;
 				this->loadChrImage(false);
 			}
 
@@ -451,6 +496,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (this->importCharacterList_cursorPositionOnScreen > 2) {
 					this->importCharacterList_cursorPositionOnScreen = 2;
 				}
+				renderTop = true;
 				this->loadChrImage(false);
 			}
 		}
@@ -461,6 +507,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		} else if (hDown & KEY_SELECT) {
 			sndSelect();
 			this->subScreenMode = 0;
+			renderTop = true;
 			this->loadChrImage(true);	// Load Robz
 		}
 
@@ -469,6 +516,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->char_highlightedGame--;
 			if (this->char_highlightedGame < 0) this->char_highlightedGame = 4;
 			this->getMaxChars();
+			renderTop = true;
 		}
 
 		if (hDown & KEY_DRIGHT) {
@@ -476,6 +524,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->char_highlightedGame++;
 			if (this->char_highlightedGame > 4) this->char_highlightedGame = 0;
 			this->getMaxChars();
+			renderTop = true;
 		}
 
 		if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
@@ -493,6 +542,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			}
 			this->getMaxChars();
+			renderTop = true;
 			this->loadChrImage(false);
 		}
 
@@ -502,6 +552,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				this->seasonNo--;
 				if (this->seasonNo < 0) this->seasonNo = 3;
 				this->loadChrImage(false);
+				renderTop = true;
 			}
 
 			if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
@@ -509,6 +560,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				this->seasonNo++;
 				if (this->seasonNo > 3) this->seasonNo = 0;
 				this->loadChrImage(false);
+				renderTop = true;
 			}
 		}
 
@@ -593,7 +645,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_A) {
 			sndSelect();
 			this->subScreenMode = 0;
-			this->previewCharacter = this->characterPicked;
+			this->previewCharacter = this->characterPicked[currentCharNum];
 		}
 
 		if (hDown & KEY_DLEFT) {
@@ -638,7 +690,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
 			this->subScreenMode = 0;
-			this->previewCharacter = this->characterPicked;
+			this->previewCharacter = this->characterPicked[currentCharNum];
 		}
 
 	} else {
@@ -664,6 +716,23 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (this->characterChangeMenu_cursorPositionOnScreen > 1) {
 					this->characterChangeMenu_cursorPositionOnScreen = 1;
+				}
+			}
+
+			if (this->characterChangeMenu_cursorPosition == 1) {
+				if (hDown & KEY_DLEFT) {
+					sndHighlight();
+					currentCharNum--;
+					if (currentCharNum < 0) {
+						currentCharNum = 0;
+					}
+				}
+				if (hDown & KEY_DRIGHT) {
+					sndHighlight();
+					currentCharNum++;
+					if (currentCharNum > 1) {
+						currentCharNum = 1;
+					}
 				}
 			}
 		}
@@ -698,6 +767,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					this->displayStudioBg = true;
 				//}
 				this->zoomIn = 0;
+				renderTop = true;
 			} else if (this->characterChangeMenu_cursorPosition == 1) {
 				sndSelect();
 				this->displayNothing = true;
@@ -709,8 +779,12 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				this->getMaxChars();
 				this->displayNothing = false;
+				this->characterPicked[currentCharNum] = true;
+				if (characterPicked[0] && characterPicked[1] && this->zoomIn > 1) {
+					this->zoomIn = 1;
+				}
+				renderTop = true;
 				this->loadChrImage(false);
-				this->characterPicked = true;
 			}
 		}
 	

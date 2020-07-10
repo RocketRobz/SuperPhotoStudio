@@ -2,10 +2,15 @@
 #include "settings.hpp"
 #include "screenvars.h"
 
+extern bool clearTop;
+extern bool renderTop;
+
 char txt_cinemaWide[24];
 char txt_frameRate[24];
 
 void Settings::Draw(void) const {
+	clearTop = true;
+	renderTop = true;
 	Gui::ScreenDraw(Top);
 
 	GFX::DrawSprite(sprites_title_idx, 0, 0, 0.5);

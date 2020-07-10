@@ -4,8 +4,6 @@
 // List all common screen variables here.
 extern u8 sysRegion;
 extern bool showCursor;
-extern float bg_xPos;
-extern float bg_yPos;
 extern int cursorAlpha;
 extern int studioBg;
 extern bool cinemaWide;

@@ -37,6 +37,7 @@ private:
 	int photo_highlightedGame = 0;
 	int char_highlightedGame = 0;
 	int seasonNo = 0;
+	int currentCharNum = 0;
 
 	char chrFilePath[256];
 	char chrFilePath2[256];
@@ -44,11 +45,11 @@ private:
 	bool displayNothing = false;
 	bool displayStudioBg = false;
 	bool showScrollingBg = true;
-	bool characterPicked = false;
+	bool characterPicked[2] = {false};
 
 	mutable int charFadeAlpha = 0;
 	bool previewCharacter = false;
-	bool previewCharacterFound = false;
+	bool previewCharacterFound[2] = {false};
 
 	bool showMessage = false;
 	int messageNo = 0;

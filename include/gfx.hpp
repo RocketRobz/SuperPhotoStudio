@@ -28,19 +28,21 @@ extern bool shiftBySubPixel;
 
 namespace GFX {
 	// Load & Unload default sheets.
+	void resetCharStatus(void);
 	Result loadSheets();
 	Result unloadSheets();
 	void loadGameSelSheets();
 	void unloadGameSelSheets();
 
 	// Sprite Functions.
-	bool loadCharSprite(const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
+	bool loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
+	void loadCharSpriteMem(int num);
 	void loadBgSprite(void);
 	void unloadBgSprite(void);
 	void reloadBgSprite(void);
 	void showBgSprite(int zoomIn);
 	void animateBgSprite(void);
-	void showCharSprite(int zoomIn, int fadeAlpha, bool lightingEffects = false);
+	void showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffects = false);
 	void DrawSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1, GPU_TEXTURE_FILTER_PARAM filter = GPU_NEAREST);
 	void DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX = 1, float ScaleY = 1, GPU_TEXTURE_FILTER_PARAM filter = GPU_NEAREST);
 

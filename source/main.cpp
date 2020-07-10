@@ -47,6 +47,8 @@ static bool musicLoopPlaying = false;
 static int musicLoopDelay = 0;
 static bool screenoff_ran = false;
 static bool screenon_ran = true;
+bool clearTop = true;	// Disable in order to render a second character
+bool renderTop = true;	// Disable to prevent second character from flickering
 
 void loadSettings(void) {
 	CIniFile settingsini(settingsIni);
@@ -131,8 +133,6 @@ void screenon(void)
 u8 sysRegion = CFG_REGION_USA;
 u64 appID = 0;
 
-float bg_xPos = 0.0f;
-float bg_yPos = 0.0f;
 bool showCursor = false;
 int cursorAlpha = 0;
 
@@ -190,6 +190,7 @@ int main()
 	loadSettings();
 
 	Gui::init();
+	osSetSpeedupEnable(true);	// Enable speed-up for New 3DS users
 	GFX::loadSheets();
 	fadein = true;
 	fadealpha = 0;
@@ -261,7 +262,9 @@ int main()
 
 		// Here we draw the actual screen.
 		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-		C2D_TargetClear(Top, TRANSPARENT);
+		if (clearTop) {
+			C2D_TargetClear(Top, TRANSPARENT);
+		}
 		C2D_TargetClear(Bottom, TRANSPARENT);
 		Gui::clearTextBufs();
 		Gui::DrawScreen();
@@ -290,25 +293,6 @@ int main()
 		if (hDown & KEY_Y) {
 			Screenshot_Capture();
 		}
-
-		// Scroll background
-		switch (iFps) {
-			default:
-				bg_xPos += 0.3;
-				bg_yPos -= 0.3;
-				break;
-			case 30:
-				bg_xPos += 0.6;
-				bg_yPos -= 0.6;
-				break;
-			case 24:
-				bg_xPos += 0.9;
-				bg_yPos -= 0.9;
-				break;
-		}
-
-		if (bg_xPos >= 72) bg_xPos = 0.0f;
-		if (bg_yPos <= -136) bg_yPos = 0.0f;
 
 		if (hDown) {
 			svcSignalEvent(threadRequest);
