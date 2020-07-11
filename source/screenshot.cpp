@@ -7,7 +7,7 @@
 
 #include "screenshot.h"
 
-extern void renderTopScreenSubPixels(void);
+//extern void renderTopScreenSubPixels(void);
 
 static Result Screenshot_GenerateScreenshot(const char *path) {
 	int x = 0, y = 0;
@@ -41,7 +41,7 @@ static Result Screenshot_GenerateScreenshot(const char *path) {
 		int x2 = 0;
 		int y2 = 0;
 	  for (int i = 0; i <= 1; i++) {
-		if (i==1) renderTopScreenSubPixels();
+		//if (i==1) renderTopScreenSubPixels();
 		x2 = 0;
 		y2 = i;
 		for (y = 0; y < 240; y++) {
