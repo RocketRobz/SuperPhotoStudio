@@ -13,7 +13,8 @@ static bool chracterSpriteFound[3] = {false};
 static bool bgSpriteLoaded = false;
 
 extern int studioBg;
-extern int cinemaWide;
+extern u8 settingBits;
+extern bool cinemaWide;
 extern int iFps;
 
 extern bool showCursor;
@@ -367,7 +368,7 @@ void GFX::showBgSprite(int zoomIn) {
 	if (!bgSpriteLoaded) return;
 
 	int yPos = -(240*zoomIn);
-	if (cinemaWide==true) yPos -= 16;
+	if (cinemaWide) yPos -= 16;
 
 	C2D_Image image = C2D_SpriteSheetGetImage(bgSprite, 0);
 	if (!gfxIsWide()) {
@@ -398,24 +399,24 @@ void GFX::animateBgSprite(void) {
 void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffects) {
 	if (!chracterSpriteLoaded) return;
 
-	int xPos = (cinemaWide==true ? 60 : 0);
+	int xPos = (cinemaWide ? 60 : 0);
 	if (chracterSpriteFound[0] && chracterSpriteFound[1] && chracterSpriteFound[2]) {
 		if (zoomIn == 1) {
 		switch (num) {
 			case 0:
-				xPos -= 160;
+				xPos -= cinemaWide ? 152 : 160;
 				break;
 			case 2:
-				xPos += 160;
+				xPos += cinemaWide ? 152 : 160;
 				break;
 		}
 		} else {
 		switch (num) {
 			case 0:
-				xPos -= 64;
+				xPos -= cinemaWide ? 56 : 64;
 				break;
 			case 2:
-				xPos += 64;
+				xPos += cinemaWide ? 56 : 64;
 				break;
 		}
 		}
@@ -423,28 +424,28 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 		if (zoomIn == 1) {
 		switch (num) {
 			case 0:
-				xPos -= 80;
+				xPos -= cinemaWide ? 72 : 80;
 				break;
 			case 1:
-				xPos += 80;
+				xPos += cinemaWide ? 72 : 80;
 				break;
 		}
 		} else {
 		switch (num) {
 			case 0:
-				xPos -= 32;
+				xPos -= cinemaWide ? 24 : 32;
 				break;
 			case 1:
-				xPos += 32;
+				xPos += cinemaWide ? 24 : 32;
 				break;
 		}
 		}
 	}
-	int yPos = -((cinemaWide==true ? 168 : 240)*zoomIn);
-	if (cinemaWide==true) yPos += 36;
+	int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
+	if (cinemaWide) yPos += 36;
 
 	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, 0);
-	if (!gfxIsWide() || cinemaWide==true) {
+	if (!gfxIsWide() || cinemaWide) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}
 
@@ -477,10 +478,10 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 					break;
 			}
 		}
-		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide==true ? 0.35f : 0.5), (cinemaWide==true ? 0.7f : 1));
+		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	} else {
 		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide==true ? 0.35f : 0.5), (cinemaWide==true ? 0.7f : 1));
+		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
 	}
 }
 

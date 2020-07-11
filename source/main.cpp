@@ -49,10 +49,13 @@ bool clearTop = true;	// Disable in order to render a second character
 bool renderTop = true;	// Disable to prevent second character from flickering
 
 void loadSettings(void) {
+	bool setting = false;
+
 	CIniFile settingsini(settingsIni);
 
 	//studioBg = settingsini.GetInt("RocketPhotoShoot", "STUDIO_BG", studioBg);
-	cinemaWide = settingsini.GetInt("RocketPhotoShoot", "CINEMA_WIDE", cinemaWide);
+	setting = settingsini.GetInt("RocketPhotoShoot", "CINEMA_WIDE", false);
+	if (setting > 0) cinemaWide = true;
 	iFps = settingsini.GetInt("RocketPhotoShoot", "FRAME_RATE", iFps);
 }
 
@@ -60,7 +63,7 @@ void saveSettings(void) {
 	CIniFile settingsini(settingsIni);
 
 	//settingsini.SetInt("RocketPhotoShoot", "STUDIO_BG", studioBg);
-	settingsini.SetInt("RocketPhotoShoot", "CINEMA_WIDE", cinemaWide);
+	settingsini.SetInt("RocketPhotoShoot", "CINEMA_WIDE", (cinemaWide) ? true : false);
 	settingsini.SetInt("RocketPhotoShoot", "FRAME_RATE", iFps);
 
 	settingsini.SaveIniFileModified(settingsIni);
