@@ -3,13 +3,13 @@
 #include <unistd.h>
 
 static char bgSpriteMem[4][0x200000];
-static char charSpriteMem[2][0x80000];
+static char charSpriteMem[3][0x80000];
 
 static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
 static bool chracterSpriteLoaded = false;
-static bool chracterSpriteFound[2] = {false};
+static bool chracterSpriteFound[3] = {false};
 static bool bgSpriteLoaded = false;
 
 extern int studioBg;
@@ -36,6 +36,7 @@ bool shiftBySubPixel = false;
 void GFX::resetCharStatus(void) {
 	chracterSpriteFound[0] = false;
 	chracterSpriteFound[1] = false;
+	chracterSpriteFound[2] = false;
 }
 
 Result GFX::loadSheets() {
@@ -398,7 +399,27 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 	if (!chracterSpriteLoaded) return;
 
 	int xPos = (cinemaWide==true ? 60 : 0);
-	if (chracterSpriteFound[0] && chracterSpriteFound[1]) {
+	if (chracterSpriteFound[0] && chracterSpriteFound[1] && chracterSpriteFound[2]) {
+		if (zoomIn == 1) {
+		switch (num) {
+			case 0:
+				xPos -= 160;
+				break;
+			case 2:
+				xPos += 160;
+				break;
+		}
+		} else {
+		switch (num) {
+			case 0:
+				xPos -= 64;
+				break;
+			case 2:
+				xPos += 64;
+				break;
+		}
+		}
+	} else if (chracterSpriteFound[0] && chracterSpriteFound[1]) {
 		if (zoomIn == 1) {
 		switch (num) {
 			case 0:
