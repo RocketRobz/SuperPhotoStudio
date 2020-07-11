@@ -437,7 +437,7 @@ void PhotoStudio::preview() const {
 
 
 void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if ((subScreenMode==0 || subScreenMode==2)) {
+	if ((subScreenMode==0 || subScreenMode==2) && (!characterPicked[1] || (characterPicked[1] && !renderTop))) {
 		int zoomLimit = characterPicked[1] ? 1 : 2;
 		if (hDown & KEY_CPAD_UP) {
 			zoomIn++;
