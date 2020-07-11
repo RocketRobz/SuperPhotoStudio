@@ -58,7 +58,7 @@ void PhotoStudio::getMaxChars() {
 }
 
 const char* PhotoStudio::seasonName(void) const {
-	switch (seasonNo) {
+	switch (seasonNo[currentCharNum]) {
 		case 0:
 			return "Spring";
 		case 1:
@@ -190,7 +190,7 @@ void PhotoStudio::loadChrImage(bool Robz) {
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath);
 	} else {
 		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", 4, (Robz ? "Robz" : import_characterName()));				// All Seasons
-		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, (Robz ? "Robz" : import_characterName()), seasonNo);	// One Season
+		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, (Robz ? "Robz" : import_characterName()), seasonNo[currentCharNum]);	// One Season
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath2);
 	}
 	if (previewCharacterFound[0] && !characterPicked[1]) {
@@ -551,16 +551,16 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (char_highlightedGame[currentCharNum] != 4) {
 			if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 				sndHighlight();
-				seasonNo--;
-				if (seasonNo < 0) seasonNo = 3;
+				seasonNo[currentCharNum]--;
+				if (seasonNo[currentCharNum] < 0) seasonNo[currentCharNum] = 3;
 				loadChrImage(false);
 				renderTop = true;
 			}
 
 			if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
 				sndHighlight();
-				seasonNo++;
-				if (seasonNo > 3) seasonNo = 0;
+				seasonNo[currentCharNum]++;
+				if (seasonNo[currentCharNum] > 3) seasonNo[currentCharNum] = 0;
 				loadChrImage(false);
 				renderTop = true;
 			}
