@@ -404,10 +404,10 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 		if (zoomIn == 1) {
 		switch (num) {
 			case 0:
-				xPos -= cinemaWide ? 136 : 160;
+				xPos -= cinemaWide ? 136 : 152;
 				break;
 			case 2:
-				xPos += cinemaWide ? 136 : 160;
+				xPos += cinemaWide ? 136 : 152;
 				break;
 		}
 		} else {
