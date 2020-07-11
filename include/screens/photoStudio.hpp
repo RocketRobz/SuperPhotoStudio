@@ -35,7 +35,7 @@ private:
 
 	mutable int cursorX, cursorY;
 	int photo_highlightedGame = 0;
-	int char_highlightedGame = 0;
+	int char_highlightedGame[2] = {0};
 	int seasonNo = 0;
 	int currentCharNum = 0;
 
@@ -55,11 +55,7 @@ private:
 	int messageNo = 0;
 	int zoomIn = 0;
 
-	u16 totalCharacters = 0;
 	u16 import_totalCharacters = 0;
-
-	int characterList_cursorPosition = 0;
-	int characterList_cursorPositionOnScreen = 0;
 
 	int characterChangeMenu_cursorPosition = 0;
 	int characterChangeMenu_cursorPositionOnScreen = 0;
@@ -67,14 +63,13 @@ private:
 	int characterChangeMenuOps[4] = {0};
 	int characterChangeMenuOptions = 2;
 
-	int importCharacterList_cursorPosition = 0;
-	int importCharacterList_cursorPositionOnScreen = 0;
+	int importCharacterList_cursorPosition[2] = {0};
+	int importCharacterList_cursorPositionOnScreen[2] = {0};
 
 	int bgList_cursorPosition = 0;
 	int bgList_cursorPositionOnScreen = 0;
 
-	int characterShownFirst = 0;
-	int import_characterShownFirst = 0;
+	int import_characterShownFirst[2] = {0};
 
 	int import_bgShownFirst = 0;
 

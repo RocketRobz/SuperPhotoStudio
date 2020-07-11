@@ -43,15 +43,15 @@ void PhotoStudio::getMaxChars() {
 			import_totalCharacters = 2;
 		}
 	} else {
-		if (char_highlightedGame == 4) {
+		if (char_highlightedGame[currentCharNum] == 4) {
 			import_totalCharacters = numberOfExportedCharacters-1;
-		} else if (char_highlightedGame == 3) {
+		} else if (char_highlightedGame[currentCharNum] == 3) {
 			import_totalCharacters = 0xD;
-		} else if (char_highlightedGame == 2) {
+		} else if (char_highlightedGame[currentCharNum] == 2) {
 			import_totalCharacters = 0x10;
-		} else if (char_highlightedGame == 1) {
+		} else if (char_highlightedGame[currentCharNum] == 1) {
 			import_totalCharacters = 0x12;
-		} else if (char_highlightedGame == 0) {
+		} else if (char_highlightedGame[currentCharNum] == 0) {
 			import_totalCharacters = 0x7;
 		}
 	}
@@ -73,15 +73,15 @@ const char* PhotoStudio::seasonName(void) const {
 }
 
 const char* PhotoStudio::import_characterName(void) const {
-	switch (char_highlightedGame) {
+	switch (char_highlightedGame[currentCharNum]) {
 		case 0:
-			return import_ss1CharacterNames[importCharacterList_cursorPosition];
+			return import_ss1CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 1:
-			return import_ss2CharacterNames[importCharacterList_cursorPosition];
+			return import_ss2CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 2:
-			return import_ss3CharacterNames[importCharacterList_cursorPosition];
+			return import_ss3CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 3:
-			return import_ss4CharacterNames[importCharacterList_cursorPosition];
+			return import_ss4CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -97,15 +97,15 @@ const char* PhotoStudio::import_SS2CharacterNames(int i) const {
 }
 
 const char* PhotoStudio::import_characterNameDisplay(void) const {
-	switch (char_highlightedGame) {
+	switch (char_highlightedGame[currentCharNum]) {
 		case 0:
-			return import_ss1CharacterNames[importCharacterList_cursorPosition];
+			return import_ss1CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 1:
-			return import_SS2CharacterNames(importCharacterList_cursorPosition);
+			return import_SS2CharacterNames(importCharacterList_cursorPosition[currentCharNum]);
 		case 2:
-			return import_ss3CharacterNames[importCharacterList_cursorPosition];
+			return import_ss3CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 3:
-			return import_ss4CharacterNames[importCharacterList_cursorPosition];
+			return import_ss4CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -181,9 +181,9 @@ void PhotoStudio::drawMsg(void) const {
 void PhotoStudio::loadChrImage(bool Robz) {
 	this->previewCharacter = false;
 	gspWaitForVBlank();
-	if (char_highlightedGame == 4) {
+	if (char_highlightedGame[currentCharNum] == 4) {
 		if (numberOfExportedCharacters > 0) {
-			sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", 4, getExportedCharacterName(this->importCharacterList_cursorPosition));	// All Seasons
+			sprintf(this->chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", 4, getExportedCharacterName(this->importCharacterList_cursorPosition[currentCharNum]));	// All Seasons
 		} else {
 			sprintf(this->chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
 		}
@@ -229,7 +229,7 @@ void PhotoStudio::Draw(void) const {
 				}
 				GFX::showCharSprite(0, this->zoomIn, this->charFadeAlpha, this->displayStudioBg);
 			} else {
-				Gui::DrawStringCentered(0, 104, 0.65, WHITE, (this->char_highlightedGame==4 ? "Preview not found." : "Preview unavailable."));
+				Gui::DrawStringCentered(0, 104, 0.65, WHITE, (this->char_highlightedGame[currentCharNum]==4 ? "Preview not found." : "Preview unavailable."));
 			}
 		}
 	} else if (currentCharacterRendered == 1) {
@@ -265,10 +265,10 @@ void PhotoStudio::Draw(void) const {
 
 	this->cursorX = 248;
 	if (this->subScreenMode == 2) {
-		this->cursorY = 64+(48*this->importCharacterList_cursorPositionOnScreen);
+		this->cursorY = 64+(48*this->importCharacterList_cursorPositionOnScreen[currentCharNum]);
 
 		// Game name
-		switch (this->char_highlightedGame) {
+		switch (this->char_highlightedGame[currentCharNum]) {
 			case 4:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Your character files");
 				break;
@@ -288,7 +288,7 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawString(8, 8, 0.50, WHITE, "<");
 		Gui::DrawString(304, 8, 0.50, WHITE, ">");
 
-		if (char_highlightedGame != 4) {
+		if (char_highlightedGame[currentCharNum] != 4) {
 			// Selected season
 			Gui::DrawString(120-32, 208, 0.65, WHITE, "L");
 			Gui::DrawStringCentered(-32, 210, 0.50, WHITE, this->seasonName());
@@ -299,25 +299,25 @@ void PhotoStudio::Draw(void) const {
 
 	  if (!displayNothing) {
 		int i2 = 48;
-		for (int i = import_characterShownFirst; i < import_characterShownFirst+3; i++) {
-			if (char_highlightedGame == 4) {
+		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
+			if (char_highlightedGame[currentCharNum] == 4) {
 				if (i >= numberOfExportedCharacters) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, getExportedCharacterName(i));
-			} else if (char_highlightedGame == 3) {
+			} else if (char_highlightedGame[currentCharNum] == 3) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, import_ss4CharacterNames[i]);
-			} else if (char_highlightedGame == 2) {
+			} else if (char_highlightedGame[currentCharNum] == 2) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, import_ss3CharacterNames[i]);
-			} else if (char_highlightedGame == 1) {
+			} else if (char_highlightedGame[currentCharNum] == 1) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)/*+import_ss2CharacterTieColors[i]*/, 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, import_SS2CharacterNames(i));
-			} else if (char_highlightedGame == 0) {
+			} else if (char_highlightedGame[currentCharNum] == 0) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, import_ss1CharacterNames[i]);
@@ -464,16 +464,16 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (showCursor) {
 			if (hDown & KEY_DUP) {
 				sndHighlight();
-				this->importCharacterList_cursorPosition--;
-				this->importCharacterList_cursorPositionOnScreen--;
-				if (this->importCharacterList_cursorPosition < 0) {
-					this->importCharacterList_cursorPosition = 0;
-					this->import_characterShownFirst = 0;
-				} else if (this->importCharacterList_cursorPosition < this->import_characterShownFirst) {
-					this->import_characterShownFirst--;
+				this->importCharacterList_cursorPosition[currentCharNum]--;
+				this->importCharacterList_cursorPositionOnScreen[currentCharNum]--;
+				if (this->importCharacterList_cursorPosition[currentCharNum] < 0) {
+					this->importCharacterList_cursorPosition[currentCharNum] = 0;
+					this->import_characterShownFirst[currentCharNum] = 0;
+				} else if (this->importCharacterList_cursorPosition[currentCharNum] < this->import_characterShownFirst[currentCharNum]) {
+					this->import_characterShownFirst[currentCharNum]--;
 				}
-				if (this->importCharacterList_cursorPositionOnScreen < 0) {
-					this->importCharacterList_cursorPositionOnScreen = 0;
+				if (this->importCharacterList_cursorPositionOnScreen[currentCharNum] < 0) {
+					this->importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
 				}
 				renderTop = true;
 				this->loadChrImage(false);
@@ -481,20 +481,20 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 			if (hDown & KEY_DDOWN) {
 				sndHighlight();
-				this->importCharacterList_cursorPosition++;
-				this->importCharacterList_cursorPositionOnScreen++;
-				if (this->importCharacterList_cursorPosition > this->import_totalCharacters) {
-					this->importCharacterList_cursorPosition = this->import_totalCharacters;
-					this->import_characterShownFirst = this->import_totalCharacters-2;
-					if (this->import_characterShownFirst < 0) this->import_characterShownFirst = 0;
-					if (this->importCharacterList_cursorPositionOnScreen > this->import_totalCharacters) {
-						this->importCharacterList_cursorPositionOnScreen = this->import_totalCharacters;
+				this->importCharacterList_cursorPosition[currentCharNum]++;
+				this->importCharacterList_cursorPositionOnScreen[currentCharNum]++;
+				if (this->importCharacterList_cursorPosition[currentCharNum] > this->import_totalCharacters) {
+					this->importCharacterList_cursorPosition[currentCharNum] = this->import_totalCharacters;
+					this->import_characterShownFirst[currentCharNum] = this->import_totalCharacters-2;
+					if (this->import_characterShownFirst[currentCharNum] < 0) this->import_characterShownFirst[currentCharNum] = 0;
+					if (this->importCharacterList_cursorPositionOnScreen[currentCharNum] > this->import_totalCharacters) {
+						this->importCharacterList_cursorPositionOnScreen[currentCharNum] = this->import_totalCharacters;
 					}
-				} else if (this->importCharacterList_cursorPosition > this->import_characterShownFirst+2) {
-					this->import_characterShownFirst++;
+				} else if (this->importCharacterList_cursorPosition[currentCharNum] > this->import_characterShownFirst[currentCharNum]+2) {
+					this->import_characterShownFirst[currentCharNum]++;
 				}
-				if (this->importCharacterList_cursorPositionOnScreen > 2) {
-					this->importCharacterList_cursorPositionOnScreen = 2;
+				if (this->importCharacterList_cursorPositionOnScreen[currentCharNum] > 2) {
+					this->importCharacterList_cursorPositionOnScreen[currentCharNum] = 2;
 				}
 				renderTop = true;
 				this->loadChrImage(false);
@@ -513,25 +513,25 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
-			this->char_highlightedGame--;
-			if (this->char_highlightedGame < 0) this->char_highlightedGame = 4;
+			this->char_highlightedGame[currentCharNum]--;
+			if (this->char_highlightedGame[currentCharNum] < 0) this->char_highlightedGame[currentCharNum] = 4;
 			this->getMaxChars();
 			renderTop = true;
 		}
 
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
-			this->char_highlightedGame++;
-			if (this->char_highlightedGame > 4) this->char_highlightedGame = 0;
+			this->char_highlightedGame[currentCharNum]++;
+			if (this->char_highlightedGame[currentCharNum] > 4) this->char_highlightedGame[currentCharNum] = 0;
 			this->getMaxChars();
 			renderTop = true;
 		}
 
 		if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
-			this->importCharacterList_cursorPosition = 0;
-			this->importCharacterList_cursorPositionOnScreen = 0;
-			this->import_characterShownFirst = 0;
-			if (this->char_highlightedGame == 4) {
+			this->importCharacterList_cursorPosition[currentCharNum] = 0;
+			this->importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
+			this->import_characterShownFirst[currentCharNum] = 0;
+			if (this->char_highlightedGame[currentCharNum] == 4) {
 				this->previewCharacter = false;
 				if (!this->exportedCharListGotten) {
 					this->displayNothing = true;
@@ -546,7 +546,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			this->loadChrImage(false);
 		}
 
-		if (this->char_highlightedGame != 4) {
+		if (this->char_highlightedGame[currentCharNum] != 4) {
 			if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 				sndHighlight();
 				this->seasonNo--;
@@ -772,7 +772,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndSelect();
 				this->displayNothing = true;
 				this->subScreenMode = 2;
-				if ((this->subScreenMode == 2) && (this->char_highlightedGame == 4) && !this->exportedCharListGotten) {
+				if ((this->subScreenMode == 2) && (this->char_highlightedGame[currentCharNum] == 4) && !this->exportedCharListGotten) {
 					gspWaitForVBlank();
 					getExportedCharacterContents();
 					this->exportedCharListGotten = true;
