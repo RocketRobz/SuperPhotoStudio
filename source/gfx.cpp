@@ -441,10 +441,11 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 		}
 		}
 	}
-	int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
+	//int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
+	int yPos = 0;
 	if (cinemaWide) yPos += 36;
 
-	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, 0);
+	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, zoomIn);
 	if (!gfxIsWide() || cinemaWide) {
 		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 	}

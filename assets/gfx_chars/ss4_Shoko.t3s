@@ -1,1 +1,4 @@
--f rgba -z auto "characters/Styling Star/All Seasons/Shoko.png"
+--atlas -f rgba -z auto
+"characters/Styling Star/All Seasons/zoom0/Shoko.png"
+"characters/Styling Star/All Seasons/zoom1/Shoko.png"
+"characters/Styling Star/All Seasons/zoom2/Shoko.png"
