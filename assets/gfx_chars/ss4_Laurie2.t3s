@@ -1,1 +1,4 @@
--f rgba -z auto "characters/Styling Star/Fall/Laurie.png"
+--atlas -f rgba -z auto
+"characters/Styling Star/Fall/zoom0/Laurie.png"
+"characters/Styling Star/Fall/zoom1/Laurie.png"
+"characters/Styling Star/Fall/zoom2/Laurie.png"
