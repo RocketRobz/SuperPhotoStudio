@@ -652,6 +652,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndSelect();
 			subScreenMode = 0;
 			previewCharacter = characterPicked[currentCharNum];
+			if (characterPicked[3] && zoomIn < 1) {
+				zoomIn = 1;
+			}
 		}
 
 		if (hDown & KEY_DLEFT) {
@@ -697,6 +700,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndBack();
 			subScreenMode = 0;
 			previewCharacter = characterPicked[currentCharNum];
+			if (characterPicked[3] && zoomIn < 1) {
+				zoomIn = 1;
+			}
 		}
 
 	} else {
