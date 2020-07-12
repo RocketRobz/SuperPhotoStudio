@@ -398,10 +398,14 @@ void GFX::animateBgSprite(void) {
 	}
 }
 
-void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffects) {
+void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool lightingEffects) {
 	if (!chracterSpriteLoaded) return;
 
 	int xPos = (cinemaWide ? 60 : 0);
+	float xScale = (cinemaWide ? 0.35f : 0.5);
+	if (flipH) {
+		xScale -= xScale*2;
+	}
 	int yPos = 0;
 	int yPosRefl = 230;
 	if (cinemaWide) {
@@ -475,7 +479,7 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 					break;
 				case 43:
 					C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 127), 0);
-					C2D_DrawImageAt(image, xPos, yPosRefl-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), -((cinemaWide ? 0.7f : 1)/2));
+					C2D_DrawImageAt(image, xPos, yPosRefl-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, xScale, -((cinemaWide ? 0.7f : 1)/2));
 					break;
 			}
 		}
@@ -506,10 +510,10 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 					break;
 			}
 		}
-		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
+		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, xScale, (cinemaWide ? 0.7f : 1));
 	} else {
 		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, fadeAlpha), 1);
-		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), (cinemaWide ? 0.7f : 1));
+		C2D_DrawImageAt(image, xPos, yPos-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, xScale, (cinemaWide ? 0.7f : 1));
 	}
 }
 

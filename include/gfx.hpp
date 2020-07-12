@@ -42,7 +42,7 @@ namespace GFX {
 	void reloadBgSprite(void);
 	void showBgSprite(int zoomIn);
 	void animateBgSprite(void);
-	void showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffects = false);
+	void showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool lightingEffects = false);
 	void DrawSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1, GPU_TEXTURE_FILTER_PARAM filter = GPU_NEAREST);
 	void DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX = 1, float ScaleY = 1, GPU_TEXTURE_FILTER_PARAM filter = GPU_NEAREST);
 

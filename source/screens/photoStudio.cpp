@@ -8,6 +8,7 @@
 #include "import_ss2charnames.h"
 #include "import_ss3charnames.h"
 #include "import_ss4charnames.h"
+#include "rocketcharnames.h"
 
 #include "import_ss1bgnames.h"
 #include "import_ss2bgnames.h"
@@ -33,6 +34,7 @@ void PhotoStudio::getList() {
 
 void PhotoStudio::getMaxChars() {
 	if (subScreenMode == 1) {
+		// Locations
 		if (photo_highlightedGame == 3) {
 			import_totalCharacters = 11;
 		} else if (photo_highlightedGame == 2) {
@@ -43,8 +45,9 @@ void PhotoStudio::getMaxChars() {
 			import_totalCharacters = 2;
 		}
 	} else {
+		// Characters
 		if (char_highlightedGame[currentCharNum] == 4) {
-			import_totalCharacters = numberOfExportedCharacters-1;
+			import_totalCharacters = 0;
 		} else if (char_highlightedGame[currentCharNum] == 3) {
 			import_totalCharacters = 0xD;
 		} else if (char_highlightedGame[currentCharNum] == 2) {
@@ -82,6 +85,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return import_ss3CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 3:
 			return import_ss4CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 4:
+			return rocketCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -106,6 +111,8 @@ const char* PhotoStudio::import_characterNameDisplay(void) const {
 			return import_ss3CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 3:
 			return import_ss4CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 4:
+			return rocketCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -178,19 +185,34 @@ void PhotoStudio::drawMsg(void) const {
 	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
 }
 
-void PhotoStudio::loadChrImage(bool Robz) {
+void PhotoStudio::loadChrImage(void) {
 	previewCharacter = false;
 	gspWaitForVBlank();
 	if (char_highlightedGame[currentCharNum] == 4) {
-		if (numberOfExportedCharacters > 0) {
+		/*if (numberOfExportedCharacters > 0) {
 			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", 4, getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));	// All Seasons
 		} else {
 			sprintf(chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
+		}*/
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+			default:
+				sprintf(chrFilePath, "romfs:/gfx/%s.t3x", rocketCharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]]);
+				break;
+			case 1:
+				sprintf(chrFilePath, "romfs:/gfx/%s.t3x", rocketCharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]]);
+				break;
+			case 2:
+				sprintf(chrFilePath, "romfs:/gfx/%s.t3x", rocketCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]]);
+				break;
+			case 3:
+				sprintf(chrFilePath, "romfs:/gfx/%s.t3x", rocketCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]]);
+				break;
 		}
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath);
 	} else {
-		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", 4, (Robz ? "Robz" : import_characterName()));				// All Seasons
-		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, (Robz ? "Robz" : import_characterName()), seasonNo[currentCharNum]);	// One Season
+		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", 4, import_characterName());				// All Seasons
+		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, import_characterName(), seasonNo[currentCharNum]);	// One Season
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath2);
 	}
 	if (previewCharacterFound[0] && !characterPicked[1]) {
@@ -227,7 +249,7 @@ void PhotoStudio::Draw(void) const {
 				if (characterPicked[1]) {
 					GFX::loadCharSpriteMem(0);
 				}
-				GFX::showCharSprite(0, zoomIn, charFadeAlpha, displayStudioBg);
+				GFX::showCharSprite(0, characterFlipH[0], zoomIn, charFadeAlpha, displayStudioBg);
 			} else {
 				Gui::DrawStringCentered(0, 104, 0.65, WHITE, (char_highlightedGame[currentCharNum]==4 ? "Preview not found." : "Preview unavailable."));
 			}
@@ -235,7 +257,7 @@ void PhotoStudio::Draw(void) const {
 	} else {
 		if (characterPicked[currentCharacterRendered] && previewCharacterFound[currentCharacterRendered]) {
 			GFX::loadCharSpriteMem(currentCharacterRendered);
-			GFX::showCharSprite(currentCharacterRendered, zoomIn, charFadeAlpha, displayStudioBg);
+			GFX::showCharSprite(currentCharacterRendered, characterFlipH[currentCharacterRendered], zoomIn, charFadeAlpha, displayStudioBg);
 		}
 	}
 
@@ -288,23 +310,23 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawString(8, 8, 0.50, WHITE, "<");
 		Gui::DrawString(304, 8, 0.50, WHITE, ">");
 
-		if (char_highlightedGame[currentCharNum] != 4) {
+		//if (char_highlightedGame[currentCharNum] != 4) {
 			// Selected season
-			Gui::DrawString(120-32, 208, 0.65, WHITE, "L");
-			Gui::DrawStringCentered(-32, 210, 0.50, WHITE, seasonName());
-			Gui::DrawString(192-32, 208, 0.65, WHITE, "R");
-		}
+			Gui::DrawString(120-36, 208, 0.65, WHITE, "L");
+			Gui::DrawStringCentered(-36, 210, 0.50, WHITE, seasonName());
+			Gui::DrawString(192-36, 208, 0.65, WHITE, "R");
+		//}
 
-		Gui::DrawString(192, 208, 0.65, BLUE, "SELECT: Robz");
+		Gui::DrawString(184, 208, 0.65, WHITE, "SELECT: Flip H");
 
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
 			if (char_highlightedGame[currentCharNum] == 4) {
-				if (i >= numberOfExportedCharacters) break;
+				//if (i >= numberOfExportedCharacters) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((getExportedCharacterGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, getExportedCharacterName(i));
+				GFX::DrawSprite((rocketCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Gui::DrawString(64, i2, 0.65, WHITE, rocketCharacterNames[i]);
 			} else if (char_highlightedGame[currentCharNum] == 3) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
@@ -331,7 +353,7 @@ void PhotoStudio::Draw(void) const {
 		// Game name
 		switch (photo_highlightedGame) {
 			case 4:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Your character files");
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Rocket Photo Shoot");
 				break;
 			case 3:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss4Title());
@@ -482,7 +504,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
 				}
 				renderTop = true;
-				loadChrImage(false);
+				loadChrImage();
 			}
 
 			if (hDown & KEY_DDOWN) {
@@ -503,18 +525,20 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 2;
 				}
 				renderTop = true;
-				loadChrImage(false);
+				loadChrImage();
 			}
 		}
 
 		if (hDown & KEY_A) {
 			sndSelect();
 			subScreenMode = 0;
-		} else if (hDown & KEY_SELECT) {
+		}
+
+		if (hDown & KEY_SELECT) {
 			sndSelect();
 			subScreenMode = 0;
 			renderTop = true;
-			loadChrImage(true);	// Load Robz
+			characterFlipH[currentCharNum] = !characterFlipH[currentCharNum];
 		}
 
 		if (hDown & KEY_DLEFT) {
@@ -537,7 +561,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			importCharacterList_cursorPosition[currentCharNum] = 0;
 			importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
 			import_characterShownFirst[currentCharNum] = 0;
-			if (char_highlightedGame[currentCharNum] == 4) {
+			/*if (char_highlightedGame[currentCharNum] == 4) {
 				previewCharacter = false;
 				if (!exportedCharListGotten) {
 					displayNothing = true;
@@ -546,18 +570,18 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					exportedCharListGotten = true;
 					displayNothing = false;
 				}
-			}
+			}*/
 			getMaxChars();
 			renderTop = true;
-			loadChrImage(false);
+			loadChrImage();
 		}
 
-		if (char_highlightedGame[currentCharNum] != 4) {
+		//if (char_highlightedGame[currentCharNum] != 4) {
 			if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 				sndHighlight();
 				seasonNo[currentCharNum]--;
 				if (seasonNo[currentCharNum] < 0) seasonNo[currentCharNum] = 3;
-				loadChrImage(false);
+				loadChrImage();
 				renderTop = true;
 			}
 
@@ -565,10 +589,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndHighlight();
 				seasonNo[currentCharNum]++;
 				if (seasonNo[currentCharNum] > 3) seasonNo[currentCharNum] = 0;
-				loadChrImage(false);
+				loadChrImage();
 				renderTop = true;
 			}
-		}
+		//}
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
@@ -787,11 +811,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndSelect();
 				displayNothing = true;
 				subScreenMode = 2;
-				if ((subScreenMode == 2) && (char_highlightedGame[currentCharNum] == 4) && !exportedCharListGotten) {
+				/*if ((subScreenMode == 2) && (char_highlightedGame[currentCharNum] == 4) && !exportedCharListGotten) {
 					gspWaitForVBlank();
 					getExportedCharacterContents();
 					exportedCharListGotten = true;
-				}
+				}*/
 				getMaxChars();
 				displayNothing = false;
 				if (!characterPicked[currentCharNum] && currentCharNum != 0) {
@@ -805,7 +829,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					zoomIn = 1;
 				}
 				renderTop = true;
-				loadChrImage(false);
+				loadChrImage();
 			}
 		}
 	

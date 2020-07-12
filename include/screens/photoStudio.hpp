@@ -24,7 +24,7 @@ private:
 	const char* ss3Title(void) const;
 	const char* ss4Title(void) const;
 	void drawMsg(void) const;
-	void loadChrImage(bool Robz);
+	void loadChrImage(void);
 
 	int subScreenMode = 0;
 	/*
@@ -35,7 +35,7 @@ private:
 
 	mutable int cursorX, cursorY;
 	int photo_highlightedGame = 0;
-	int char_highlightedGame[5] = {0};
+	int char_highlightedGame[5] = {4};
 	int seasonNo[5] = {0};
 	int currentCharNum = 0;
 	int charsShown = 0;
@@ -47,6 +47,7 @@ private:
 	bool displayStudioBg = false;
 	bool showScrollingBg = true;
 	bool characterPicked[5] = {false};
+	bool characterFlipH[5] = {false};
 
 	mutable int charFadeAlpha = 0;
 	bool previewCharacter = false;
