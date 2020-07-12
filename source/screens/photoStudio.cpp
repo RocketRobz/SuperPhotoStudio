@@ -388,7 +388,11 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawString(32, i2, 0.65, WHITE, "Change location");
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-		if (currentCharNum==2) {
+		if (currentCharNum==4) {
+			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 5 >");
+		} else if (currentCharNum==3) {
+			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 4 >");
+		} else if (currentCharNum==2) {
 			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 3 >");
 		} else if (currentCharNum==1) {
 			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 2 >");
@@ -437,7 +441,7 @@ void PhotoStudio::preview() const {
 
 
 void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	if ((subScreenMode==0 || subScreenMode==2) && (!characterPicked[1] || (characterPicked[1] && !renderTop))) {
+	if ((subScreenMode==0 || subScreenMode==2) && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3]) {
 		int zoomLimit = characterPicked[1] ? 1 : 2;
 		if (hDown & KEY_CPAD_UP) {
 			zoomIn++;
@@ -735,8 +739,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					if (currentCharNum > charsShown+1) {
 						currentCharNum = charsShown+1;
 					}
-					if (currentCharNum > 2) {
-						currentCharNum = 2;
+					if (currentCharNum > 4) {
+						currentCharNum = 4;
 					}
 				}
 			}
@@ -789,6 +793,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				characterPicked[currentCharNum] = true;
 				if (characterPicked[0] && characterPicked[1] && zoomIn > 1) {
+					zoomIn = 1;
+				}
+				if (characterPicked[3] && zoomIn < 1) {
 					zoomIn = 1;
 				}
 				renderTop = true;

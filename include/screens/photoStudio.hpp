@@ -35,8 +35,8 @@ private:
 
 	mutable int cursorX, cursorY;
 	int photo_highlightedGame = 0;
-	int char_highlightedGame[3] = {0};
-	int seasonNo[3] = {0};
+	int char_highlightedGame[5] = {0};
+	int seasonNo[5] = {0};
 	int currentCharNum = 0;
 	int charsShown = 0;
 
@@ -46,11 +46,11 @@ private:
 	bool displayNothing = false;
 	bool displayStudioBg = false;
 	bool showScrollingBg = true;
-	bool characterPicked[3] = {false};
+	bool characterPicked[5] = {false};
 
 	mutable int charFadeAlpha = 0;
 	bool previewCharacter = false;
-	bool previewCharacterFound[3] = {false};
+	bool previewCharacterFound[5] = {false};
 
 	bool showMessage = false;
 	int messageNo = 0;
@@ -64,13 +64,13 @@ private:
 	int characterChangeMenuOps[4] = {0};
 	int characterChangeMenuOptions = 2;
 
-	int importCharacterList_cursorPosition[3] = {0};
-	int importCharacterList_cursorPositionOnScreen[3] = {0};
+	int importCharacterList_cursorPosition[5] = {0};
+	int importCharacterList_cursorPositionOnScreen[5] = {0};
 
 	int bgList_cursorPosition = 0;
 	int bgList_cursorPositionOnScreen = 0;
 
-	int import_characterShownFirst[3] = {0};
+	int import_characterShownFirst[5] = {0};
 
 	int import_bgShownFirst = 0;
 

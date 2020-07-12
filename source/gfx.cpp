@@ -3,13 +3,13 @@
 #include <unistd.h>
 
 static char bgSpriteMem[4][0x200000];
-static char charSpriteMem[3][0x80000];
+static char charSpriteMem[5][0x80000];
 
 static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet bgSprite;
 static C2D_SpriteSheet chracterSprite;
 static bool chracterSpriteLoaded = false;
-static bool chracterSpriteFound[3] = {false};
+static bool chracterSpriteFound[5] = {false};
 static bool bgSpriteLoaded = false;
 
 extern int studioBg;
@@ -38,6 +38,8 @@ void GFX::resetCharStatus(void) {
 	chracterSpriteFound[0] = false;
 	chracterSpriteFound[1] = false;
 	chracterSpriteFound[2] = false;
+	chracterSpriteFound[3] = false;
+	chracterSpriteFound[4] = false;
 }
 
 Result GFX::loadSheets() {
@@ -400,7 +402,26 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 	if (!chracterSpriteLoaded) return;
 
 	int xPos = (cinemaWide ? 60 : 0);
-	if (chracterSpriteFound[0] && chracterSpriteFound[1] && chracterSpriteFound[2]) {
+	int yPos = 0;
+	int yPosRefl = 230;
+	if (cinemaWide) {
+		yPos += 36;
+		yPosRefl -= 36;
+	}
+	if ((num == 3 || num == 4) && chracterSpriteFound[3]) {
+		if (zoomIn == 0) {
+			return;
+		}
+		yPos += cinemaWide ? 60 : 80;
+		switch (num) {
+			case 3:
+				xPos -= cinemaWide ? 72 : 80;
+				break;
+			case 4:
+				xPos += cinemaWide ? 72 : 80;
+				break;
+		}
+	} else if (chracterSpriteFound[0] && chracterSpriteFound[1] && chracterSpriteFound[2]) {
 		if (zoomIn == 1) {
 		switch (num) {
 			case 0:
@@ -440,13 +461,6 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 				break;
 		}
 		}
-	}
-	//int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
-	int yPos = 0;
-	int yPosRefl = 230;
-	if (cinemaWide) {
-		yPos += 36;
-		yPosRefl -= 36;
 	}
 
 	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, zoomIn);
