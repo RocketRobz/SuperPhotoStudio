@@ -443,15 +443,28 @@ void GFX::showCharSprite(int num, int zoomIn, int fadeAlpha, bool lightingEffect
 	}
 	//int yPos = -((cinemaWide ? 168 : 240)*zoomIn);
 	int yPos = 0;
-	if (cinemaWide) yPos += 36;
+	int yPosRefl = 230;
+	if (cinemaWide) {
+		yPos += 36;
+		yPosRefl -= 36;
+	}
 
 	C2D_Image image = C2D_SpriteSheetGetImage(chracterSprite, zoomIn);
-	if (!gfxIsWide() || cinemaWide) {
-		C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
-	}
+	C3D_TexSetFilter(image.tex, GPU_LINEAR, GPU_LINEAR);
 
 	C2D_ImageTint tint;
 	if (fadeAlpha == 255) {
+		if (lightingEffects && zoomIn==0) {
+			// Reflection on the floor
+			switch (studioBg) {
+				default:
+					break;
+				case 43:
+					C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 127), 0);
+					C2D_DrawImageAt(image, xPos, yPosRefl-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, (cinemaWide ? 0.35f : 0.5), -((cinemaWide ? 0.7f : 1)/2));
+					break;
+			}
+		}
 		C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 255), 0);
 		if (lightingEffects) {
 			switch (studioBg) {
