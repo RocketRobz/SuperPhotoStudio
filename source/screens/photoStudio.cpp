@@ -251,7 +251,7 @@ void PhotoStudio::Draw(void) const {
 				}
 				GFX::showCharSprite(0, characterFlipH[0], zoomIn, charFadeAlpha, displayStudioBg);
 			} else {
-				Gui::DrawStringCentered(0, 104, 0.65, WHITE, (char_highlightedGame[currentCharNum]==4 ? "Preview not found." : "Preview unavailable."));
+				Gui::DrawStringCentered(0, 104, 0.65, WHITE, (/*char_highlightedGame[currentCharNum]==4 ? "Preview not found." :*/ "Preview unavailable."));
 			}
 		}
 	} else {
