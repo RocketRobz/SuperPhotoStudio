@@ -489,10 +489,10 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 				default:
 					break;
 				case 7:
-					C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Live Music Club 4
+					C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.15);	// Tint for Live Music Club 4
 					break;
 				case 46:
-					C2D_PlainImageTint(&tint, C2D_Color32(31, 31, 95, 255), 0.1);	// Tint for Live Music Club 2
+					C2D_PlainImageTint(&tint, C2D_Color32(31, 31, 95, 255), 0.15);	// Tint for Live Music Club 2
 					break;
 				case 11:
 					C2D_PlainImageTint(&tint, C2D_Color32(191, 63, 87, 255), 0.1);	// Tint for Cinema
@@ -503,9 +503,9 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 				case 14:
 				case 15:
 					if (timeOutside == 1) {
-						C2D_PlainImageTint(&tint, C2D_Color32(95, 47, 0, 255), 0.1);	// Tint for Sunset
+						C2D_PlainImageTint(&tint, C2D_Color32(95, 47, 0, 255), 0.15);	// Tint for Sunset
 					} else if (timeOutside == 2) {
-						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.1);	// Tint for Nighttime
+						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.15);	// Tint for Nighttime
 					}
 					break;
 			}
