@@ -121,6 +121,14 @@ bool touchingBackButton(void) {
 	return (touch.px >= 7 && touch.px < 7+40 && touch.py >= 197 && touch.py < 197+44);
 }
 
+void getFrameForScreenshot(void) {
+	// Get current frame
+	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
+	Gui::clearTextBufs();
+	Gui::ScreenDraw(Top);
+	C3D_FrameEnd(0);
+}
+
 void renderTopScreenSubPixels(void) {
 	shiftBySubPixel = true;
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
@@ -264,7 +272,9 @@ int main()
 		}
 
 		if (hDown & KEY_Y) {
+			getFrameForScreenshot();
 			Screenshot_Capture();
+			renderTop = true;
 		}
 
 		if (hDown) {
