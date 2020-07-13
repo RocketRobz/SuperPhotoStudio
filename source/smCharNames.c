@@ -2,8 +2,8 @@
 
 const char* smCharacterNames[] = {
 	"Mario",
-	"",
-	"",
+	"",	// TODO: Luigi
+	"",	// TODO: Peach
 };
 
 bool smCharacterGenders[] = {

@@ -10,6 +10,7 @@
 #include "import_ss4charnames.h"
 #include "rocketcharnames.h"
 #include "smCharNames.h"
+#include "sthCharNames.h"
 
 #include "import_ss1bgnames.h"
 #include "import_ss2bgnames.h"
@@ -47,7 +48,9 @@ void PhotoStudio::getMaxChars() {
 		}
 	} else {
 		// Characters
-		if (char_highlightedGame[currentCharNum] == 5) {
+		if (char_highlightedGame[currentCharNum] == 6) {
+			import_totalCharacters = 0;
+		} else if (char_highlightedGame[currentCharNum] == 5) {
 			import_totalCharacters = 0;
 		} else if (char_highlightedGame[currentCharNum] == 4) {
 			import_totalCharacters = 3;
@@ -92,6 +95,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return rocketCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 5:
 			return smCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 6:
+			return sthCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -119,6 +124,17 @@ const char* PhotoStudio::import_characterFileName(void) const {
 				return smCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
 			case 3:
 				return smCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
+		case 6:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return sthCharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return sthCharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return sthCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return sthCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
 		}
 	}
 	return "null";
@@ -148,6 +164,8 @@ const char* PhotoStudio::import_characterNameDisplay(void) const {
 			return rocketCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 5:
 			return smCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 6:
+			return sthCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -313,6 +331,9 @@ void PhotoStudio::Draw(void) const {
 
 		// Game name
 		switch (char_highlightedGame[currentCharNum]) {
+			case 6:
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Sonic the Hedgehog series");
+				break;
 			case 5:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Mario series");
 				break;
@@ -351,12 +372,17 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
-			if (char_highlightedGame[currentCharNum] == 5) {
+			if (char_highlightedGame[currentCharNum] == 6) {
+				if (i >= 1) break;
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite((sthCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Gui::DrawString(64, i2, 0.65, WHITE, sthCharacterNames[i]);
+			} else if (char_highlightedGame[currentCharNum] == 5) {
+				if (i >= 1) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((smCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, smCharacterNames[i]);
 			} else if (char_highlightedGame[currentCharNum] == 4) {
-				//if (i >= numberOfExportedCharacters) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((rocketCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, rocketCharacterNames[i]);
@@ -593,7 +619,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
 			char_highlightedGame[currentCharNum]--;
-			if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = 5;
+			if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = 6;
 			getMaxChars();
 			renderTop = true;
 		}
@@ -601,7 +627,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
 			char_highlightedGame[currentCharNum]++;
-			if (char_highlightedGame[currentCharNum] > 5) char_highlightedGame[currentCharNum] = 0;
+			if (char_highlightedGame[currentCharNum] > 6) char_highlightedGame[currentCharNum] = 0;
 			getMaxChars();
 			renderTop = true;
 		}
