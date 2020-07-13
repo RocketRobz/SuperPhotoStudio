@@ -292,7 +292,7 @@ void PhotoStudio::Draw(void) const {
 		// Game name
 		switch (char_highlightedGame[currentCharNum]) {
 			case 4:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Your character files");
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Rocket Photo Shoot");
 				break;
 			case 3:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss4Title());
