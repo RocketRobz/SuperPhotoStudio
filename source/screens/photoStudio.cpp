@@ -818,6 +818,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}*/
 				getMaxChars();
 				displayNothing = false;
+				bool doCharLoad = !characterPicked[currentCharNum];
 				if (!characterPicked[currentCharNum] && currentCharNum != 0) {
 					charsShown++;
 				}
@@ -828,8 +829,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (characterPicked[3] && zoomIn < 1) {
 					zoomIn = 1;
 				}
-				renderTop = true;
-				loadChrImage();
+				if (doCharLoad) {
+					renderTop = true;
+					loadChrImage();
+				}
 			}
 		}
 	
