@@ -16,6 +16,7 @@
 #include "import_ss2bgnames.h"
 #include "import_ss3bgnames.h"
 #include "import_ss4bgnames.h"
+#include "pdarkBgNames.h"
 
 #include <unistd.h>
 
@@ -37,7 +38,11 @@ void PhotoStudio::getList() {
 void PhotoStudio::getMaxChars() {
 	if (subScreenMode == 1) {
 		// Locations
-		if (photo_highlightedGame == 3) {
+		if (photo_highlightedGame == 5) {
+			import_totalCharacters = 0;
+		} else if (photo_highlightedGame == 4) {
+			import_totalCharacters = 0;
+		} else if (photo_highlightedGame == 3) {
 			import_totalCharacters = 11;
 		} else if (photo_highlightedGame == 2) {
 			import_totalCharacters = 8;
@@ -411,6 +416,9 @@ void PhotoStudio::Draw(void) const {
 
 		// Game name
 		switch (photo_highlightedGame) {
+			case 5:
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Perfect Dark");
+				break;
 			case 4:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Rocket Photo Shoot");
 				break;
@@ -440,7 +448,11 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
-			if (photo_highlightedGame == 3) {
+			if (photo_highlightedGame == 5) {
+				if (i >= 1) break;
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				Gui::DrawString(32, i2, 0.65, WHITE, pdarkBgNames[i]);
+			} else if (photo_highlightedGame == 3) {
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				Gui::DrawString(32, i2, 0.65, WHITE, import_ss4BgNames[i]);
 			} else if (photo_highlightedGame == 2) {
@@ -702,6 +714,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					case 3:
 						studioBg = import_ss4BgNums[bgList_cursorPosition];
 						break;
+					case 5:
+						studioBg = pdarkBgNums[bgList_cursorPosition];
+						break;
 				}
 				displayStudioBg = false;
 				gspWaitForVBlank();
@@ -739,6 +754,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					case 3:
 						studioBg = import_ss4BgNums[bgList_cursorPosition];
 						break;
+					case 5:
+						studioBg = pdarkBgNums[bgList_cursorPosition];
+						break;
 				}
 				displayStudioBg = false;
 				gspWaitForVBlank();
@@ -759,14 +777,16 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
 			photo_highlightedGame--;
-			if (photo_highlightedGame < 0) photo_highlightedGame = 3;
+			if (photo_highlightedGame == 4) photo_highlightedGame--;	// Skip Rocket Photo Shoot page for now
+			if (photo_highlightedGame < 0) photo_highlightedGame = 5;
 			getMaxChars();
 		}
 
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
 			photo_highlightedGame++;
-			if (photo_highlightedGame > 3) photo_highlightedGame = 0;
+			if (photo_highlightedGame == 4) photo_highlightedGame++;	// Skip Rocket Photo Shoot page for now
+			if (photo_highlightedGame > 5) photo_highlightedGame = 0;
 			getMaxChars();
 		}
 
@@ -787,6 +807,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					break;
 				case 3:
 					studioBg = import_ss4BgNums[bgList_cursorPosition];
+					break;
+				case 5:
+					studioBg = pdarkBgNums[bgList_cursorPosition];
 					break;
 			}
 			displayStudioBg = false;
@@ -870,6 +893,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 						break;
 					case 3:
 						bgNum = import_ss4BgNums[bgList_cursorPosition];
+						break;
+					case 5:
+						bgNum = pdarkBgNums[bgList_cursorPosition];
 						break;
 				}
 				//if (studioBg != bgNum) {

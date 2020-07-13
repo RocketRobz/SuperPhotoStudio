@@ -276,6 +276,9 @@ void GFX::loadBgSprite(void) {
 		case 47:
 			bgPath = "romfs:/gfx/bg_roseGarden2.t3x";
 			break;
+		case 48:
+			bgPath = "romfs:/gfx/bg_carringtonInstitute.t3x";
+			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
 	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);
@@ -482,7 +485,8 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 			switch (studioBg) {
 				default:
 					break;
-				case 43:
+				case 43:	// Hair Salon (Girls Mode/Style Savvy/Style Boutique)
+				case 48:	// Carrington Institute (Perfect Dark)
 					C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 127), 0);
 					C2D_DrawImageAt(image, xPos, yPosRefl-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, xScale, -((cinemaWide ? 0.7f : 1)/2));
 					break;
