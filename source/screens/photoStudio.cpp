@@ -586,9 +586,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 		if (hDown & KEY_SELECT) {
 			sndSelect();
-			subScreenMode = 0;
-			renderTop = true;
 			characterFlipH[currentCharNum] = !characterFlipH[currentCharNum];
+			renderTop = true;
 		}
 
 		if (hDown & KEY_DLEFT) {
