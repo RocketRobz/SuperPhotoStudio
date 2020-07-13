@@ -178,7 +178,8 @@ void PhotoStudio::drawMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(messageNo == 4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
 
-	Gui::DrawStringCentered(0, 84, 0.60, BLACK, "This feature is not available yet.");
+	Gui::DrawStringCentered(0, 84, 0.60, BLACK, "Please remove latest");
+	Gui::DrawStringCentered(0, 104, 0.60, BLACK, "character(s) first.");
 
 	GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
 	GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
@@ -310,6 +311,10 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawString(8, 8, 0.50, WHITE, "<");
 		Gui::DrawString(304, 8, 0.50, WHITE, ">");
 
+		if (currentCharNum > 0) {
+			Gui::DrawString(96, 184, 0.55, WHITE, ": Remove character");
+		}
+
 		//if (char_highlightedGame[currentCharNum] != 4) {
 			// Selected season
 			Gui::DrawString(120-36, 208, 0.65, WHITE, "L");
@@ -411,13 +416,13 @@ void PhotoStudio::Draw(void) const {
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 		if (currentCharNum==4) {
-			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 5 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
 		} else if (currentCharNum==3) {
-			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 4 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[3] ? "Change character < 4 >" : "Add character < 4 >");
 		} else if (currentCharNum==2) {
-			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 3 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[2] ? "Change character < 3 >" : "Add character < 3 >");
 		} else if (currentCharNum==1) {
-			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 2 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
 		} else {
 			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 1 >");
 		}
@@ -532,6 +537,23 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_A) {
 			sndSelect();
 			subScreenMode = 0;
+		}
+
+		if ((hDown & KEY_X) && (currentCharNum > 0) && characterPicked[currentCharNum]) {
+			if ((currentCharNum == 4) || !characterPicked[currentCharNum+1]) {
+				sndSelect();
+				characterPicked[currentCharNum] = false;
+				previewCharacterFound[currentCharNum] = false;
+				GFX::resetCharStatus(currentCharNum);
+				currentCharNum--;
+				charsShown--;
+				subScreenMode = 0;
+				renderTop = true;
+				loadChrImage();
+			} else {
+				sndBack();
+				showMessage = true;
+			}
 		}
 
 		if (hDown & KEY_SELECT) {

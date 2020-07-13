@@ -28,7 +28,7 @@ extern bool shiftBySubPixel;
 
 namespace GFX {
 	// Load & Unload default sheets.
-	void resetCharStatus(void);
+	void resetCharStatus(int num = -1);
 	Result loadSheets();
 	Result unloadSheets();
 	void loadGameSelSheets();

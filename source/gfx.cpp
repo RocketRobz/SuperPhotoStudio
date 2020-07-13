@@ -34,7 +34,12 @@ static int timeOutside = 0;	// 0 == Day, 1 == Sunset, 2 == Night
 
 bool shiftBySubPixel = false;
 
-void GFX::resetCharStatus(void) {
+void GFX::resetCharStatus(int num) {
+	if (num > -1) {
+		chracterSpriteFound[num] = false;
+		return;
+	}
+
 	chracterSpriteFound[0] = false;
 	chracterSpriteFound[1] = false;
 	chracterSpriteFound[2] = false;
