@@ -47,7 +47,9 @@ void PhotoStudio::getMaxChars() {
 		}
 	} else {
 		// Characters
-		if (char_highlightedGame[currentCharNum] == 4) {
+		if (char_highlightedGame[currentCharNum] == 5) {
+			import_totalCharacters = 0;
+		} else if (char_highlightedGame[currentCharNum] == 4) {
 			import_totalCharacters = 3;
 		} else if (char_highlightedGame[currentCharNum] == 3) {
 			import_totalCharacters = 0xD;
