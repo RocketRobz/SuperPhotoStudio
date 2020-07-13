@@ -13,6 +13,7 @@ A photo studio for your Nintendo 3DS, in glorious Hori-HD (800px mode)!
 # Credits
 * devkitPro: libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Universal Team: Universal Core
+* @SuperSaiyajinStackZ: StackZ and Stackie avatars
 * joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)
 * Mike Dexter: Original MIDI sequence of the Sega CD Model 2 BIOS music
 * Freepik: [Camera icon](https://www.flaticon.com/free-icon/camera_2965705?term=camera&page=1&position=12)
