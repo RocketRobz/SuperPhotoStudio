@@ -17,6 +17,7 @@ private:
 	void getMaxChars();
 	const char* seasonName(void) const;
 	const char* import_characterName(void) const;
+	const char* import_characterFileName(void) const;
 	const char* import_SS2CharacterNames(int i) const;
 	const char* import_characterNameDisplay(void) const;
 	const char* ss1Title(void) const;
