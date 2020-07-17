@@ -32,7 +32,7 @@ void ProductIdent::Draw(void) const {
 	}
 	Gui::Draw_Rect(24, 100-(shiftBySubPixel ? 0.5f : 0), 400-28, 1, LIGHTRED);
 	Gui::DrawString(40, 100-(shiftBySubPixel ? 0.5f : 0), 0.45, LIGHTRED, "Title:");
-	Gui::DrawString(192, 100-(shiftBySubPixel ? 0.5f : 0), 0.45, LIGHTRED, "RocketPhotoShoot");
+	Gui::DrawString(192, 100-(shiftBySubPixel ? 0.5f : 0), 0.45, LIGHTRED, "SuperPhotoStudio");
 	Gui::DrawString(40, 110-(shiftBySubPixel ? 0.5f : 0), 0.45, LIGHTRED, "Product Code:");
 	Gui::DrawString(192, 110-(shiftBySubPixel ? 0.5f : 0), 0.45, LIGHTRED, "CTR-H-RPHO");
 	Gui::DrawString(40, 120-(shiftBySubPixel ? 0.5f : 0), 0.45, LIGHTRED, "Unique ID:");

@@ -23,6 +23,7 @@
 
 static int charPageOrder[] = {4, 7, 5, 6, 0, 1, 2, 3};
 
+static int metalXpos = 0;
 static int currentCharacterRendered = 0;
 extern bool musicPlayStarted;
 extern bool clearTop;
@@ -306,6 +307,11 @@ void PhotoStudio::Draw(void) const {
 		if (displayStudioBg) {
 			GFX::showBgSprite(zoomIn);
 		} else if (showScrollingBg) {
+			GFX::DrawSpriteLinear(sprites_titleMetal_idx, metalXpos, 0, 16, 16);
+			metalXpos--;
+			if (metalXpos < -8*16) {
+				metalXpos = 0;
+			}
 			GFX::DrawSprite(sprites_title_idx, 0, 0, 0.5);
 		} else {
 			Gui::Draw_Rect(0, 0, 400, 240, WHITE);
@@ -367,7 +373,7 @@ void PhotoStudio::Draw(void) const {
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Mario series");
 				break;
 			case 4:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Rocket Photo Shoot");
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Photo Studio");
 				break;
 			case 3:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss4Title());
@@ -449,7 +455,7 @@ void PhotoStudio::Draw(void) const {
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Perfect Dark");
 				break;
 			case 4:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Rocket Photo Shoot");
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Photo Studio");
 				break;
 			case 3:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss4Title());

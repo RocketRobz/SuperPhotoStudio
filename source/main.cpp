@@ -23,7 +23,7 @@ bool rocketRobzScreen = false;
 int delay = 0;
 Handle threadRequest;
 
-#define settingsIni "sdmc:/3ds/RocketPhotoShoot/settings.ini"
+#define settingsIni "sdmc:/3ds/SuperPhotoStudio/settings.ini"
 
 char verText[32];
 int studioBg = 0;
@@ -53,18 +53,18 @@ void loadSettings(void) {
 
 	CIniFile settingsini(settingsIni);
 
-	//studioBg = settingsini.GetInt("RocketPhotoShoot", "STUDIO_BG", studioBg);
-	setting = settingsini.GetInt("RocketPhotoShoot", "CINEMA_WIDE", false);
+	//studioBg = settingsini.GetInt("SuperPhotoStudio", "STUDIO_BG", studioBg);
+	setting = settingsini.GetInt("SuperPhotoStudio", "CINEMA_WIDE", false);
 	if (setting > 0) cinemaWide = true;
-	iFps = settingsini.GetInt("RocketPhotoShoot", "FRAME_RATE", iFps);
+	iFps = settingsini.GetInt("SuperPhotoStudio", "FRAME_RATE", iFps);
 }
 
 void saveSettings(void) {
 	CIniFile settingsini(settingsIni);
 
-	//settingsini.SetInt("RocketPhotoShoot", "STUDIO_BG", studioBg);
-	settingsini.SetInt("RocketPhotoShoot", "CINEMA_WIDE", (cinemaWide) ? true : false);
-	settingsini.SetInt("RocketPhotoShoot", "FRAME_RATE", iFps);
+	//settingsini.SetInt("SuperPhotoStudio", "STUDIO_BG", studioBg);
+	settingsini.SetInt("SuperPhotoStudio", "CINEMA_WIDE", (cinemaWide) ? true : false);
+	settingsini.SetInt("SuperPhotoStudio", "FRAME_RATE", iFps);
 
 	settingsini.SaveIniFileModified(settingsIni);
 }
@@ -181,7 +181,7 @@ int main()
 
 	// make folders if they don't exist
 	mkdir("sdmc:/3ds", 0777);
-	mkdir("sdmc:/3ds/RocketPhotoShoot", 0777);
+	mkdir("sdmc:/3ds/SuperPhotoStudio", 0777);
 
 	if ( access( "sdmc:/3ds/dspfirm.cdc", F_OK ) != -1 ) {
 		ndspInit();
