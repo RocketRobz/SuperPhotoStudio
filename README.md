@@ -1,8 +1,8 @@
 <p align="center">
  <img src="https://github.com/RocketRobz/SuperPhotoStudio/blob/master/resources/title.png"><br>
 </p>
-What happens when you take the concept of *Super Smash Bros.*, and turn it from a fighting game, into a photo shoot application?     
-The result, *Super Photo Studio*! Take pictures of your favorite all-star characters, including Robz himself, in any location possible!
+What happens when you take the concept of Super Smash Bros, and turn it from a fighting game, into a photo shoot application?     
+The result, Super Photo Studio! Take pictures of your favorite all-star characters, including Robz himself, in any location possible!
 
 # Features
 
@@ -19,6 +19,7 @@ The result, *Super Photo Studio*! Take pictures of your favorite all-star charac
 * SEGA
 * StackZ*
 * Syn Sophia
+
 (*Homebrew dev)
 
 # Credits
