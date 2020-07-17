@@ -2,8 +2,10 @@
 
 #include <unistd.h>
 
+#define charSpriteSize 0x100000
+
 static char bgSpriteMem[4][0x200000];
-static char charSpriteMem[5][0x80000];
+static char charSpriteMem[5][charSpriteSize];
 
 static C2D_SpriteSheet sprites;
 static C2D_SpriteSheet bgSprite;
@@ -355,10 +357,9 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	}
 
 	FILE* charFile = fopen((allSeasons ? t3xPathAllSeasons : t3xPathOneSeason), "rb");
-	fread((void*)charSpriteMem[num], 1, 0x80000, charFile);
+	fread((void*)charSpriteMem[num], 1, charSpriteSize, charFile);
 	fclose(charFile);
 
-	//chracterSprite		= C2D_SpriteSheetLoadFromMem(charSpriteMem[num], 0x80000);
 	chracterSpriteFound[num] = true;
 
 	return true;
@@ -370,7 +371,7 @@ void GFX::loadCharSpriteMem(int num) {
 	}
 
 	if (!chracterSpriteFound[num]) return;
-	chracterSprite		= C2D_SpriteSheetLoadFromMem(charSpriteMem[num], 0x80000);
+	chracterSprite		= C2D_SpriteSheetLoadFromMem(charSpriteMem[num], charSpriteSize);
 	chracterSpriteLoaded = true;
 }
 

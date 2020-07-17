@@ -36,7 +36,7 @@ private:
 
 	mutable int cursorX, cursorY;
 	int photo_highlightedGame = 0;
-	int char_highlightedGame[5] = {4};
+	int char_highlightedGame[5] = {0};
 	int seasonNo[5] = {0};
 	int currentCharNum = 0;
 	int charsShown = 0;
