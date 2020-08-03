@@ -1,6 +1,5 @@
 #include "photoStudio.hpp"
 #include "screenvars.h"
-#include "settings.hpp"
 
 #include "file_browse.h"
 
@@ -358,7 +357,9 @@ void PhotoStudio::Draw(void) const {
 	GFX::DrawSprite(sprites_photo_bg_idx, 0, 0);
 
 	cursorX = 248;
-	if (subScreenMode == 2) {
+	if (subScreenMode == 10) {
+		SettingsDraw();
+	} else if (subScreenMode == 2) {
 		cursorY = 64+(48*importCharacterList_cursorPositionOnScreen[currentCharNum]);
 
 		// Game name
@@ -594,6 +595,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndSelect();
 			showMessage = false;
 		}
+	} else if (subScreenMode == 10) {
+		SettingsLogic(hDown, hHeld, touch);
 	} else if (subScreenMode == 2) {
 		if (showCursor) {
 			if (hDown & KEY_DUP) {
@@ -974,7 +977,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	
 		if (hDown & KEY_SELECT) {
 			sndSelect();
-			Gui::setScreen(std::make_unique<Settings>(), true);
+			subScreenMode = 10;
 		}
 	}
 }

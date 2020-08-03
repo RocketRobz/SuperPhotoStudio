@@ -1,33 +1,14 @@
 #include "photoStudio.hpp"
-#include "settings.hpp"
 #include "screenvars.h"
 
 extern bool clearTop;
 extern bool renderTop;
 
-char txt_cinemaWide[24];
-char txt_frameRate[24];
+static char txt_cinemaWide[24];
+static char txt_frameRate[24];
 
-void Settings::Draw(void) const {
-	clearTop = true;
-	renderTop = true;
-	Gui::ScreenDraw(Top);
-
-	GFX::DrawSprite(sprites_title_idx, 0, 0, 0.5);
-
-	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-	if (cinemaWide) {
-		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
-		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
-	}
-
-	if (shiftBySubPixel) return;
-	Gui::ScreenDraw(Bottom);
-	GFX::DrawSprite(sprites_photo_bg_idx, 0, 0);
-
-	this->cursorX = 248;
-	this->cursorY = 64+(48*cursorPositionOnScreen);
+void PhotoStudio::SettingsDraw(void) const {
+	cursorY = 64+(48*settings_cursorPositionOnScreen);
 
 	Gui::DrawStringCentered(0, 8, 0.55, WHITE, "Settings");
 
@@ -50,57 +31,48 @@ void Settings::Draw(void) const {
 		}
 		i2 += 48;
 	}
-
-	GFX::DrawSprite(sprites_button_shadow_idx, 5, 199);
-	GFX::DrawSprite(sprites_button_red_idx, 5, 195);
-	GFX::DrawSprite(sprites_arrow_back_idx, 19, 195);
-	GFX::DrawSprite(sprites_button_b_idx, 44, 218);
-
-	GFX::drawCursor(this->cursorX, this->cursorY);
-
-	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 }
 
-void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+void PhotoStudio::SettingsLogic(u32 hDown, u32 hHeld, touchPosition touch) {
 	if (showCursor) {
 		if (hDown & KEY_UP) {
 			sndHighlight();
-			cursorPosition--;
-			cursorPositionOnScreen--;
-			if (cursorPosition < 0) {
-				cursorPosition = 0;
+			settings_cursorPosition--;
+			settings_cursorPositionOnScreen--;
+			if (settings_cursorPosition < 0) {
+				settings_cursorPosition = 0;
 				settingShownFirst = 0;
-			} else if (cursorPosition < settingShownFirst) {
+			} else if (settings_cursorPosition < settingShownFirst) {
 				settingShownFirst--;
 			}
-			if (cursorPositionOnScreen < 0) {
-				cursorPositionOnScreen = 0;
+			if (settings_cursorPositionOnScreen < 0) {
+				settings_cursorPositionOnScreen = 0;
 			}
 		}
 
 		if (hDown & KEY_DOWN) {
 			sndHighlight();
-			cursorPosition++;
-			cursorPositionOnScreen++;
-			if (cursorPosition > numberOfSettings) {
-				cursorPosition = numberOfSettings;
+			settings_cursorPosition++;
+			settings_cursorPositionOnScreen++;
+			if (settings_cursorPosition > numberOfSettings) {
+				settings_cursorPosition = numberOfSettings;
 				settingShownFirst = numberOfSettings-2;
 				if (settingShownFirst < 0) settingShownFirst = 0;
-				if (cursorPositionOnScreen > numberOfSettings) {
-					cursorPositionOnScreen = numberOfSettings;
+				if (settings_cursorPositionOnScreen > numberOfSettings) {
+					settings_cursorPositionOnScreen = numberOfSettings;
 				}
-			} else if (cursorPosition > settingShownFirst+2) {
+			} else if (settings_cursorPosition > settingShownFirst+2) {
 				settingShownFirst++;
 			}
-			if (cursorPositionOnScreen > 2) {
-				cursorPositionOnScreen = 2;
+			if (settings_cursorPositionOnScreen > 2) {
+				settings_cursorPositionOnScreen = 2;
 			}
 		}
 	}
 
-	if ((hDown & KEY_LEFT) && (cursorPosition <= numberOfSettings)) {
+	if ((hDown & KEY_LEFT) && (settings_cursorPosition <= numberOfSettings)) {
 		sndSelect();
-		switch (cursorPosition) {
+		switch (settings_cursorPosition) {
 			case 0:
 				cinemaWide = !cinemaWide;
 				break;
@@ -109,13 +81,14 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				else if (iFps==24) iFps = 60;
 				else if (iFps==60) iFps = 30;
 				C3D_FrameRate(iFps);
+				renderTop = true;
 				break;
 		}
 	}
 
-	if (((hDown & KEY_RIGHT) || (hDown & KEY_A)) && (cursorPosition <= numberOfSettings)) {
+	if (((hDown & KEY_RIGHT) || (hDown & KEY_A)) && (settings_cursorPosition <= numberOfSettings)) {
 		sndSelect();
-		switch (cursorPosition) {
+		switch (settings_cursorPosition) {
 			case 0:
 				cinemaWide = !cinemaWide;
 				break;
@@ -124,12 +97,13 @@ void Settings::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				else if (iFps==24) iFps = 30;
 				else if (iFps==30) iFps = 60;
 				C3D_FrameRate(iFps);
+				renderTop = true;
 				break;
 		}
 	}
 
 	if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 		sndBack();
-		Gui::setScreen(std::make_unique<PhotoStudio>(), true);
+		subScreenMode = 0;
 	}
 }

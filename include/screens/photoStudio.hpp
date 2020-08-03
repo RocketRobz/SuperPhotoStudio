@@ -9,7 +9,9 @@
 class PhotoStudio : public Screen {
 public:
 	void Draw(void) const override;
+	void SettingsDraw(void) const;
 	void Logic(u32 hDown, u32 hHeld, touchPosition touch) override;
+	void SettingsLogic(u32 hDown, u32 hHeld, touchPosition touch);
 	PhotoStudio();
 private:
 	void preview() const;
@@ -32,6 +34,7 @@ private:
 		0: What to change
 		1: Studio BG list
 		2: Character list
+		10: Settings
 	*/
 
 	mutable int cursorX, cursorY;
@@ -75,6 +78,11 @@ private:
 	int import_characterShownFirst[5] = {0};
 
 	int import_bgShownFirst = 0;
+
+	int numberOfSettings = 1;
+	int settings_cursorPosition = 0;
+	int settings_cursorPositionOnScreen = 0;
+	int settingShownFirst = 0;
 
 	bool exportedCharListGotten = false;
 };
