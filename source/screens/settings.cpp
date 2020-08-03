@@ -75,13 +75,13 @@ void PhotoStudio::SettingsLogic(u32 hDown, u32 hHeld, touchPosition touch) {
 		switch (settings_cursorPosition) {
 			case 0:
 				cinemaWide = !cinemaWide;
+				renderTop = true;
 				break;
 			case 1:
 					 if (iFps==30) iFps = 24;
 				else if (iFps==24) iFps = 60;
 				else if (iFps==60) iFps = 30;
 				C3D_FrameRate(iFps);
-				renderTop = true;
 				break;
 		}
 	}
@@ -91,13 +91,13 @@ void PhotoStudio::SettingsLogic(u32 hDown, u32 hHeld, touchPosition touch) {
 		switch (settings_cursorPosition) {
 			case 0:
 				cinemaWide = !cinemaWide;
+				renderTop = true;
 				break;
 			case 1:
 					 if (iFps==60) iFps = 24;
 				else if (iFps==24) iFps = 30;
 				else if (iFps==30) iFps = 60;
 				C3D_FrameRate(iFps);
-				renderTop = true;
 				break;
 		}
 	}
