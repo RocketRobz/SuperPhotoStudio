@@ -11,6 +11,7 @@
 #include "smCharNames.h"
 #include "sthCharNames.h"
 #include "jfgCharNames.h"
+#include "conkerCharNames.h"
 
 #include "import_ss1bgnames.h"
 #include "import_ss2bgnames.h"
@@ -20,7 +21,7 @@
 
 #include <unistd.h>
 
-static int charPageOrder[] = {4, 7, 5, 6, 0, 1, 2, 3};
+static int charPageOrder[] = {4, 8, 7, 5, 6, 0, 1, 2, 3};
 
 static int metalXpos = 0;
 static int currentCharacterRendered = 0;
@@ -57,7 +58,9 @@ void PhotoStudio::getMaxChars() {
 	} else {
 		// Characters
 		const int highlightedGame = char_highlightedGame[currentCharNum];
-		if (charPageOrder[highlightedGame] == 7) {
+		if (charPageOrder[highlightedGame] == 8) {
+			import_totalCharacters = 0;
+		} else if (charPageOrder[highlightedGame] == 7) {
 			import_totalCharacters = 1;
 		} else if (charPageOrder[highlightedGame] == 6) {
 			import_totalCharacters = 0;
@@ -110,6 +113,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return sthCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 7:
 			return jfgCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 8:
+			return conkerCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -160,6 +165,17 @@ const char* PhotoStudio::import_characterFileName(void) const {
 			case 3:
 				return jfgCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
 		}
+		case 8:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return conkerCharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return conkerCharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return conkerCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return conkerCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
 	}
 	return "null";
 }
@@ -192,6 +208,8 @@ const char* PhotoStudio::import_characterNameDisplay(void) const {
 			return sthCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 7:
 			return jfgCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 8:
+			return conkerCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -364,6 +382,9 @@ void PhotoStudio::Draw(void) const {
 
 		// Game name
 		switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
+			case 8:
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Conker series");
+				break;
 			case 7:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Jet Force Gemini");
 				break;
@@ -408,7 +429,12 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
-			if (charPageOrder[char_highlightedGame[currentCharNum]] == 7) {
+			if (charPageOrder[char_highlightedGame[currentCharNum]] == 8) {
+				if (i >= 1) break;
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite((conkerCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
+				Gui::DrawString(64, i2, 0.65, WHITE, conkerCharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 7) {
 				if (i >= 2) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((jfgCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
@@ -669,7 +695,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
 			char_highlightedGame[currentCharNum]--;
-			if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = 7;
+			if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = 8;
 			getMaxChars();
 			renderTop = true;
 		}
@@ -677,7 +703,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
 			char_highlightedGame[currentCharNum]++;
-			if (char_highlightedGame[currentCharNum] > 7) char_highlightedGame[currentCharNum] = 0;
+			if (char_highlightedGame[currentCharNum] > 8) char_highlightedGame[currentCharNum] = 0;
 			getMaxChars();
 			renderTop = true;
 		}
