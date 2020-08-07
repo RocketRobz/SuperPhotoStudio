@@ -19,6 +19,7 @@
 #include "import_ss3bgnames.h"
 #include "import_ss4bgnames.h"
 #include "pdarkBgNames.h"
+#include "smBgNames.h"
 
 #include <unistd.h>
 
@@ -43,7 +44,9 @@ void PhotoStudio::getList() {
 void PhotoStudio::getMaxChars() {
 	if (subScreenMode == 1) {
 		// Locations
-		if (photo_highlightedGame == 5) {
+		if (photo_highlightedGame == 6) {
+			import_totalCharacters = 1;
+		} else if (photo_highlightedGame == 5) {
 			import_totalCharacters = 0;
 		} else if (photo_highlightedGame == 4) {
 			import_totalCharacters = 0;
@@ -299,6 +302,24 @@ const char* PhotoStudio::ss4Title(void) const {
 	}
 }
 
+int PhotoStudio::getBgNum(void) const {
+	switch (photo_highlightedGame) {
+		case 0:
+			return import_ss1BgNums[bgList_cursorPosition];
+		case 1:
+			return import_ss2BgNums[bgList_cursorPosition];
+		case 2:
+			return import_ss3BgNums[bgList_cursorPosition];
+		case 3:
+			return import_ss4BgNums[bgList_cursorPosition];
+		case 5:
+			return pdarkBgNums[bgList_cursorPosition];
+		case 6:
+			return smBgNums[bgList_cursorPosition];
+	}
+	return 0;
+}
+
 void PhotoStudio::drawMsg(void) const {
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
@@ -515,6 +536,9 @@ void PhotoStudio::Draw(void) const {
 
 		// Game name
 		switch (photo_highlightedGame) {
+			case 6:
+				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Mario series");
+				break;
 			case 5:
 				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Perfect Dark");
 				break;
@@ -547,7 +571,11 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
-			if (photo_highlightedGame == 5) {
+			if (photo_highlightedGame == 6) {
+				if (i >= 2) break;
+				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				Gui::DrawString(32, i2, 0.65, WHITE, smBgNames[i]);
+			} else if (photo_highlightedGame == 5) {
 				if (i >= 1) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				Gui::DrawString(32, i2, 0.65, WHITE, pdarkBgNames[i]);
@@ -802,23 +830,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (bgList_cursorPositionOnScreen < 0) {
 					bgList_cursorPositionOnScreen = 0;
 				}
-				switch (photo_highlightedGame) {
-					case 0:
-						studioBg = import_ss1BgNums[bgList_cursorPosition];
-						break;
-					case 1:
-						studioBg = import_ss2BgNums[bgList_cursorPosition];
-						break;
-					case 2:
-						studioBg = import_ss3BgNums[bgList_cursorPosition];
-						break;
-					case 3:
-						studioBg = import_ss4BgNums[bgList_cursorPosition];
-						break;
-					case 5:
-						studioBg = pdarkBgNums[bgList_cursorPosition];
-						break;
-				}
+				studioBg = getBgNum();
 				displayStudioBg = false;
 				gspWaitForVBlank();
 				GFX::reloadBgSprite();
@@ -842,23 +854,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (bgList_cursorPositionOnScreen > 2) {
 					bgList_cursorPositionOnScreen = 2;
 				}
-				switch (photo_highlightedGame) {
-					case 0:
-						studioBg = import_ss1BgNums[bgList_cursorPosition];
-						break;
-					case 1:
-						studioBg = import_ss2BgNums[bgList_cursorPosition];
-						break;
-					case 2:
-						studioBg = import_ss3BgNums[bgList_cursorPosition];
-						break;
-					case 3:
-						studioBg = import_ss4BgNums[bgList_cursorPosition];
-						break;
-					case 5:
-						studioBg = pdarkBgNums[bgList_cursorPosition];
-						break;
-				}
+				studioBg = getBgNum();
 				displayStudioBg = false;
 				gspWaitForVBlank();
 				GFX::reloadBgSprite();
@@ -879,7 +875,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndHighlight();
 			photo_highlightedGame--;
 			if (photo_highlightedGame == 4) photo_highlightedGame--;	// Skip Rocket Photo Shoot page for now
-			if (photo_highlightedGame < 0) photo_highlightedGame = 5;
+			if (photo_highlightedGame < 0) photo_highlightedGame = 6;
 			getMaxChars();
 		}
 
@@ -887,7 +883,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndHighlight();
 			photo_highlightedGame++;
 			if (photo_highlightedGame == 4) photo_highlightedGame++;	// Skip Rocket Photo Shoot page for now
-			if (photo_highlightedGame > 5) photo_highlightedGame = 0;
+			if (photo_highlightedGame > 6) photo_highlightedGame = 0;
 			getMaxChars();
 		}
 
@@ -896,23 +892,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			bgList_cursorPositionOnScreen = 0;
 			import_bgShownFirst = 0;
 			getMaxChars();
-			switch (photo_highlightedGame) {
-				case 0:
-					studioBg = import_ss1BgNums[bgList_cursorPosition];
-					break;
-				case 1:
-					studioBg = import_ss2BgNums[bgList_cursorPosition];
-					break;
-				case 2:
-					studioBg = import_ss3BgNums[bgList_cursorPosition];
-					break;
-				case 3:
-					studioBg = import_ss4BgNums[bgList_cursorPosition];
-					break;
-				case 5:
-					studioBg = pdarkBgNums[bgList_cursorPosition];
-					break;
-			}
+			studioBg = getBgNum();
 			displayStudioBg = false;
 			gspWaitForVBlank();
 			GFX::reloadBgSprite();
@@ -981,24 +961,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				subScreenMode = 1;
 				getMaxChars();
 				previewCharacter = false;
-				int bgNum = 0;
-				switch (photo_highlightedGame) {
-					case 0:
-						bgNum = import_ss1BgNums[bgList_cursorPosition];
-						break;
-					case 1:
-						bgNum = import_ss2BgNums[bgList_cursorPosition];
-						break;
-					case 2:
-						bgNum = import_ss3BgNums[bgList_cursorPosition];
-						break;
-					case 3:
-						bgNum = import_ss4BgNums[bgList_cursorPosition];
-						break;
-					case 5:
-						bgNum = pdarkBgNums[bgList_cursorPosition];
-						break;
-				}
+				int bgNum = getBgNum();
 				//if (studioBg != bgNum) {
 					showScrollingBg = false;
 					displayStudioBg = false;

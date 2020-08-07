@@ -281,6 +281,12 @@ void GFX::loadBgSprite(void) {
 		case 48:
 			bgPath = "romfs:/gfx/bg_carringtonInstitute.t3x";
 			break;
+		case 49:
+			bgPath = "romfs:/gfx/bg_peachCastleOutside.t3x";
+			break;
+		case 50:
+			bgPath = "romfs:/gfx/bg_peachCastle.t3x";
+			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
 	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);

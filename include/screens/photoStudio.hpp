@@ -26,6 +26,7 @@ private:
 	const char* ss2Title(void) const;
 	const char* ss3Title(void) const;
 	const char* ss4Title(void) const;
+	int getBgNum(void) const;
 	void drawMsg(void) const;
 	void loadChrImage(void);
 
