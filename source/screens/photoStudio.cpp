@@ -126,6 +126,17 @@ const char* PhotoStudio::import_characterName(void) const {
 
 const char* PhotoStudio::import_characterFileName(void) const {
 	switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
+		case 3:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return ss4CharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return ss4CharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return ss4CharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return ss4CharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
 		case 4:
 		switch (seasonNo[currentCharNum]) {
 			case 0:
@@ -304,7 +315,7 @@ void PhotoStudio::drawMsg(void) const {
 void PhotoStudio::loadChrImage(void) {
 	previewCharacter = false;
 	gspWaitForVBlank();
-	if (charPageOrder[char_highlightedGame[currentCharNum]] >= 4) {
+	if (charPageOrder[char_highlightedGame[currentCharNum]] >= 3) {
 		/*if (numberOfExportedCharacters > 0) {
 			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", 4, getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));	// All Seasons
 		} else {
