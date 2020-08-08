@@ -71,7 +71,7 @@ void PhotoStudio::getMaxChars() {
 		} else if (charPageOrder[highlightedGame] == 6) {
 			import_totalCharacters = 0;
 		} else if (charPageOrder[highlightedGame] == 5) {
-			import_totalCharacters = 0;
+			import_totalCharacters = 3;
 		} else if (charPageOrder[highlightedGame] == 4) {
 			import_totalCharacters = 3;
 		} else if (charPageOrder[highlightedGame] == 3) {
@@ -503,7 +503,6 @@ void PhotoStudio::Draw(void) const {
 				GFX::DrawSprite((sthCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, sthCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 5) {
-				if (i >= 1) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((smCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, smCharacterNames[i]);
