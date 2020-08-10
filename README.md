@@ -7,11 +7,18 @@ The result, Super Photo Studio! Take pictures of your favorite all-star characte
 # Features
 
 * High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
-* Pre-rendered characters and backgrounds, from Mario, Sonic, Style Savvy, and more!
+* Pre-rendered characters and backgrounds, from     
+-Super Mario     
+-Sonic the Hedgehog     
+-Pac-Man     
+-Banjo-Kazooie        
+-Style Savvy     
+and more!
 * Take pictures of your favorite characters, and even Robz himself, in any location possible!
 * The first homebrew appearance of Robz' fashionable twin, Rabz!     
 
 # Characters and Locations by
+* Namco
 * Nintendo
 * Rare
 * RocketRobz*
