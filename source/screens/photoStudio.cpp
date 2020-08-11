@@ -497,7 +497,7 @@ void PhotoStudio::Draw(void) const {
 				GFX::DrawSprite((banjokCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, banjokCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 8) {
-				if (i >= 1) break;
+				if (i >= 2) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((conkerCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, conkerCharacterNames[i]);
