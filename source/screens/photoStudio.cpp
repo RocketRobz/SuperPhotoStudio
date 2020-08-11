@@ -79,7 +79,7 @@ void PhotoStudio::getMaxChars() {
 		} else if (charPageOrder[highlightedGame] == 9) {
 			import_totalCharacters = 0;
 		} else if (charPageOrder[highlightedGame] == 8) {
-			import_totalCharacters = 0;
+			import_totalCharacters = 1;
 		} else if (charPageOrder[highlightedGame] == 7) {
 			import_totalCharacters = 1;
 		} else if (charPageOrder[highlightedGame] == 6) {
