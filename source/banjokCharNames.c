@@ -20,13 +20,29 @@ bool banjokCharacterGenders[] = {
 
 const char* banjokCharacterFileNamesSpring[] = {
 	"banjok_Banjo",
+	"banjok_Kazooie",
+	"banjok_Tooty",
+	"banjok_Mumbo",
+	"banjok_Bottles",
 };
 const char* banjokCharacterFileNamesSummer[] = {
 	"banjok_Banjo",
+	"banjok_Kazooie",
+	"banjok_Tooty",
+	"banjok_Mumbo",
+	"banjok_Bottles",
 };
 const char* banjokCharacterFileNamesFall[] = {
 	"banjok_Banjo",
+	"banjok_Kazooie",
+	"banjok_Tooty",
+	"banjok_Mumbo",
+	"banjok_Bottles",
 };
 const char* banjokCharacterFileNamesWinter[] = {
 	"banjok_Banjo",
+	"banjok_Kazooie",
+	"banjok_Tooty",
+	"banjok_Mumbo",
+	"banjok_Bottles",
 };

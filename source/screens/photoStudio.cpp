@@ -26,7 +26,7 @@
 
 static int charPageOrder[] = {
 	4,	// Super Photo Studio (Original Characters)
-	9,	// Banjo-Kazooie
+	9,	// Banjo-Kazooie series
 	8,	// Conker series
 	7,	// Jet Force Gemini
 	10,	// Pac-Man series
@@ -77,7 +77,7 @@ void PhotoStudio::getMaxChars() {
 		if (charPageOrder[highlightedGame] == 10) {
 			import_totalCharacters = 1;
 		} else if (charPageOrder[highlightedGame] == 9) {
-			import_totalCharacters = 0;
+			import_totalCharacters = 4;
 		} else if (charPageOrder[highlightedGame] == 8) {
 			import_totalCharacters = 1;
 		} else if (charPageOrder[highlightedGame] == 7) {
@@ -492,7 +492,6 @@ void PhotoStudio::Draw(void) const {
 				GFX::DrawSprite((pacCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, pacCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 9) {
-				if (i >= 1) break;
 				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
 				GFX::DrawSprite((banjokCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
 				Gui::DrawString(64, i2, 0.65, WHITE, banjokCharacterNames[i]);
