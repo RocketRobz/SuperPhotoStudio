@@ -17,13 +17,13 @@ void RocketRobz::Draw(void) const {
 	} else {
 		GFX::DrawSpriteLinear(sprites_logo_rocketrobz_idx, 0, 0, 0.5, 1);
 	}
-	Gui::Draw_Rect(0, 238, 400, 2, C2D_Color32(0, 0, 0, 255));	// Hide line from other texture(s)
+	Gui::Draw_Rect(0, 238, 400, 2, BLACK);	// Hide line from other texture(s)
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
 
 	if (cinemaWide) {
-		Gui::Draw_Rect(0, 0, 400, 36, C2D_Color32(0, 0, 0, 255));
-		Gui::Draw_Rect(0, 204, 400, 36, C2D_Color32(0, 0, 0, 255));
+		Gui::Draw_Rect(0, 0, 400, 36, BLACK);
+		Gui::Draw_Rect(0, 204, 400, 36, BLACK);
 	}
 
 	if (shiftBySubPixel) return;
@@ -61,6 +61,7 @@ void RocketRobz::Draw(void) const {
 		if (rr_fadeAlpha > 255) rr_fadeAlpha = 255;
 	}
 
+	#ifdef _3DS
 	if (delay > iFps*9 && gfxIsWide()) {
 		if (prevSubMode != 0) {
 			rr_fadeType = false;
@@ -71,6 +72,7 @@ void RocketRobz::Draw(void) const {
 			prevSubMode++;
 		}
 	}
+	#endif
 }
 
 

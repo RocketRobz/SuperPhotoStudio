@@ -10,10 +10,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "inifile.h"
-#include "util/stringtool.h"
-#include "tonccpy.h"
+#include "rocketRobz.hpp"
+#include "screen.hpp"
 
+u32 hDown = 0;
+u32 hHeld = 0;
 touchPosition touch;
 
 //---------------------------------------------------------------------------------
@@ -29,7 +30,6 @@ void doPause() {
 		scanKeys();
 		if (keysDown() & KEY_START)
 			break;
-		snd().updateStream();
 		swiWaitForVBlank();
 	}
 	scanKeys();
@@ -37,6 +37,19 @@ void doPause() {
 
 int main(int argc, char **argv) {
 	defaultExceptionHandler();
+
+	while (1) {
+		// Scan hid shared memory for input events
+		scanKeys();
+
+		hDown = keysDown();
+		hHeld = keysHeld();
+
+		touchRead(&touch);
+
+		Gui::setScreen(std::make_unique<RocketRobz>(), false); // Set screen to product identification.
+		Gui::ScreenLogic(hDown, hHeld, touch, true); // Call the logic of the current screen here.
+	}
 
 	return 0;
 }
