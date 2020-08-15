@@ -36,14 +36,11 @@ namespace Gui {
 	void clearTextBufs(void);
 
 	/*	Draw a sprite from a SpriteSheet.
-	*	sheet: The SpriteSheet which should be used.
 	*	imgIndex: The index of the sprite from the sheet which should be drawn.
 	*	x: The X Position where the sprite should be drawn.
 	*	y: The Y Position where the sprite should be drawn.
-	*	ScaleX: The X-Scale for the sprite. (Optional!)
-	*	ScaleY: The Y-Scale for the sprite. (Optional!)
 	*/
-	void DrawSprite(int x, int y, float ScaleX = 1, float ScaleY = 1);
+	void DrawSprite(int imgindex, int x, int y);
 
 	// Initialize the GUI with Citro2D & Citro3D and initialize the Textbuffer. (call this when initializing.)
 	void init(void);

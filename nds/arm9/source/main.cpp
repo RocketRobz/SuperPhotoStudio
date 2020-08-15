@@ -126,6 +126,7 @@ int main(int argc, char **argv) {
 	};
 
 	Gui::init();
+	GFX::loadSheets();
 
 	Gui::setScreen(std::make_unique<ProductIdent>(), false); // Set screen to product identification.
 
@@ -170,6 +171,8 @@ int main(int argc, char **argv) {
 		{
 			showCursor = false;
 		}
+
+		cursorAlpha = (showCursor ? 255 : 0);
 
 		int fadeFPS;
 		switch (iFps) {

@@ -19,7 +19,7 @@ include $(DEVKITARM)/ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	SuperPhotoStudio
 BUILD		:=	build
-SOURCES		:=	source ../../source source/screens ../../source/screens ../../source/utils
+SOURCES		:=	source ../../source source/screens ../../source/screens source/utils ../../source/utils
 INCLUDES	:=	include ../../include include/screens ../../include/screens include/utils ../../include/utils
 GRAPHICS	:=  ../gfx
 MUSIC       :=  ../sound

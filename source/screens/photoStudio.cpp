@@ -382,15 +382,15 @@ void PhotoStudio::loadChrImage(void) {
 			sprintf(chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
 		}*/
 		#ifdef NDS
-		sprintf(chrFilePath, "nitrofs:/graphics/char/%s.png", import_characterFileName());
+		sprintf(chrFilePath, "nitro:/graphics/char/%s.png", import_characterFileName());
 		#else
 		sprintf(chrFilePath, "romfs:/gfx/%s.t3x", import_characterFileName());
 		#endif
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath);
 	} else {
 		#ifdef NDS
-		sprintf(chrFilePath, "nitrofs:/graphics/char/ss%i_%s.png", 4, import_characterName());				// All Seasons
-		sprintf(chrFilePath2, "nitrofs:/graphics/char/ss%i_%s%i.png", 4, import_characterName(), seasonNo[currentCharNum]);	// One Season
+		sprintf(chrFilePath, "nitro:/graphics/char/ss%i_%s.png", 4, import_characterName());				// All Seasons
+		sprintf(chrFilePath2, "nitro:/graphics/char/ss%i_%s%i.png", 4, import_characterName(), seasonNo[currentCharNum]);	// One Season
 		#else
 		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", 4, import_characterName());				// All Seasons
 		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, import_characterName(), seasonNo[currentCharNum]);	// One Season
@@ -405,7 +405,18 @@ void PhotoStudio::loadChrImage(void) {
 
 
 void PhotoStudio::Draw(void) const {
-	#ifdef _3DS
+	#ifdef NDS	// Bottom screen only
+	cursorX = 200;
+	if (subScreenMode == 2) {
+		cursorY = 48+(40*importCharacterList_cursorPositionOnScreen[currentCharNum]);
+	} else if (subScreenMode == 1) {
+		cursorY = 48+(40*bgList_cursorPositionOnScreen);
+	} else {
+		cursorY = 48+(40*characterChangeMenu_cursorPositionOnScreen);
+	}
+
+	GFX::drawCursor(cursorX, cursorY);
+	#else
 	animateBg = bgCanAnimate;
 
 	if (!musicPlayStarted) {

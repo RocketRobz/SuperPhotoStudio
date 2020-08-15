@@ -1,16 +1,15 @@
 #include "common.hpp"
+#include "lodepng.h"
 
 #include <ctime>
 #include <unistd.h>
 
-/*#define charSpriteSize 0x100000
+#define charSpriteSize 0x18000
 
-static char bgSpriteMem[4][0x200000];
-static char charSpriteMem[5][charSpriteSize];
+static u16 bmpImageBuffer[256*192];
+static u16 bgSpriteMem[(charSpriteSize/2)] = {0};
+static u16 charSpriteMem[2][(charSpriteSize/2)*3];
 
-static C2D_SpriteSheet sprites;
-static C2D_SpriteSheet bgSprite;
-static C2D_SpriteSheet chracterSprite;*/
 static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
 static bool bgSpriteLoaded = false;
@@ -19,9 +18,11 @@ extern int studioBg;
 extern u8 settingBits;
 extern int iFps;
 
+extern int bg3Main;
+extern int bg2Main;
+extern int bg3Sub;
+
 extern bool showCursor;
-extern int cursorX;
-extern int cursorY;
 extern int cursorAlpha;
 
 bool animateBg = false;
@@ -48,6 +49,32 @@ void GFX::resetCharStatus(int num) {
 }
 
 void GFX::loadSheets() {
+	FILE* file = fopen("nitro:/graphics/gui/title.bmp", "rb");
+
+	if (file) {
+		// Start loading
+		fseek(file, 0xe, SEEK_SET);
+		u8 pixelStart = (u8)fgetc(file) + 0xe;
+		fseek(file, pixelStart, SEEK_SET);
+		fread(bmpImageBuffer, 2, 0x18000/2, file);
+		u16* src = bmpImageBuffer;
+		int x = 0;
+		int y = 191;
+		for (int i=0; i<256*192; i++) {
+			if (x >= 256) {
+				x = 0;
+				y--;
+			}
+			u16 val = *(src++);
+			bgSpriteMem[y*256+x] = ((val>>10)&0x1f) | ((val)&(0x1f<<5)) | (val&0x1f)<<10 | BIT(15);
+			x++;
+		}
+	}
+
+	fclose(file);
+
+	dmaCopyWords(1, (void*)bgSpriteMem[0], (void*)bgSpriteMem[charSpriteSize], 0x18000);
+	dmaCopyWords(1, (void*)bgSpriteMem[0], (void*)bgSpriteMem[charSpriteSize*2], 0x18000);
 }
 
 void GFX::unloadSheets() {
@@ -346,9 +373,12 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		return false;
 	}
 
-	FILE* charFile = fopen((allSeasons ? t3xPathAllSeasons : t3xPathOneSeason), "rb");
-	//fread((void*)charSpriteMem[num], 1, charSpriteSize, charFile);
-	fclose(charFile);
+	std::vector<unsigned char> image;
+	unsigned width, height;
+	lodepng::decode(image, width, height, allSeasons ? t3xPathAllSeasons : t3xPathOneSeason);
+	for(unsigned i=0;i<image.size()/4;i++) {
+		charSpriteMem[num][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+	}
 
 	chracterSpriteFound[num] = true;
 
@@ -356,11 +386,14 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 }
 
 void GFX::loadCharSpriteMem(int num) {
-	if (chracterSpriteLoaded) {
-	}
-
 	if (!chracterSpriteFound[num]) return;
-	//chracterSprite		= C2D_SpriteSheetLoadFromMem(charSpriteMem[num], charSpriteSize);
+	dmaCopyWords(1, bgSpriteMem, bmpImageBuffer, 0x18000);
+	for (int i = 0; i < 256*192; i++) {
+		if (charSpriteMem[num][i] != 0xFC1F) {
+			bmpImageBuffer[i] = charSpriteMem[num][i];
+		}
+	}
+	dmaCopyWordsAsynch(1, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
 	chracterSpriteLoaded = true;
 }
 
@@ -456,4 +489,6 @@ void GFX::DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX, fl
 }
 
 void GFX::drawCursor(int cX, int cY) {
+	if (cursorAlpha == 0) return;
+	DrawSprite(sprites_cursor_idx, cX, cY);
 }

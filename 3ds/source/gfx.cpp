@@ -20,8 +20,6 @@ extern bool cinemaWide;
 extern int iFps;
 
 extern bool showCursor;
-extern int cursorX;
-extern int cursorY;
 extern int cursorAlpha;
 
 bool animateBg = false;

@@ -1,6 +1,8 @@
 #ifndef GFX_HPP
 #define GFX_HPP
 
+#include "sprites.h"
+
 #ifdef NDS
 
 #include <nds.h>
@@ -19,8 +21,6 @@
 #define TIME RGB15(16/8, 0, 0)
 
 #else
-
-#include "sprites.h"
 
 #include <3ds.h>
 #include <citro2d.h>
