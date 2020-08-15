@@ -33,6 +33,8 @@
 #define KEY_DDOWN KEY_DOWN
 #define KEY_DLEFT KEY_LEFT
 #define KEY_DRIGHT KEY_RIGHT
+#define KEY_ZL KEY_L
+#define KEY_ZR KEY_R
 #endif
 
 static int charPageOrder[] = {
