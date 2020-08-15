@@ -1,3 +1,5 @@
+#ifdef _3DS
+
 #include "photoStudio.hpp"
 #include "screenvars.h"
 
@@ -107,3 +109,5 @@ void PhotoStudio::SettingsLogic(u32 hDown, u32 hHeld, touchPosition touch) {
 		subScreenMode = 0;
 	}
 }
+
+#endif

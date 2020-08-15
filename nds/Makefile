@@ -23,8 +23,8 @@ makearm9:
 	cp arm9/$(TARGET).elf $(TARGET).arm9.elf
 
 $(TARGET).nds:	makearm7 makearm9
-	ndstool	-u 00030004 -g HPHA -c $(TARGET).nds -7 $(TARGET).arm7.elf -9 $(TARGET).arm9.elf -d $(NITRODATA) \
-  -b icon.bmp "Super Photo Studio;RocketRobz"
+	ndstool	-c $(TARGET).nds -7 $(TARGET).arm7.elf -9 $(TARGET).arm9.elf -d $(NITRODATA) \
+			-g HPHA 00 "SUPERPHOTO" -z 80040000 -u 00030004 -a 00000138 -b icon.bmp "Super Photo Studio;RocketRobz"
 
 clean:
 	@echo clean ...

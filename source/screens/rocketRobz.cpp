@@ -8,6 +8,7 @@ static int rr_fadeAlpha = 0;
 static int rr_fadeType = true;
 
 void RocketRobz::Draw(void) const {
+	#ifdef _3DS
 	fadecolor = 0;	// Always use black color for fading effects
 
 	Gui::ScreenDraw(Top);
@@ -36,6 +37,7 @@ void RocketRobz::Draw(void) const {
 	}
 	if (rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	#endif
 	
 	int fadeFPS;
 	switch (iFps) {

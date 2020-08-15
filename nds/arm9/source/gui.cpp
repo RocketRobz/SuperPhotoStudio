@@ -28,6 +28,7 @@
 #include "screenCommon.hpp"
 
 #include <nds.h>
+#include <gl2d.h>
 #include <unistd.h>
 
 std::unique_ptr<Screen> usedScreen, tempScreen; // tempScreen used for "fade" effects.
@@ -46,6 +47,46 @@ void Gui::DrawSprite(int x, int y, float ScaleX, float ScaleY) {
 
 // Initialize GUI.
 void Gui::init(void) {
+	//////////////////////////////////////////////////////////
+	videoSetMode(MODE_5_3D | DISPLAY_BG3_ACTIVE);
+	videoSetModeSub(MODE_3_2D | DISPLAY_BG3_ACTIVE);
+
+	// Initialize gl2d
+	glScreen2D();
+	// Make gl2d render on transparent stage.
+	glClearColor(31, 31, 31, 0);
+	glDisable(GL_CLEAR_BMP);
+
+	// Clear the GL texture state
+	glResetTextures();
+
+	// Set up enough texture memory for our textures
+	// Bank A is just 128kb and we are using 194 kb of
+	// sprites
+	vramSetBankA(VRAM_A_TEXTURE);
+	vramSetBankB(VRAM_B_MAIN_BG_0x06020000);
+	vramSetBankC(VRAM_C_SUB_BG_0x06200000);
+	vramSetBankD(VRAM_D_MAIN_BG_0x06000000);
+	vramSetBankE(VRAM_E_TEX_PALETTE);
+	vramSetBankF(VRAM_F_TEX_PALETTE_SLOT4);
+	vramSetBankG(VRAM_G_MAIN_SPRITE);
+	vramSetBankH(VRAM_H_SUB_BG_EXT_PALETTE);
+	vramSetBankI(VRAM_I_SUB_SPRITE_EXT_PALETTE);
+
+	//	vramSetBankH(VRAM_H_SUB_BG_EXT_PALETTE); // Not sure this does anything...
+	lcdMainOnBottom();
+
+	int bg3Main = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
+	bgSetPriority(bg3Main, 3);
+
+	int bg2Main = bgInit(2, BgType_Bmp8, BgSize_B8_256x256, 6, 0);
+	nocashMessage(std::to_string(bg2Main).c_str());
+	bgSetPriority(bg2Main, 0);
+
+	int bg3Sub = bgInitSub(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
+	bgSetPriority(bg3Sub, 3);
+
+	bgSetPriority(0, 1); // Set 3D to below text
 }
 
 // Load a Font.

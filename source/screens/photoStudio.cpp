@@ -35,6 +35,9 @@
 #define KEY_DRIGHT KEY_RIGHT
 #define KEY_ZL KEY_L
 #define KEY_ZR KEY_R
+
+void gspWaitForVBlank(void) {
+}
 #endif
 
 static int charPageOrder[] = {
@@ -251,6 +254,7 @@ const char* PhotoStudio::import_characterFileName(void) const {
 }
 
 const char* PhotoStudio::import_SS2CharacterNames(int i) const {
+	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return import_ss2CharacterNames[i];
@@ -258,9 +262,13 @@ const char* PhotoStudio::import_SS2CharacterNames(int i) const {
 		case CFG_REGION_AUS:
 			return import_nsbCharacterNames[i];
 	}
+	#else
+	return import_ss2CharacterNames[i];
+	#endif
 }
 
 const char* PhotoStudio::ss1Title(void) const {
+	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Style Savvy";
@@ -272,9 +280,13 @@ const char* PhotoStudio::ss1Title(void) const {
 		case CFG_REGION_KOR:
 			return "Namanui Collection: Girls Style";
 	}
+	#else
+	return "Style Savvy";
+	#endif
 }
 
 const char* PhotoStudio::ss2Title(void) const {
+	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Style Savvy: Trendsetters";
@@ -286,9 +298,13 @@ const char* PhotoStudio::ss2Title(void) const {
 		case CFG_REGION_KOR:
 			return "Girls Style: Paesyeon Lideo Seon-eon!";
 	}
+	#else
+	return "Style Savvy: Trendsetters";
+	#endif
 }
 
 const char* PhotoStudio::ss3Title(void) const {
+	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Style Savvy: Fashion Forward";
@@ -300,9 +316,13 @@ const char* PhotoStudio::ss3Title(void) const {
 		case CFG_REGION_KOR:
 			return "Girls Style: Kirakira * Code";
 	}
+	#else
+	return "Style Savvy: Fashion Forward";
+	#endif
 }
 
 const char* PhotoStudio::ss4Title(void) const {
+	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Style Savvy: Styling Star";
@@ -314,6 +334,9 @@ const char* PhotoStudio::ss4Title(void) const {
 		case CFG_REGION_KOR:
 			return "Girls Style: Star Stylist";
 	}
+	#else
+	return "Style Savvy: Styling Star";
+	#endif
 }
 
 int PhotoStudio::getBgNum(void) const {
@@ -335,6 +358,7 @@ int PhotoStudio::getBgNum(void) const {
 }
 
 void PhotoStudio::drawMsg(void) const {
+	#ifdef _3DS
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(messageNo == 4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
@@ -345,6 +369,7 @@ void PhotoStudio::drawMsg(void) const {
 	GFX::DrawSprite(sprites_button_msg_shadow_idx, 114, 197);
 	GFX::DrawSprite(sprites_button_msg_idx, 115, 188);
 	Gui::DrawString(134, 196, 0.70, MSG_BUTTONTEXT, " OK!");
+	#endif
 }
 
 void PhotoStudio::loadChrImage(void) {
@@ -356,11 +381,20 @@ void PhotoStudio::loadChrImage(void) {
 		} else {
 			sprintf(chrFilePath, "romfs:/gfx/null.t3x");	// All Seasons
 		}*/
+		#ifdef NDS
+		sprintf(chrFilePath, "nitrofs:/graphics/char/%s.png", import_characterFileName());
+		#else
 		sprintf(chrFilePath, "romfs:/gfx/%s.t3x", import_characterFileName());
+		#endif
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath);
 	} else {
+		#ifdef NDS
+		sprintf(chrFilePath, "nitrofs:/graphics/char/ss%i_%s.png", 4, import_characterName());				// All Seasons
+		sprintf(chrFilePath2, "nitrofs:/graphics/char/ss%i_%s%i.png", 4, import_characterName(), seasonNo[currentCharNum]);	// One Season
+		#else
 		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", 4, import_characterName());				// All Seasons
 		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, import_characterName(), seasonNo[currentCharNum]);	// One Season
+		#endif
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath2);
 	}
 	if (previewCharacterFound[0] && !characterPicked[1]) {
@@ -371,6 +405,7 @@ void PhotoStudio::loadChrImage(void) {
 
 
 void PhotoStudio::Draw(void) const {
+	#ifdef _3DS
 	animateBg = bgCanAnimate;
 
 	if (!musicPlayStarted) {
@@ -655,6 +690,7 @@ void PhotoStudio::Draw(void) const {
 	}
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
+	#endif
 }
 
 void PhotoStudio::preview() const {
@@ -710,8 +746,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndSelect();
 			showMessage = false;
 		}
+	#ifdef _3DS
 	} else if (subScreenMode == 10) {
 		SettingsLogic(hDown, hHeld, touch);
+	#endif
 	} else if (subScreenMode == 2) {
 		if (showCursor) {
 			if (hDown & KEY_DUP) {
@@ -1025,9 +1063,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			}
 		}
 	
+		#ifdef _3DS
 		if (hDown & KEY_SELECT) {
 			sndSelect();
 			subScreenMode = 10;
 		}
+		#endif
 	}
 }
