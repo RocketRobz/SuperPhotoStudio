@@ -1,6 +1,12 @@
 #ifndef GFX_HPP
 #define GFX_HPP
 
+#ifdef NDS
+
+#include <nds.h>
+
+#else
+
 #include "sprites.h"
 
 #include <3ds.h>
@@ -19,6 +25,8 @@
 
 #define TIME C2D_Color32(16, 0, 0, 223)
 
+#endif
+
 typedef u32 Color;
 
 extern bool animateBg;
@@ -29,8 +37,13 @@ extern bool shiftBySubPixel;
 namespace GFX {
 	// Load & Unload default sheets.
 	void resetCharStatus(int num = -1);
+	#ifdef _3DS
 	Result loadSheets();
 	Result unloadSheets();
+	#else
+	void loadSheets();
+	void unloadSheets();
+	#endif
 	void loadGameSelSheets();
 	void unloadGameSelSheets();
 
