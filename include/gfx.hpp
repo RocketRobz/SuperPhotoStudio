@@ -5,6 +5,19 @@
 
 #include <nds.h>
 
+// Colors.
+#define TRANSPARENT RGB15(0, 0, 0, 0)
+#define BLACK RGB15(0, 0, 0)
+#define WHITE RGB15(255/8, 255/8, 255/8)
+#define GRAY RGB15(127/8, 127/8, 127/8)
+#define BLUE RGB15(0, 0, 255/8)
+#define GREEN RGB15(0, 255/8, 0)
+#define RED RGB15(255/8, 0, 0)
+#define LIGHTRED RGB15(222/8, 110/8, 110/8)
+#define MSG_BUTTONTEXT RGB15(181/8, 48/8, 0)
+
+#define TIME RGB15(16/8, 0, 0)
+
 #else
 
 #include "sprites.h"

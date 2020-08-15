@@ -38,6 +38,19 @@ bool fadein = false;
 int fadealpha = 0;
 int fadecolor = 0;
 
+// Ported from PAlib (obsolete)
+void SetBrightness(u8 screen, s8 bright) {
+	u16 mode = 1 << 14;
+
+	if (bright < 0) {
+		mode = 2 << 14;
+		bright = -bright;
+	}
+	if (bright > 31)
+		bright = 31;
+	*(u16 *)(0x0400006C + (0x1000 * screen)) = bright + mode;
+}
+
 // Clear Text.
 void Gui::clearTextBufs(void) {  }
 
@@ -87,6 +100,9 @@ void Gui::init(void) {
 	bgSetPriority(bg3Sub, 3);
 
 	bgSetPriority(0, 1); // Set 3D to below text
+
+	irqSet(IRQ_VBLANK, DrawScreen);
+	irqEnable(IRQ_VBLANK);
 }
 
 // Load a Font.
@@ -132,12 +148,20 @@ float Gui::GetStringHeight(float size, std::string Text) {
 }
 
 // Draw a Rectangle.
-bool Gui::Draw_Rect(float x, float y, float w, float h, u32 color) {
+bool Gui::Draw_Rect(int x, int y, int w, int h, int color) {
+	glBoxFilled(x, y, x+w, y+h, color);
 }
 
 // Draw's the current screen's draw.
 void Gui::DrawScreen() {
+	SetBrightness(0, fadealpha/8);
+	SetBrightness(1, fadealpha/8);
+	glBegin2D();
+
 	if (usedScreen != nullptr)	usedScreen->Draw();
+
+	glEnd2D();
+	GFX_FLUSH = 0;
 }
 
 // Do the current screen's logic.

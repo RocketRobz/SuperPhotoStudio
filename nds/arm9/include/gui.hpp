@@ -128,7 +128,7 @@ namespace Gui {
 	*	h: The height of the rectangle.
 	*	color: The color of the rectangle.
 	*/
-	bool Draw_Rect(float x, float y, float w, float h, u32 color);
+	bool Draw_Rect(int x, int y, int w, int h, int color);
 	
 	//	Used for the current Screen's Draw. (Optional!)
 	void DrawScreen();

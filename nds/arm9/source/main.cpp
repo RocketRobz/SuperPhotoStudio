@@ -12,12 +12,13 @@
 
 #include "nitrofs.h"
 #include "photoStudio.hpp"
+#include "productIdent.hpp"
 #include "rocketRobz.hpp"
 #include "screen.hpp"
 
 bool isInit = true;
 bool exiting = false;
-bool rocketRobzScreen = true;
+bool rocketRobzScreen = false;
 int delay = 0;
 
 char verText[32];
@@ -70,7 +71,7 @@ void doPause() {
 int main(int argc, char **argv) {
 	defaultExceptionHandler();
 
-	if (!fatInitDefault()) {
+	/*if (!fatInitDefault()) {
 		consoleDemoInit();
 		iprintf("fatInitDefault failed!");
 		stop();
@@ -80,11 +81,11 @@ int main(int argc, char **argv) {
 		consoleDemoInit();
 		iprintf("NitroFS init failed!");
 		stop();
-	}
+	}*/
 
 	Gui::init();
 
-	Gui::setScreen(std::make_unique<RocketRobz>(), false); // Set screen to product identification.
+	Gui::setScreen(std::make_unique<ProductIdent>(), false); // Set screen to product identification.
 
 	while (1) {
 		// Scan hid shared memory for input events
@@ -116,6 +117,22 @@ int main(int argc, char **argv) {
 		touchRead(&touch);
 
 		Gui::ScreenLogic(hDown, hHeld, touch, true); // Call the logic of the current screen here.
+
+		int fadeFPS;
+		switch (iFps) {
+			default:
+				fadeFPS = 8;
+				break;
+			case 30:
+				fadeFPS = 16;
+				break;
+			case 24:
+				fadeFPS = 20;
+				break;
+		}
+
+		Gui::fadeEffects(fadeFPS, fadeFPS);
+
 		swiWaitForVBlank();
 	}
 
