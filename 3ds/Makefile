@@ -50,10 +50,10 @@ VERSION_MICRO := 1
 #---------------------------------------------------------------------------------
 TARGET		:=	SuperPhotoStudio
 BUILD		:=	build
-UNIVCORE	:=	Universal-Core
-SOURCES		:=	$(UNIVCORE) source source/screens source/utils
+UNIVCORE	:=	../Universal-Core
+SOURCES		:=	$(UNIVCORE) source ../source source/screens ../source/screens source/utils ../source/utils
 DATA		:=	data
-INCLUDES	:=	$(UNIVCORE) include include/screens include/utils
+INCLUDES	:=	$(UNIVCORE) include ../include include/screens ../include/screens include/utils ../include/utils
 GRAPHICS	:=	assets/gfx assets/gfx_chars assets/gfx_charprevbg
 ROMFS		:=	romfs
 GFXBUILD	:=	$(ROMFS)/gfx

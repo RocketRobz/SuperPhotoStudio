@@ -1,4 +1,6 @@
-﻿#include <stdio.h>
+﻿#ifdef _3DS
+
+#include <stdio.h>
 #include <dirent.h>
 #include <string.h>
 #include <3ds.h>
@@ -350,3 +352,5 @@ int main()
 
 	return 0;
 }
+
+#endif

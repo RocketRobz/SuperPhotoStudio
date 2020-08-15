@@ -29,7 +29,11 @@
 #include <stdio.h>
 #include <dirent.h>
 
+#ifdef NDS
+#include <nds.h>
+#else
 #include <3ds.h>
+#endif
 
 int numberOfExportedCharacters = 0;
 
