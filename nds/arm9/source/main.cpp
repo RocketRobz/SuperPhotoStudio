@@ -11,6 +11,7 @@
 #include <unistd.h>
 
 #include "nitrofs.h"
+#include "soundbank.h"
 #include "photoStudio.hpp"
 #include "productIdent.hpp"
 #include "rocketRobz.hpp"
@@ -27,16 +28,23 @@ int iFps = 60;
 
 bool renderTop = true;	// Disable to prevent second character from flickering
 
+static mm_sound_effect snd_select;
+static mm_sound_effect snd_back;
+static mm_sound_effect snd_highlight;
+
 void Play_Music(void) {
 }
 
 void sndSelect(void) {
+	mmEffectEx(&snd_select);
 }
 
 void sndBack(void) {
+	mmEffectEx(&snd_back);
 }
 
 void sndHighlight(void) {
+	mmEffectEx(&snd_highlight);
 }
 
 bool showCursor = false;
@@ -71,7 +79,7 @@ void doPause() {
 int main(int argc, char **argv) {
 	defaultExceptionHandler();
 
-	/*if (!fatInitDefault()) {
+	if (!fatInitDefault()) {
 		consoleDemoInit();
 		iprintf("fatInitDefault failed!");
 		stop();
@@ -81,7 +89,41 @@ int main(int argc, char **argv) {
 		consoleDemoInit();
 		iprintf("NitroFS init failed!");
 		stop();
-	}*/
+	}
+
+	FILE* soundBank = fopen("nitro:/soundbank.bin", "rb");
+	fread((void*)0x02FA0000, 1, 0x20000, soundBank);
+	fclose(soundBank);
+
+	mmInitDefaultMem((mm_addr)0x02FA0000);
+
+	mmLoadEffect( SFX_SELECT );
+	mmLoadEffect( SFX_BACK );
+	mmLoadEffect( SFX_HIGHLIGHT );
+
+	snd_select = {
+		{ SFX_SELECT } ,			// id
+		(int)(1.0f * (1<<10)),	// rate
+		0,		// handle
+		255,	// volume
+		128,	// panning
+	};
+
+	snd_back = {
+		{ SFX_BACK } ,			// id
+		(int)(1.0f * (1<<10)),	// rate
+		0,		// handle
+		255,	// volume
+		128,	// panning
+	};
+
+	snd_highlight = {
+		{ SFX_HIGHLIGHT } ,			// id
+		(int)(1.0f * (1<<10)),	// rate
+		0,		// handle
+		255,	// volume
+		128,	// panning
+	};
 
 	Gui::init();
 
@@ -117,6 +159,17 @@ int main(int argc, char **argv) {
 		touchRead(&touch);
 
 		Gui::ScreenLogic(hDown, hHeld, touch, true); // Call the logic of the current screen here.
+
+		if ((hDown & KEY_UP)
+		|| (hDown & KEY_DOWN)
+		|| (hDown & KEY_LEFT)
+		|| (hDown & KEY_RIGHT))
+		{
+			showCursor = true;
+		} else if (hDown & KEY_TOUCH)
+		{
+			showCursor = false;
+		}
 
 		int fadeFPS;
 		switch (iFps) {
