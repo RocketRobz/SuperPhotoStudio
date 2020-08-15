@@ -24,6 +24,17 @@
 
 #include <unistd.h>
 
+#ifdef NDS
+#define KEY_CPAD_UP KEY_UP
+#define KEY_CPAD_DOWN KEY_DOWN
+#define KEY_CPAD_LEFT KEY_LEFT
+#define KEY_CPAD_RIGHT KEY_RIGHT
+#define KEY_DUP KEY_UP
+#define KEY_DDOWN KEY_DOWN
+#define KEY_DLEFT KEY_LEFT
+#define KEY_DRIGHT KEY_RIGHT
+#endif
+
 static int charPageOrder[] = {
 	4,	// Super Photo Studio (Original Characters)
 	9,	// Banjo-Kazooie series
@@ -668,7 +679,11 @@ void PhotoStudio::preview() const {
 
 
 void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+	#ifdef NDS
+	if (subScreenMode==0 && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3]) {
+	#else
 	if ((subScreenMode==0 || subScreenMode==2) && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3]) {
+	#endif
 		int zoomLimit = characterPicked[1] ? 1 : 2;
 		if (hDown & KEY_CPAD_UP) {
 			zoomIn++;
