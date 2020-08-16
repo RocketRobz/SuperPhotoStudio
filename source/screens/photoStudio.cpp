@@ -441,7 +441,7 @@ void PhotoStudio::Draw(void) const {
 
 	cursorX = 200;
 	if (subScreenMode == 2) {
-		cursorY = 48+(40*importCharacterList_cursorPositionOnScreen[currentCharNum]);
+		cursorY = 52+(40*importCharacterList_cursorPositionOnScreen[currentCharNum]);
 		if (redrawText) {
 		// Game name
 		switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
@@ -545,7 +545,7 @@ void PhotoStudio::Draw(void) const {
 		}
 	  }
 	} else if (subScreenMode == 1) {
-		cursorY = 48+(40*bgList_cursorPositionOnScreen);
+		cursorY = 52+(40*bgList_cursorPositionOnScreen);
 		if (redrawText) {
 		// Game name
 		switch (photo_highlightedGame) {
@@ -603,7 +603,7 @@ void PhotoStudio::Draw(void) const {
 		}
 	  }
 	} else {
-		cursorY = 48+(40*characterChangeMenu_cursorPositionOnScreen);
+		cursorY = 52+(40*characterChangeMenu_cursorPositionOnScreen);
 		if (redrawText) {
 			printSmall(false, 6, 6, "What do you want to do?");
 		}
@@ -630,7 +630,7 @@ void PhotoStudio::Draw(void) const {
 	}
 
 	if (subScreenMode != 0) {
-		glSprite(5, 157, GL_FLIP_NONE, backImage);
+		glSprite(5, 156, GL_FLIP_NONE, backImage);
 	}
 
 	if (showCursor) {
