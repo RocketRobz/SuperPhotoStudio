@@ -1300,6 +1300,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				subScreenMode = 1;
 				getMaxChars();
 				previewCharacter = false;
+				#ifdef NDS
+				redrawText = true;
+				#endif
 				int bgNum = getBgNum();
 				//if (studioBg != bgNum) {
 					showScrollingBg = false;
@@ -1311,9 +1314,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				//}
 				zoomIn = 0;
 				renderTop = true;
-				#ifdef NDS
-				redrawText = true;
-				#endif
 			} else if (characterChangeMenu_cursorPosition == 1) {
 				sndSelect();
 				displayNothing = true;
@@ -1336,13 +1336,13 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (characterPicked[3] && zoomIn < 1) {
 					zoomIn = 1;
 				}
+				#ifdef NDS
+				redrawText = true;
+				#endif
 				if (doCharLoad) {
 					renderTop = true;
 					loadChrImage();
 				}
-				#ifdef NDS
-				redrawText = true;
-				#endif
 			}
 		}
 	
