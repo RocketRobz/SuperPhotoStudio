@@ -565,23 +565,23 @@ void PhotoStudio::Draw(void) const {
 			if (photo_highlightedGame == 6) {
 				if (i >= 2) break;
 				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 24, i2, smBgNames[i]);
+				if (redrawText) printSmall(false, 26, i2, smBgNames[i]);
 			} else if (photo_highlightedGame == 5) {
 				if (i >= 1) break;
 				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 24, i2, pdarkBgNames[i]);
+				if (redrawText) printSmall(false, 26, i2, pdarkBgNames[i]);
 			} else if (photo_highlightedGame == 3) {
 				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 24, i2, import_ss4BgNames[i]);
+				if (redrawText) printSmall(false, 26, i2, import_ss4BgNames[i]);
 			} else if (photo_highlightedGame == 2) {
 				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 24, i2, import_ss3BgNames[i]);
+				if (redrawText) printSmall(false, 26, i2, import_ss3BgNames[i]);
 			} else if (photo_highlightedGame == 1) {
 				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 24, i2, import_ss2BgNames[i]);
+				if (redrawText) printSmall(false, 26, i2, import_ss2BgNames[i]);
 			} else if (photo_highlightedGame == 0) {
 				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 24, i2, import_ss1BgNames[i]);
+				if (redrawText) printSmall(false, 26, i2, import_ss1BgNames[i]);
 			}
 			i2 += 40;
 		}
@@ -595,20 +595,20 @@ void PhotoStudio::Draw(void) const {
 		int i2 = 0;
 		i2 += 40;
 		glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-		if (redrawText) printSmall(false, 24, i2, "Change location");
+		if (redrawText) printSmall(false, 26, i2, "Change location");
 		i2 += 40;
 		glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
 		if (redrawText) {
 		if (currentCharNum==4) {
-			printSmall(false, 24, i2, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
+			printSmall(false, 26, i2, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
 		} else if (currentCharNum==3) {
-			printSmall(false, 24, i2, characterPicked[3] ? "Change character < 4 >" : "Add character < 4 >");
+			printSmall(false, 26, i2, characterPicked[3] ? "Change character < 4 >" : "Add character < 4 >");
 		} else if (currentCharNum==2) {
-			printSmall(false, 24, i2, characterPicked[2] ? "Change character < 3 >" : "Add character < 3 >");
+			printSmall(false, 26, i2, characterPicked[2] ? "Change character < 3 >" : "Add character < 3 >");
 		} else if (currentCharNum==1) {
-			printSmall(false, 24, i2, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
+			printSmall(false, 26, i2, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
 		} else {
-			printSmall(false, 24, i2, "Change character < 1 >");
+			printSmall(false, 26, i2, "Change character < 1 >");
 		}
 		}
 	}
