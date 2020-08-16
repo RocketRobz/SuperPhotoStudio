@@ -1165,6 +1165,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (bgList_cursorPositionOnScreen < 0) {
 					bgList_cursorPositionOnScreen = 0;
+					#ifdef NDS
+					redrawText = true;
+					#endif
 				}
 				studioBg = getBgNum();
 				displayStudioBg = false;
@@ -1189,6 +1192,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (bgList_cursorPositionOnScreen > 2) {
 					bgList_cursorPositionOnScreen = 2;
+					#ifdef NDS
+					redrawText = true;
+					#endif
 				}
 				studioBg = getBgNum();
 				displayStudioBg = false;
