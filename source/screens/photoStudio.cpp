@@ -64,7 +64,9 @@ static int charPageOrder[] = {
 	2,	// Style Savvy: Fashion Forward
 	3};	// Style Savvy: Styling Star
 
+#ifndef NDS
 static int metalXpos = 0;
+#endif
 static int currentCharacterRendered = 0;
 extern bool musicPlayStarted;
 extern bool clearTop;
@@ -83,46 +85,58 @@ void PhotoStudio::getList() {
 void PhotoStudio::getMaxChars() {
 	if (subScreenMode == 1) {
 		// Locations
-		if (photo_highlightedGame == 6) {
-			import_totalCharacters = 1;
-		} else if (photo_highlightedGame == 5) {
-			import_totalCharacters = 0;
-		} else if (photo_highlightedGame == 4) {
-			import_totalCharacters = 0;
-		} else if (photo_highlightedGame == 3) {
-			import_totalCharacters = 11;
-		} else if (photo_highlightedGame == 2) {
-			import_totalCharacters = 8;
-		} else if (photo_highlightedGame == 1) {
-			import_totalCharacters = 27;
-		} else if (photo_highlightedGame == 0) {
-			import_totalCharacters = 2;
+		switch (photo_highlightedGame) {
+			case 0:
+				import_totalCharacters = 2;
+				break;
+			case 1:
+				import_totalCharacters = 27;
+				break;
+			case 2:
+				import_totalCharacters = 8;
+				break;
+			case 3:
+				import_totalCharacters = 11;
+				break;
+			case 4:
+			case 5:
+				import_totalCharacters = 0;
+				break;
+			case 6:
+				import_totalCharacters = 1;
+				break;
 		}
 	} else {
 		// Characters
 		const int highlightedGame = char_highlightedGame[currentCharNum];
-		if (charPageOrder[highlightedGame] == 10) {
-			import_totalCharacters = 1;
-		} else if (charPageOrder[highlightedGame] == 9) {
-			import_totalCharacters = 4;
-		} else if (charPageOrder[highlightedGame] == 8) {
-			import_totalCharacters = 1;
-		} else if (charPageOrder[highlightedGame] == 7) {
-			import_totalCharacters = 1;
-		} else if (charPageOrder[highlightedGame] == 6) {
-			import_totalCharacters = 0;
-		} else if (charPageOrder[highlightedGame] == 5) {
-			import_totalCharacters = 3;
-		} else if (charPageOrder[highlightedGame] == 4) {
-			import_totalCharacters = 3;
-		} else if (charPageOrder[highlightedGame] == 3) {
-			import_totalCharacters = 0xD;
-		} else if (charPageOrder[highlightedGame] == 2) {
-			import_totalCharacters = 0x10;
-		} else if (charPageOrder[highlightedGame] == 1) {
-			import_totalCharacters = 0x12;
-		} else if (charPageOrder[highlightedGame] == 0) {
-			import_totalCharacters = 0x7;
+		switch (charPageOrder[highlightedGame]) {
+			case 0:
+				import_totalCharacters = 0x7;
+				break;
+			case 1:
+				import_totalCharacters = 0x12;
+				break;
+			case 2:
+				import_totalCharacters = 0x10;
+				break;
+			case 3:
+				import_totalCharacters = 0xD;
+				break;
+			case 4:
+			case 5:
+				import_totalCharacters = 3;
+				break;
+			case 6:
+				import_totalCharacters = 0;
+				break;
+			case 7:
+			case 8:
+			case 10:
+				import_totalCharacters = 1;
+				break;
+			case 9:
+				import_totalCharacters = 4;
+				break;
 		}
 	}
 }
