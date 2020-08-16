@@ -8,9 +8,9 @@ static int rr_fadeAlpha = 0;
 static int rr_fadeType = true;
 
 void RocketRobz::Draw(void) const {
-	#ifdef _3DS
 	fadecolor = 0;	// Always use black color for fading effects
 
+	#ifdef _3DS
 	Gui::ScreenDraw(Top);
 
 	if (cinemaWide) {
@@ -78,4 +78,14 @@ void RocketRobz::Draw(void) const {
 }
 
 
-void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) { }
+void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
+	#ifdef NDS
+	if (!graphicLoaded) {
+		extern int bg3Sub;
+		extern void bmpLoad(const char* filePath, u16* bgPath);
+
+		bmpLoad("nitro:/graphics/logos/rocketRobz.bmp", bgGetGfxPtr(bg3Sub));
+		graphicLoaded = true;
+	}
+	#endif
+}

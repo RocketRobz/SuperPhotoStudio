@@ -8,7 +8,9 @@ public:
 	void Draw(void) const override;
 	void Logic(u32 hDown, u32 hHeld, touchPosition touch) override;
 private:
-	//bool musicPlayed = false;
+	#ifdef NDS
+	bool graphicLoaded = false;
+	#endif
 	const char* presentedText = "Presented in";
 };
 

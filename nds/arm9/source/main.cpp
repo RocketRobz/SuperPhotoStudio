@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 
 		touchRead(&touch);
 
-		Gui::ScreenLogic(hDown, hHeld, touch, true); // Call the logic of the current screen here.
+		Gui::ScreenLogic(hDown, hHeld, touch, false); // Call the logic of the current screen here.
 
 		if ((hDown & KEY_UP)
 		|| (hDown & KEY_DOWN)

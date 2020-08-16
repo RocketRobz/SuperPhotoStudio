@@ -3,9 +3,9 @@
 extern char verText[32];
 
 void ProductIdent::Draw(void) const {
-	/*fadecolor = 0;	// Always use black color for fading effects
+	fadecolor = 0;	// Always use black color for fading effects
 
-	Gui::DrawString(26, 86, 0.45, LIGHTRED, "Nintendo DS Product Identification");
+	/*Gui::DrawString(26, 86, 0.45, LIGHTRED, "Nintendo DS Product Identification");
 	Gui::Draw_Rect(24, 100, 400-28, 1, LIGHTRED);
 	Gui::DrawString(40, 100, 0.45, LIGHTRED, "Title:");
 	Gui::DrawString(192, 100, 0.45, LIGHTRED, "SUPERPHOTO");

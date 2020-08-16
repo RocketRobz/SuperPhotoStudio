@@ -733,10 +733,23 @@ void PhotoStudio::preview() const {
 
 void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	#ifdef NDS
-	if (subScreenMode==0 && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3]) {
-	#else
-	if ((subScreenMode==0 || subScreenMode==2) && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3]) {
+	if (!graphicLoaded) {
+		extern int bg3Sub;
+		extern int bg3Main;
+		extern void bmpLoad(const char* filePath, u16* bgPath);
+
+		bmpLoad("nitro:/graphics/gui/title.bmp", bgGetGfxPtr(bg3Sub));
+		bmpLoad("nitro:/graphics/gui/photo_bg.bmp", bgGetGfxPtr(bg3Main));
+		graphicLoaded = true;
+	}
 	#endif
+
+	#ifdef NDS
+	if (subScreenMode==0 && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3])
+	#else
+	if ((subScreenMode==0 || subScreenMode==2) && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3])
+	#endif
+	{
 		int zoomLimit = characterPicked[1] ? 1 : 2;
 		if (hDown & KEY_CPAD_UP) {
 			zoomIn++;

@@ -14,6 +14,9 @@ public:
 	void SettingsLogic(u32 hDown, u32 hHeld, touchPosition touch);
 	PhotoStudio();
 private:
+	#ifdef NDS
+	bool graphicLoaded = false;
+	#endif
 	void preview() const;
 	void getList();
 	void getMaxChars();

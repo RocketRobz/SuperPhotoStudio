@@ -183,8 +183,8 @@ bool Gui::Draw_Rect(int x, int y, int w, int h, int color) {
 
 // Draw's the current screen's draw.
 void Gui::DrawScreen() {
-	SetBrightness(0, fadealpha/8);
-	SetBrightness(1, fadealpha/8);
+	SetBrightness(0, (fadecolor==255 ? fadealpha : -fadealpha)/8);
+	SetBrightness(1, (fadecolor==255 ? fadealpha : -fadealpha)/8);
 	glBegin2D();
 
 	if (usedScreen != nullptr)	usedScreen->Draw();

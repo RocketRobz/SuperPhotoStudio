@@ -150,7 +150,7 @@ static bool runThreads = true;
 void controlThread(void) {
 	while (runThreads) {
 		svcWaitSynchronization(threadRequest, U64_MAX);
-		Gui::ScreenLogic(hDown, hHeld, touch, true); // Call the logic of the current screen here.
+		Gui::ScreenLogic(hDown, hHeld, touch, false); // Call the logic of the current screen here.
 		svcClearEvent(threadRequest);
 	}
 }

@@ -6,7 +6,9 @@
 
 #define charSpriteSize 0x18000
 
-static u16 bmpImageBuffer[256*192];
+extern void bmpLoad(const char* filePath, u16* bgPath);
+
+u16 bmpImageBuffer[256*192];
 static u16 bgSpriteMem[(charSpriteSize/2)*3] = {0};
 static u16 charSpriteMem[2][(charSpriteSize/2)*3];
 
@@ -49,29 +51,7 @@ void GFX::resetCharStatus(int num) {
 }
 
 void GFX::loadSheets() {
-	FILE* file = fopen("nitro:/graphics/gui/title.bmp", "rb");
-
-	if (file) {
-		// Start loading
-		fseek(file, 0xe, SEEK_SET);
-		u8 pixelStart = (u8)fgetc(file) + 0xe;
-		fseek(file, pixelStart, SEEK_SET);
-		fread(bmpImageBuffer, 2, 0x18000/2, file);
-		u16* src = bmpImageBuffer;
-		int x = 0;
-		int y = 191;
-		for (int i=0; i<256*192; i++) {
-			if (x >= 256) {
-				x = 0;
-				y--;
-			}
-			u16 val = *(src++);
-			bgSpriteMem[y*256+x] = ((val>>10)&0x1f) | ((val)&(0x1f<<5)) | (val&0x1f)<<10 | BIT(15);
-			x++;
-		}
-	}
-
-	fclose(file);
+	bmpLoad("nitro:/graphics/gui/title.bmp", bgSpriteMem);
 
 	dmaCopyWords(1, bgSpriteMem, bgSpriteMem+(charSpriteSize/2), 0x18000);
 	dmaCopyWords(1, bgSpriteMem, bgSpriteMem+((charSpriteSize/2)*2), 0x18000);
