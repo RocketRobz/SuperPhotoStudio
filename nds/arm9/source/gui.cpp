@@ -107,7 +107,6 @@ void Gui::init(void) {
 	vramSetBankH(VRAM_H_SUB_BG_EXT_PALETTE);
 	vramSetBankI(VRAM_I_SUB_SPRITE_EXT_PALETTE);
 
-	//	vramSetBankH(VRAM_H_SUB_BG_EXT_PALETTE); // Not sure this does anything...
 	lcdMainOnBottom();
 
 	bg3Main = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
