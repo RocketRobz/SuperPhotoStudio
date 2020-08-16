@@ -424,7 +424,7 @@ void PhotoStudio::loadChrImage(void) {
 	}
 	if (previewCharacterFound[0] && !characterPicked[1]) {
 		#ifdef NDS
-		GFX::loadCharSpriteMem(0, zoomIn);
+		GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
 		#else
 		GFX::loadCharSpriteMem(0);
 		#endif
@@ -485,6 +485,8 @@ void PhotoStudio::Draw(void) const {
 			printLarge(false, -60, 166, "L", Alignment::center);
 			printSmall(false, -26, 168, seasonName(), Alignment::center);
 			printLarge(false, 10, 166, "R", Alignment::center);
+
+			printSmall(false, 160, 168, "SELECT: Flip H");
 		}
 
 	  if (!displayNothing) {
@@ -973,7 +975,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				zoomIn = zoomLimit;
 			} else {
 				#ifdef NDS
-				GFX::loadCharSpriteMem(0, zoomIn);
+				GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
 				#endif
 				renderTop = true;
 			}
@@ -984,7 +986,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				zoomIn = 0;
 			} else {
 				#ifdef NDS
-				GFX::loadCharSpriteMem(0, zoomIn);
+				GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
 				#endif
 				renderTop = true;
 			}
@@ -1078,6 +1080,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_SELECT) {
 			sndSelect();
 			characterFlipH[currentCharNum] = !characterFlipH[currentCharNum];
+			#ifdef NDS
+			GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
+			#endif
 			renderTop = true;
 		}
 
@@ -1213,7 +1218,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			}
 			#ifdef NDS
 			redrawText = true;
-			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn);
+			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
 			#endif
 		}
 
@@ -1257,7 +1262,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			}
 			#ifdef NDS
 			redrawText = true;
-			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn);
+			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
 			#endif
 		}
 

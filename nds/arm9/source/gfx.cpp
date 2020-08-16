@@ -370,13 +370,18 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	return true;
 }
 
-void GFX::loadCharSpriteMem(int num, int zoomIn) {
+void GFX::loadCharSpriteMem(int num, int zoomIn, bool flipH) {
 	if (!chracterSpriteFound[num]) return;
 	dmaCopyWords(1, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer, 0x18000);
-	for (int i = 0; i < 256*192; i++) {
-		if (charSpriteMem[num][i+((0x18000/2)*zoomIn)] != 0xFC1F) {
-			bmpImageBuffer[i] = charSpriteMem[num][i+((0x18000/2)*zoomIn)];
+	int x2 = 0;
+	for (int y = 0; y < 192; y++) {
+	  x2 = flipH ? 255 : 0;
+	  for (int x = 0; x < 256; x++) {
+		if (charSpriteMem[num][((y*256)+x)+((0x18000/2)*zoomIn)] != 0xFC1F) {
+			bmpImageBuffer[(y*256)+x2] = charSpriteMem[num][((y*256)+x)+((0x18000/2)*zoomIn)];
 		}
+		flipH ? x2-- : x2++;
+	  }
 	}
 	dmaCopyWordsAsynch(1, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
 	chracterSpriteLoaded = true;

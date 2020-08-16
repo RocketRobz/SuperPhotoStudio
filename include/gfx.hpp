@@ -65,7 +65,7 @@ namespace GFX {
 	#ifdef _3DS
 	void loadCharSpriteMem(int num);
 	#else
-	void loadCharSpriteMem(int num, int zoomIn);
+	void loadCharSpriteMem(int num, int zoomIn, bool flipH);
 	#endif
 	void loadBgSprite(void);
 	void unloadBgSprite(void);
