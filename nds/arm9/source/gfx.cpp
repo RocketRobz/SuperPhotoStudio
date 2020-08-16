@@ -474,6 +474,4 @@ void GFX::DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX, fl
 }
 
 void GFX::drawCursor(int cX, int cY) {
-	if (cursorAlpha == 0) return;
-	DrawSprite(sprites_cursor_idx, cX, cY);
 }

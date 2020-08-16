@@ -28,8 +28,6 @@
 #include "screenCommon.hpp"
 #include "fontHandler.h"
 
-#include "sprites.h"
-
 #include "arrow_back.h"
 #include "cursor.h"
 
@@ -49,8 +47,8 @@ int bg2Main;
 int bg3Sub;
 
 static int backTexID, cursorTexID;
-static glImage backImage[(64 / 64) * (64 / 64)];
-static glImage cursorImage[(32 / 32) * (32 / 32)];
+glImage backImage[(64 / 64) * (64 / 64)];
+glImage cursorImage[(32 / 32) * (32 / 32)];
 
 // Ported from PAlib (obsolete)
 void SetBrightness(u8 screen, s8 bright) {
@@ -70,14 +68,6 @@ void Gui::clearTextBufs(void) {  }
 
 // Draw a sprite from the sheet.
 void Gui::DrawSprite(int imgindex, int x, int y) {
-	switch (imgindex) {
-		case sprites_arrow_back_idx:
-			glSprite(x, y, GL_FLIP_NONE, backImage);
-			break;
-		case sprites_cursor_idx:
-			glSprite(x, y, GL_FLIP_NONE, cursorImage);
-			break;
-	}
 }
 
 // Initialize GUI.

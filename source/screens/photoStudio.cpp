@@ -25,6 +25,8 @@
 #include <unistd.h>
 
 #ifdef NDS
+#include <gl2d.h>
+
 #include "fontHandler.h"
 
 #define KEY_CPAD_UP KEY_X
@@ -42,6 +44,9 @@ void gspWaitForVBlank(void) {
 }
 
 static bool redrawText = true;
+
+extern glImage backImage[(64 / 64) * (64 / 64)];
+extern glImage cursorImage[(32 / 32) * (32 / 32)];
 #endif
 
 static int charPageOrder[] = {
@@ -499,10 +504,12 @@ void PhotoStudio::Draw(void) const {
 	}
 
 	if (subScreenMode != 0) {
-		GFX::DrawSprite(sprites_arrow_back_idx, 5, 157);
+		glSprite(5, 157, GL_FLIP_NONE, backImage);
 	}
 
-	GFX::drawCursor(cursorX, cursorY);
+	if (showCursor) {
+		glSprite(cursorX, cursorY, GL_FLIP_NONE, cursorImage);
+	}
 
 	redrawText = false;
 	#else
