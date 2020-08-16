@@ -1094,11 +1094,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			}*/
 			getMaxChars();
-			renderTop = true;
-			loadChrImage();
 			#ifdef NDS
 			redrawText = true;
 			#endif
+			renderTop = true;
+			loadChrImage();
 		}
 
 		//if (charPageOrder[char_highlightedGame[currentCharNum]] != 4) {
@@ -1106,22 +1106,22 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndHighlight();
 				seasonNo[currentCharNum]--;
 				if (seasonNo[currentCharNum] < 0) seasonNo[currentCharNum] = 3;
-				loadChrImage();
-				renderTop = true;
 				#ifdef NDS
 				redrawText = true;
 				#endif
+				loadChrImage();
+				renderTop = true;
 			}
 
 			if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
 				sndHighlight();
 				seasonNo[currentCharNum]++;
 				if (seasonNo[currentCharNum] > 3) seasonNo[currentCharNum] = 0;
-				loadChrImage();
-				renderTop = true;
 				#ifdef NDS
 				redrawText = true;
 				#endif
+				loadChrImage();
+				renderTop = true;
 			}
 		//}
 
@@ -1214,14 +1214,14 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			bgList_cursorPositionOnScreen = 0;
 			import_bgShownFirst = 0;
 			getMaxChars();
+			#ifdef NDS
+			redrawText = true;
+			#endif
 			studioBg = getBgNum();
 			displayStudioBg = false;
 			gspWaitForVBlank();
 			GFX::reloadBgSprite();
 			displayStudioBg = true;
-			#ifdef NDS
-			redrawText = true;
-			#endif
 		}
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
