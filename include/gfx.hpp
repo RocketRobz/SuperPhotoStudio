@@ -62,7 +62,11 @@ namespace GFX {
 
 	// Sprite Functions.
 	bool loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
+	#ifdef _3DS
 	void loadCharSpriteMem(int num);
+	#else
+	void loadCharSpriteMem(int num, int zoomIn);
+	#endif
 	void loadBgSprite(void);
 	void unloadBgSprite(void);
 	void reloadBgSprite(void);

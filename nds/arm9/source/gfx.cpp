@@ -7,7 +7,7 @@
 #define charSpriteSize 0x18000
 
 static u16 bmpImageBuffer[256*192];
-static u16 bgSpriteMem[(charSpriteSize/2)] = {0};
+static u16 bgSpriteMem[(charSpriteSize/2)*3] = {0};
 static u16 charSpriteMem[2][(charSpriteSize/2)*3];
 
 static bool chracterSpriteLoaded = false;
@@ -73,8 +73,8 @@ void GFX::loadSheets() {
 
 	fclose(file);
 
-	dmaCopyWords(1, (void*)bgSpriteMem[0], (void*)bgSpriteMem[charSpriteSize], 0x18000);
-	dmaCopyWords(1, (void*)bgSpriteMem[0], (void*)bgSpriteMem[charSpriteSize*2], 0x18000);
+	dmaCopyWords(1, bgSpriteMem, bgSpriteMem+(charSpriteSize/2), 0x18000);
+	dmaCopyWords(1, bgSpriteMem, bgSpriteMem+((charSpriteSize/2)*2), 0x18000);
 }
 
 void GFX::unloadSheets() {
@@ -385,12 +385,12 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	return true;
 }
 
-void GFX::loadCharSpriteMem(int num) {
+void GFX::loadCharSpriteMem(int num, int zoomIn) {
 	if (!chracterSpriteFound[num]) return;
-	dmaCopyWords(1, bgSpriteMem, bmpImageBuffer, 0x18000);
+	dmaCopyWords(1, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer, 0x18000);
 	for (int i = 0; i < 256*192; i++) {
-		if (charSpriteMem[num][i] != 0xFC1F) {
-			bmpImageBuffer[i] = charSpriteMem[num][i];
+		if (charSpriteMem[num][i+((0x18000/2)*zoomIn)] != 0xFC1F) {
+			bmpImageBuffer[i] = charSpriteMem[num][i+((0x18000/2)*zoomIn)];
 		}
 	}
 	dmaCopyWordsAsynch(1, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);

@@ -25,8 +25,8 @@
 #include <unistd.h>
 
 #ifdef NDS
-#define KEY_CPAD_UP KEY_UP
-#define KEY_CPAD_DOWN KEY_DOWN
+#define KEY_CPAD_UP KEY_X
+#define KEY_CPAD_DOWN KEY_B
 #define KEY_CPAD_LEFT KEY_LEFT
 #define KEY_CPAD_RIGHT KEY_RIGHT
 #define KEY_DUP KEY_UP
@@ -398,7 +398,11 @@ void PhotoStudio::loadChrImage(void) {
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath2);
 	}
 	if (previewCharacterFound[0] && !characterPicked[1]) {
+		#ifdef NDS
+		GFX::loadCharSpriteMem(0, zoomIn);
+		#else
 		GFX::loadCharSpriteMem(0);
+		#endif
 	}
 	previewCharacter = true;
 }
@@ -739,6 +743,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			if (zoomIn > zoomLimit) {
 				zoomIn = zoomLimit;
 			} else {
+				#ifdef NDS
+				GFX::loadCharSpriteMem(0, zoomIn);
+				#endif
 				renderTop = true;
 			}
 		}
@@ -747,6 +754,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			if (zoomIn < 0) {
 				zoomIn = 0;
 			} else {
+				#ifdef NDS
+				GFX::loadCharSpriteMem(0, zoomIn);
+				#endif
 				renderTop = true;
 			}
 		}
