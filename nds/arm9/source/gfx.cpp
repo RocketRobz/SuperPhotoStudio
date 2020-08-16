@@ -79,6 +79,8 @@ static inline bool isEvening(int hour, int minutes) {
 void GFX::loadBgSprite(void) {
 	if (bgSpriteLoaded) return;
 
+	dmaFillWords(0xFFFFFFFF, bgGetGfxPtr(bg3Sub), 0x18000);
+
 	timeOutside = 2;	// Default is Nighttime
 
 	const char* bgPath;
