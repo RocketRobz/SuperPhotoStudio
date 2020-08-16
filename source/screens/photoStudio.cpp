@@ -47,6 +47,8 @@ static bool redrawText = true;
 
 extern glImage backImage[(64 / 64) * (64 / 64)];
 extern glImage cursorImage[(32 / 32) * (32 / 32)];
+extern glImage itemButtonImage[(256 / 32) * (64 / 32)];
+extern glImage genderImage[2][(64 / 64) * (64 / 64)];
 #endif
 
 static int charPageOrder[] = {
@@ -466,6 +468,62 @@ void PhotoStudio::Draw(void) const {
 			printSmall(false, 6, 6, "<");
 			printSmall(false, 242, 6, ">");
 		}
+
+	  if (!displayNothing) {
+		int i2 = 40;
+		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
+			if (charPageOrder[char_highlightedGame[currentCharNum]] == 10) {
+				if (i >= 2) break;
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[pacCharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, pacCharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 9) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[banjokCharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, banjokCharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 8) {
+				if (i >= 2) break;
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[conkerCharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, conkerCharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 7) {
+				if (i >= 2) break;
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[jfgCharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, jfgCharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 6) {
+				if (i >= 1) break;
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[sthCharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, sthCharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 5) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[smCharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, smCharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 4) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[rocketCharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, rocketCharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 3) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[import_ss4CharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, import_ss4CharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 2) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[import_ss3CharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, import_ss3CharacterNames[i]);
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 1) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[import_ss2CharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, import_SS2CharacterNames(i));
+			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 0) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[import_ss1CharacterGenders[i]]);
+				if (redrawText) printSmall(false, 54, i2, import_ss1CharacterNames[i]);
+			}
+			i2 += 40;
+		}
+	  }
 	} else if (subScreenMode == 1) {
 		cursorY = 48+(40*bgList_cursorPositionOnScreen);
 		if (redrawText) {
@@ -496,10 +554,58 @@ void PhotoStudio::Draw(void) const {
 			printSmall(false, 6, 6, "<");
 			printSmall(false, 242, 6, ">");
 		}
+
+	  if (!displayNothing) {
+		int i2 = 40;
+		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
+			if (photo_highlightedGame == 6) {
+				if (i >= 2) break;
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				if (redrawText) printSmall(false, 24, i2, smBgNames[i]);
+			} else if (photo_highlightedGame == 5) {
+				if (i >= 1) break;
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				if (redrawText) printSmall(false, 24, i2, pdarkBgNames[i]);
+			} else if (photo_highlightedGame == 3) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				if (redrawText) printSmall(false, 24, i2, import_ss4BgNames[i]);
+			} else if (photo_highlightedGame == 2) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				if (redrawText) printSmall(false, 24, i2, import_ss3BgNames[i]);
+			} else if (photo_highlightedGame == 1) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				if (redrawText) printSmall(false, 24, i2, import_ss2BgNames[i]);
+			} else if (photo_highlightedGame == 0) {
+				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+				if (redrawText) printSmall(false, 24, i2, import_ss1BgNames[i]);
+			}
+			i2 += 40;
+		}
+	  }
 	} else {
 		cursorY = 48+(40*characterChangeMenu_cursorPositionOnScreen);
 		if (redrawText) {
 			printSmall(false, 6, 6, "What do you want to do?");
+		}
+
+		int i2 = 0;
+		i2 += 40;
+		glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+		if (redrawText) printSmall(false, 24, i2, "Change location");
+		i2 += 40;
+		glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+		if (redrawText) {
+		if (currentCharNum==4) {
+			printSmall(false, 24, i2, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
+		} else if (currentCharNum==3) {
+			printSmall(false, 24, i2, characterPicked[3] ? "Change character < 4 >" : "Add character < 4 >");
+		} else if (currentCharNum==2) {
+			printSmall(false, 24, i2, characterPicked[2] ? "Change character < 3 >" : "Add character < 3 >");
+		} else if (currentCharNum==1) {
+			printSmall(false, 24, i2, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
+		} else {
+			printSmall(false, 24, i2, "Change character < 1 >");
+		}
 		}
 	}
 
