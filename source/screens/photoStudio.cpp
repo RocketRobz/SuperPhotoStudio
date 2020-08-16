@@ -608,7 +608,7 @@ void PhotoStudio::Draw(void) const {
 		} else if (currentCharNum==1) {
 			printSmall(false, 26, i2, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
 		} else {
-			printSmall(false, 26, i2, "Change character < 1 >");
+			printSmall(false, 26, i2, characterPicked[0] ? "Change character < 1 >" : "Add character < 1 >");
 		}
 		}
 	}
@@ -889,7 +889,7 @@ void PhotoStudio::Draw(void) const {
 		} else if (currentCharNum==1) {
 			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
 		} else {
-			Gui::DrawString(32, i2, 0.65, WHITE, "Change character < 1 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[0] ? "Change character < 1 >" : "Add character < 1 >");
 		}
 	}
 
@@ -1268,7 +1268,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			}
 
 			if (characterChangeMenu_cursorPosition == 1) {
-				if (hDown & KEY_DLEFT) {
+				if ((hDown & KEY_DLEFT) && characterPicked[0]) {
 					sndHighlight();
 					currentCharNum--;
 					if (currentCharNum < 0) {
@@ -1280,7 +1280,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					}
 					#endif
 				}
-				if (hDown & KEY_DRIGHT) {
+				if ((hDown & KEY_DRIGHT) && characterPicked[0]) {
 					sndHighlight();
 					currentCharNum++;
 					if (currentCharNum > charsShown+1) {
