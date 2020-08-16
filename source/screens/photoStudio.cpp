@@ -467,6 +467,10 @@ void PhotoStudio::Draw(void) const {
 		}
 			printSmall(false, 6, 6, "<");
 			printSmall(false, 242, 6, ">");
+
+			printLarge(false, -60, 166, "L", Alignment::center);
+			printSmall(false, -26, 168, seasonName(), Alignment::center);
+			printLarge(false, 10, 166, "R", Alignment::center);
 		}
 
 	  if (!displayNothing) {
