@@ -313,7 +313,7 @@ void GFX::loadBgSprite(void) {
 	bgCanAnimate = false;
 
 	// Load animated parts
-	if (studioBg == 12 && (timeOutside == 0 || timeOutside == 1)) {
+	/*if (studioBg == 12 && (timeOutside == 0 || timeOutside == 1)) {
 		if (timeOutside == 0) {
 			bgPath = "nitro:/graphics/bg/bgDay_tropicaBeach_1.png";
 		} else {
@@ -337,7 +337,7 @@ void GFX::loadBgSprite(void) {
 		bgAnimation[3] = 1;
 		bgAnimation[4] = 100;
 		bgCanAnimate = true;
-	}
+	}*/
 
 	bgSpriteLoaded = true;
 }
