@@ -138,9 +138,9 @@ void GFX::loadBgSprite(void) {
 			break;
 		case 12:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/Day_tropicaBeach_0.png";
+				bgPath = "nitro:/graphics/bg/Day_tropicaBeach.png";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_0.png";
+				bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach.png";
 			} else {
 				bgPath = "nitro:/graphics/bg/Night_tropicaBeach.png";
 			}
