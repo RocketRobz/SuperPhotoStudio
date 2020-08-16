@@ -419,6 +419,10 @@ void PhotoStudio::Draw(void) const {
 		cursorY = 48+(40*characterChangeMenu_cursorPositionOnScreen);
 	}
 
+	if (subScreenMode != 0) {
+		GFX::DrawSprite(sprites_arrow_back_idx, 5, 157);
+	}
+
 	GFX::drawCursor(cursorX, cursorY);
 	#else
 	animateBg = bgCanAnimate;
