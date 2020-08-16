@@ -25,6 +25,8 @@
 #include <unistd.h>
 
 #ifdef NDS
+#include "fontHandler.h"
+
 #define KEY_CPAD_UP KEY_X
 #define KEY_CPAD_DOWN KEY_B
 #define KEY_CPAD_LEFT KEY_LEFT
@@ -38,6 +40,8 @@
 
 void gspWaitForVBlank(void) {
 }
+
+static bool redrawText = true;
 #endif
 
 static int charPageOrder[] = {
@@ -410,13 +414,88 @@ void PhotoStudio::loadChrImage(void) {
 
 void PhotoStudio::Draw(void) const {
 	#ifdef NDS	// Bottom screen only
+	if (redrawText) {
+		clearText(false);
+	}
+
 	cursorX = 200;
 	if (subScreenMode == 2) {
 		cursorY = 48+(40*importCharacterList_cursorPositionOnScreen[currentCharNum]);
+		if (redrawText) {
+		// Game name
+		switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
+			case 10:
+				printSmall(false, 0, 6, "Pac-Man series", Alignment::center);
+				break;
+			case 9:
+				printSmall(false, 0, 6, "Banjo-Kazooie series", Alignment::center);
+				break;
+			case 8:
+				printSmall(false, 0, 6, "Conker series", Alignment::center);
+				break;
+			case 7:
+				printSmall(false, 0, 6, "Jet Force Gemini", Alignment::center);
+				break;
+			case 6:
+				printSmall(false, 0, 6, "Sonic the Hedgehog series", Alignment::center);
+				break;
+			case 5:
+				printSmall(false, 0, 6, "Super Mario series", Alignment::center);
+				break;
+			case 4:
+				printSmall(false, 0, 6, "Super Photo Studio", Alignment::center);
+				break;
+			case 3:
+				printSmall(false, 0, 6, ss4Title(), Alignment::center);
+				break;
+			case 2:
+				printSmall(false, 0, 6, ss3Title(), Alignment::center);
+				break;
+			case 1:
+				printSmall(false, 0, 6, ss2Title(), Alignment::center);
+				break;
+			case 0:
+				printSmall(false, 0, 6, ss1Title(), Alignment::center);
+				break;
+		}
+			printSmall(false, 6, 6, "<");
+			printSmall(false, 242, 6, ">");
+		}
 	} else if (subScreenMode == 1) {
 		cursorY = 48+(40*bgList_cursorPositionOnScreen);
+		if (redrawText) {
+		// Game name
+		switch (photo_highlightedGame) {
+			case 6:
+				printSmall(false, 0, 6, "Super Mario series", Alignment::center);
+				break;
+			case 5:
+				printSmall(false, 0, 6, "Perfect Dark", Alignment::center);
+				break;
+			case 4:
+				printSmall(false, 0, 6, "Super Photo Studio", Alignment::center);
+				break;
+			case 3:
+				printSmall(false, 0, 6, ss4Title(), Alignment::center);
+				break;
+			case 2:
+				printSmall(false, 0, 6, ss3Title(), Alignment::center);
+				break;
+			case 1:
+				printSmall(false, 0, 6, ss2Title(), Alignment::center);
+				break;
+			case 0:
+				printSmall(false, 0, 6, ss1Title(), Alignment::center);
+				break;
+		}
+			printSmall(false, 6, 6, "<");
+			printSmall(false, 242, 6, ">");
+		}
 	} else {
 		cursorY = 48+(40*characterChangeMenu_cursorPositionOnScreen);
+		if (redrawText) {
+			printSmall(false, 6, 6, "What do you want to do?");
+		}
 	}
 
 	if (subScreenMode != 0) {
@@ -424,6 +503,8 @@ void PhotoStudio::Draw(void) const {
 	}
 
 	GFX::drawCursor(cursorX, cursorY);
+
+	redrawText = false;
 	#else
 	animateBg = bgCanAnimate;
 
@@ -802,6 +883,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (importCharacterList_cursorPositionOnScreen[currentCharNum] < 0) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
+					#ifdef NDS
+					redrawText = true;
+					#endif
 				}
 				renderTop = true;
 				loadChrImage();
@@ -823,6 +907,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (importCharacterList_cursorPositionOnScreen[currentCharNum] > 2) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 2;
+					#ifdef NDS
+					redrawText = true;
+					#endif
 				}
 				renderTop = true;
 				loadChrImage();
@@ -832,6 +919,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_A) {
 			sndSelect();
 			subScreenMode = 0;
+			#ifdef NDS
+			redrawText = true;
+			#endif
 		}
 
 		if ((hDown & KEY_X) && (currentCharNum > 0) && characterPicked[currentCharNum]) {
@@ -843,6 +933,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				currentCharNum--;
 				charsShown--;
 				subScreenMode = 0;
+				#ifdef NDS
+				redrawText = true;
+				#endif
 				renderTop = true;
 				loadChrImage();
 			} else {
@@ -890,6 +983,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			getMaxChars();
 			renderTop = true;
 			loadChrImage();
+			#ifdef NDS
+			redrawText = true;
+			#endif
 		}
 
 		//if (charPageOrder[char_highlightedGame[currentCharNum]] != 4) {
@@ -899,6 +995,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (seasonNo[currentCharNum] < 0) seasonNo[currentCharNum] = 3;
 				loadChrImage();
 				renderTop = true;
+				#ifdef NDS
+				redrawText = true;
+				#endif
 			}
 
 			if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
@@ -907,12 +1006,18 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (seasonNo[currentCharNum] > 3) seasonNo[currentCharNum] = 0;
 				loadChrImage();
 				renderTop = true;
+				#ifdef NDS
+				redrawText = true;
+				#endif
 			}
 		//}
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
 			subScreenMode = 0;
+			#ifdef NDS
+			redrawText = true;
+			#endif
 		}
 
 	} else if (subScreenMode == 1) {
@@ -970,6 +1075,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				zoomIn = 1;
 			}
 			#ifdef NDS
+			redrawText = true;
 			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn);
 			#endif
 		}
@@ -1000,6 +1106,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			gspWaitForVBlank();
 			GFX::reloadBgSprite();
 			displayStudioBg = true;
+			#ifdef NDS
+			redrawText = true;
+			#endif
 		}
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
@@ -1010,6 +1119,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				zoomIn = 1;
 			}
 			#ifdef NDS
+			redrawText = true;
 			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn);
 			#endif
 		}
@@ -1047,6 +1157,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					if (currentCharNum < 0) {
 						currentCharNum = 0;
 					}
+					#ifdef NDS
+					else {
+						redrawText = true;
+					}
+					#endif
 				}
 				if (hDown & KEY_DRIGHT) {
 					sndHighlight();
@@ -1057,6 +1172,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					if (currentCharNum > 4) {
 						currentCharNum = 4;
 					}
+					#ifdef NDS
+					else {
+						redrawText = true;
+					}
+					#endif
 				}
 			}
 		}
@@ -1078,6 +1198,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				//}
 				zoomIn = 0;
 				renderTop = true;
+				#ifdef NDS
+				redrawText = true;
+				#endif
 			} else if (characterChangeMenu_cursorPosition == 1) {
 				sndSelect();
 				displayNothing = true;
@@ -1104,6 +1227,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					renderTop = true;
 					loadChrImage();
 				}
+				#ifdef NDS
+				redrawText = true;
+				#endif
 			}
 		}
 	

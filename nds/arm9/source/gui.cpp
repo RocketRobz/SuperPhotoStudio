@@ -26,6 +26,7 @@
 
 #include "gui.hpp"
 #include "screenCommon.hpp"
+#include "fontHandler.h"
 
 #include "sprites.h"
 
@@ -81,7 +82,6 @@ void Gui::DrawSprite(int imgindex, int x, int y) {
 
 // Initialize GUI.
 void Gui::init(void) {
-	//////////////////////////////////////////////////////////
 	videoSetMode(MODE_5_3D | DISPLAY_BG3_ACTIVE);
 	videoSetModeSub(MODE_3_2D | DISPLAY_BG3_ACTIVE);
 
@@ -151,6 +151,8 @@ void Gui::init(void) {
 
 	irqSet(IRQ_VBLANK, DrawScreen);
 	irqEnable(IRQ_VBLANK);
+
+	fontInit();
 }
 
 // Load a Font.
@@ -207,6 +209,7 @@ void Gui::DrawScreen() {
 	glBegin2D();
 
 	if (usedScreen != nullptr)	usedScreen->Draw();
+	updateText(false);
 
 	glEnd2D();
 	GFX_FLUSH = 0;
