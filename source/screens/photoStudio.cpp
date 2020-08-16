@@ -952,6 +952,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			if (characterPicked[3] && zoomIn < 1) {
 				zoomIn = 1;
 			}
+			#ifdef NDS
+			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn);
+			#endif
 		}
 
 		if (hDown & KEY_DLEFT) {
@@ -989,6 +992,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			if (characterPicked[3] && zoomIn < 1) {
 				zoomIn = 1;
 			}
+			#ifdef NDS
+			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn);
+			#endif
 		}
 
 	} else {

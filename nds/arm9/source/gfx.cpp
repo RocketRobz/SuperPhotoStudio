@@ -109,202 +109,205 @@ void GFX::loadBgSprite(void) {
 	switch (studioBg) {
 		case 0:
 		default:
-			bgPath = "nitro:/graphics/bg/bg_blue.png";
+			bgPath = "nitro:/graphics/bg/blue.png";
 			break;
 		case 1:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgDay_loversBell.png";
+				bgPath = "nitro:/graphics/bg/Day_loversBell.png";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgSunset_loversBell.png";
+				bgPath = "nitro:/graphics/bg/Sunset_loversBell.png";
 			} else {
-				bgPath = "nitro:/graphics/bg/bgNight_loversBell.png";
+				bgPath = "nitro:/graphics/bg/Night_loversBell.png";
 			}
 			break;
 		case 2:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgDay_bougainville.png";
+				bgPath = "nitro:/graphics/bg/Day_bougainville.png";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgSunset_bougainville.png";
+				bgPath = "nitro:/graphics/bg/Sunset_bougainville.png";
 			} else {
-				bgPath = "nitro:/graphics/bg/bgNight_bougainville.png";
+				bgPath = "nitro:/graphics/bg/Night_bougainville.png";
 			}
 			break;
 		case 3:
-			bgPath = "nitro:/graphics/bg/bg_nin10Pro.png";
+			bgPath = "nitro:/graphics/bg/nin10Pro.png";
 			break;
 		case 4:
-			bgPath = "nitro:/graphics/bg/bg_beautician4.png";
+			bgPath = "nitro:/graphics/bg/beautician4.png";
 			break;
 		case 5:
-			bgPath = "nitro:/graphics/bg/bg_hairSalon4.png";
+			bgPath = "nitro:/graphics/bg/hairSalon4.png";
 			break;
 		case 6:
-			bgPath = "nitro:/graphics/bg/bg_celestialHotel.png";
+			bgPath = "nitro:/graphics/bg/celestialHotel.png";
 			break;
 		case 7:
-			bgPath = "nitro:/graphics/bg/bg_liveMusicClub4.png";
+			bgPath = "nitro:/graphics/bg/liveMusicClub4.png";
 			break;
 		case 8:
-			bgPath = "nitro:/graphics/bg/bg_menswearShop.png";
+			bgPath = "nitro:/graphics/bg/menswearShop.png";
 			break;
 		case 9:
-			bgPath = "nitro:/graphics/bg/bg_VIP.png";
+			bgPath = "nitro:/graphics/bg/VIP.png";
 			break;
 		case 10:
-			bgPath = "nitro:/graphics/bg/bg_restauraunt4.png";
+			bgPath = "nitro:/graphics/bg/restauraunt4.png";
 			break;
 		case 11:
-			bgPath = "nitro:/graphics/bg/bg_cinema.png";
+			bgPath = "nitro:/graphics/bg/cinema.png";
 			break;
 		case 12:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgDay_tropicaBeach_0.png";
+				bgPath = "nitro:/graphics/bg/Day_tropicaBeach_0.png";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgSunset_tropicaBeach_0.png";
+				bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_0.png";
 			} else {
-				bgPath = "nitro:/graphics/bg/bgNight_tropicaBeach.png";
+				bgPath = "nitro:/graphics/bg/Night_tropicaBeach.png";
 			}
 			break;
 		case 13:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgDay_primrosePark.png";
+				bgPath = "nitro:/graphics/bg/Day_primrosePark.png";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgSunset_primrosePark.png";
+				bgPath = "nitro:/graphics/bg/Sunset_primrosePark.png";
 			} else {
-				bgPath = "nitro:/graphics/bg/bgNight_primrosePark.png";
+				bgPath = "nitro:/graphics/bg/Night_primrosePark.png";
 			}
 			break;
 		case 14:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgDay_cafe3.png";
+				bgPath = "nitro:/graphics/bg/Day_cafe3.png";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgSunset_cafe3.png";
+				bgPath = "nitro:/graphics/bg/Sunset_cafe3.png";
 			} else {
-				bgPath = "nitro:/graphics/bg/bgNight_cafe3.png";
+				bgPath = "nitro:/graphics/bg/Night_cafe3.png";
 			}
 			break;
 		case 15:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgDay_mapleCrescent.png";
+				bgPath = "nitro:/graphics/bg/Day_mapleCrescent.png";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgSunset_mapleCrescent.png";
+				bgPath = "nitro:/graphics/bg/Sunset_mapleCrescent.png";
 			} else {
-				bgPath = "nitro:/graphics/bg/bgNight_mapleCrescent.png";
+				bgPath = "nitro:/graphics/bg/Night_mapleCrescent.png";
 			}
 			break;
 		case 16:
-			bgPath = "nitro:/graphics/bg/bg_white.png";
+			bgPath = "nitro:/graphics/bg/white.png";
 			break;
 		case 17:
-			bgPath = "nitro:/graphics/bg/bg_yellow.png";
+			bgPath = "nitro:/graphics/bg/yellow.png";
 			break;
 		case 18:
-			bgPath = "nitro:/graphics/bg/bg_snowflakes.png";
+			bgPath = "nitro:/graphics/bg/snowflakes.png";
 			break;
 		case 19:
-			bgPath = "nitro:/graphics/bg/bg_pinkShine.png";
+			bgPath = "nitro:/graphics/bg/pinkShine.png";
 			break;
 		case 20:
-			bgPath = "nitro:/graphics/bg/bg_beigeWithCircles.png";
+			bgPath = "nitro:/graphics/bg/beigeWithCircles.png";
 			break;
 		case 21:
-			bgPath = "nitro:/graphics/bg/bg_gradientPurple.png";
+			bgPath = "nitro:/graphics/bg/gradientPurple.png";
 			break;
 		case 22:
-			bgPath = "nitro:/graphics/bg/bg_greenBirds.png";
+			bgPath = "nitro:/graphics/bg/greenBirds.png";
 			break;
 		case 23:
-			bgPath = "nitro:/graphics/bg/bg_circlePattern.png";
+			bgPath = "nitro:/graphics/bg/circlePattern.png";
 			break;
 		case 24:
-			bgPath = "nitro:/graphics/bg/bg_circleWindows.png";
+			bgPath = "nitro:/graphics/bg/circleWindows.png";
 			break;
 		case 25:
-			bgPath = "nitro:/graphics/bg/bg_bigHearts.png";
+			bgPath = "nitro:/graphics/bg/bigHearts.png";
 			break;
 		case 26:
-			bgPath = "nitro:/graphics/bg/bg_smallHearts.png";
+			bgPath = "nitro:/graphics/bg/smallHearts.png";
 			break;
 		case 27:
-			bgPath = "nitro:/graphics/bg/bg_park2Spring.png";
+			bgPath = "nitro:/graphics/bg/park2Spring.png";
 			break;
 		case 28:
-			bgPath = "nitro:/graphics/bg/bg_park2Summer.png";
+			bgPath = "nitro:/graphics/bg/park2Summer.png";
 			break;
 		case 29:
-			bgPath = "nitro:/graphics/bg/bg_park2Fall.png";
+			bgPath = "nitro:/graphics/bg/park2Fall.png";
 			break;
 		case 30:
-			bgPath = "nitro:/graphics/bg/bg_park2Winter.png";
+			bgPath = "nitro:/graphics/bg/park2Winter.png";
 			break;
 		case 31:
-			bgPath = "nitro:/graphics/bg/bg_downtownSpring.png";
+			bgPath = "nitro:/graphics/bg/downtownSpring.png";
 			break;
 		case 32:
-			bgPath = "nitro:/graphics/bg/bg_downtownSummer.png";
+			bgPath = "nitro:/graphics/bg/downtownSummer.png";
 			break;
 		case 33:
-			bgPath = "nitro:/graphics/bg/bg_downtownFall.png";
+			bgPath = "nitro:/graphics/bg/downtownFall.png";
 			break;
 		case 34:
-			bgPath = "nitro:/graphics/bg/bg_downtownWinter.png";
+			bgPath = "nitro:/graphics/bg/downtownWinter.png";
 			break;
 		case 35:
-			bgPath = "nitro:/graphics/bg/bg_cafe2Spring.png";
+			bgPath = "nitro:/graphics/bg/cafe2Spring.png";
 			break;
 		case 36:
-			bgPath = "nitro:/graphics/bg/bg_cafe2Summer.png";
+			bgPath = "nitro:/graphics/bg/cafe2Summer.png";
 			break;
 		case 37:
-			bgPath = "nitro:/graphics/bg/bg_cafe2Fall.png";
+			bgPath = "nitro:/graphics/bg/cafe2Fall.png";
 			break;
 		case 38:
-			bgPath = "nitro:/graphics/bg/bg_cafe2Winter.png";
+			bgPath = "nitro:/graphics/bg/cafe2Winter.png";
 			break;
 		case 39:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/bgDay_exhibitionHall2.png";
+				bgPath = "nitro:/graphics/bg/Day_exhibitionHall2.png";
 			} else {
-				bgPath = "nitro:/graphics/bg/bgNight_exhibitionHall2.png";
+				bgPath = "nitro:/graphics/bg/Night_exhibitionHall2.png";
 			}
 			break;
 		case 40:
-			bgPath = "nitro:/graphics/bg/bg_beautician2.png";
+			bgPath = "nitro:/graphics/bg/beautician2.png";
 			break;
 		case 41:
-			bgPath = "nitro:/graphics/bg/bg_afterParty.png";
+			bgPath = "nitro:/graphics/bg/afterParty.png";
 			break;
 		case 42:
-			bgPath = "nitro:/graphics/bg/bg_graceShop.png";
+			bgPath = "nitro:/graphics/bg/graceShop.png";
 			break;
 		case 43:
-			bgPath = "nitro:/graphics/bg/bg_hairSalon1.png";
+			bgPath = "nitro:/graphics/bg/hairSalon1.png";
 			break;
 		case 44:
-			bgPath = "nitro:/graphics/bg/bg_beautician1.png";
+			bgPath = "nitro:/graphics/bg/beautician1.png";
 			break;
 		case 45:
-			bgPath = "nitro:/graphics/bg/bg_lifestyleShop2.png";
+			bgPath = "nitro:/graphics/bg/lifestyleShop2.png";
 			break;
 		case 46:
-			bgPath = "nitro:/graphics/bg/bg_liveMusicClub2.png";
+			bgPath = "nitro:/graphics/bg/liveMusicClub2.png";
 			break;
 		case 47:
-			bgPath = "nitro:/graphics/bg/bg_roseGarden2.png";
+			bgPath = "nitro:/graphics/bg/roseGarden2.png";
 			break;
 		case 48:
-			bgPath = "nitro:/graphics/bg/bg_carringtonInstitute.png";
+			bgPath = "nitro:/graphics/bg/carringtonInstitute.png";
 			break;
 		case 49:
-			bgPath = "nitro:/graphics/bg/bg_peachCastleOutside.png";
+			bgPath = "nitro:/graphics/bg/peachCastleOutside.png";
 			break;
 		case 50:
-			bgPath = "nitro:/graphics/bg/bg_peachCastle.png";
+			bgPath = "nitro:/graphics/bg/peachCastle.png";
 			break;
 	}
-	FILE* bgFile = fopen(bgPath, "rb");
-	//fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);
-	fclose(bgFile);
+	std::vector<unsigned char> image;
+	unsigned width, height;
+	lodepng::decode(image, width, height, bgPath);
+	for(unsigned i=0;i<image.size()/4;i++) {
+		bgSpriteMem[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+	}
 
 	bgSpriteLoaded = true;
 	bgAnimationFrame = 0;
@@ -354,6 +357,8 @@ void GFX::unloadBgSprite() {
 void GFX::reloadBgSprite() {
 	unloadBgSprite();
 	loadBgSprite();
+	dmaCopyWords(1, bgSpriteMem, bmpImageBuffer, 0x18000);
+	dmaCopyWordsAsynch(1, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
 }
 
 bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
