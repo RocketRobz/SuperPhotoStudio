@@ -753,52 +753,52 @@ void PhotoStudio::Draw(void) const {
 		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
 			if (charPageOrder[char_highlightedGame[currentCharNum]] == 10) {
 				if (i >= 2) break;
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((pacCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, pacCharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((pacCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, pacCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 9) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((banjokCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, banjokCharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((banjokCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, banjokCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 8) {
 				if (i >= 2) break;
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((conkerCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, conkerCharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((conkerCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, conkerCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 7) {
 				if (i >= 2) break;
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((jfgCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, jfgCharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((jfgCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, jfgCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 6) {
 				if (i >= 1) break;
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((sthCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, sthCharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((sthCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, sthCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 5) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((smCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, smCharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((smCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, smCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 4) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((rocketCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, rocketCharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((rocketCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, rocketCharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 3) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, import_ss4CharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, import_ss4CharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 2) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, import_ss3CharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, import_ss3CharacterNames[i]);
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 1) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)/*+import_ss2CharacterTieColors[i]*/, 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, import_SS2CharacterNames(i));
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)/*+import_ss2CharacterTieColors[i]*/, 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, import_SS2CharacterNames(i));
 			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 0) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
-				GFX::DrawSprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 12, i2-8);
-				Gui::DrawString(64, i2, 0.65, WHITE, import_ss1CharacterNames[i]);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+				GFX::DrawSprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+				Gui::DrawString(66, i2, 0.65, WHITE, import_ss1CharacterNames[i]);
 			}
 			i2 += 48;
 		}
@@ -845,23 +845,23 @@ void PhotoStudio::Draw(void) const {
 		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
 			if (photo_highlightedGame == 6) {
 				if (i >= 2) break;
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 				Gui::DrawString(32, i2, 0.65, WHITE, smBgNames[i]);
 			} else if (photo_highlightedGame == 5) {
 				if (i >= 1) break;
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 				Gui::DrawString(32, i2, 0.65, WHITE, pdarkBgNames[i]);
 			} else if (photo_highlightedGame == 3) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 				Gui::DrawString(32, i2, 0.65, WHITE, import_ss4BgNames[i]);
 			} else if (photo_highlightedGame == 2) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 				Gui::DrawString(32, i2, 0.65, WHITE, import_ss3BgNames[i]);
 			} else if (photo_highlightedGame == 1) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 				Gui::DrawString(32, i2, 0.65, WHITE, import_ss2BgNames[i]);
 			} else if (photo_highlightedGame == 0) {
-				GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 				Gui::DrawString(32, i2, 0.65, WHITE, import_ss1BgNames[i]);
 			}
 			i2 += 48;
@@ -876,10 +876,10 @@ void PhotoStudio::Draw(void) const {
 
 		int i2 = 0;
 		i2 += 48;
-		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 		Gui::DrawString(32, i2, 0.65, WHITE, "Change location");
 		i2 += 48;
-		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 		if (currentCharNum==4) {
 			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
 		} else if (currentCharNum==3) {

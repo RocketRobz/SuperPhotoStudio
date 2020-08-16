@@ -18,7 +18,7 @@ void PhotoStudio::SettingsDraw(void) const {
 	for (int i = settingShownFirst; i < settingShownFirst+3; i++) {
 		if (i > numberOfSettings) break;
 	
-		GFX::DrawSprite(sprites_item_button_idx, 16, i2-20);
+		GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 		switch (i) {
 			case 0:
 				sprintf(txt_cinemaWide, "Aspect Ratio: %s", cinemaWide ? "Cinema" : "Normal");
