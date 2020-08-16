@@ -28,8 +28,12 @@ and more!
 
 (*Homebrew dev)
 
+# Available for
+* Nintendo DS/DSi
+* Nintendo 3DS/2DS
+
 # Credits
-* devkitPro: libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
+* devkitPro: libnds, libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Universal Team: Universal Core
 * SuperSaiyajinStackZ: StackZ and Stackie avatars
 * joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)
