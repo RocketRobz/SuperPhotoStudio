@@ -1,4 +1,5 @@
 #include "common.hpp"
+#include "color.h"
 #include "lodepng.h"
 
 #include <ctime>
@@ -375,12 +376,48 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 void GFX::loadCharSpriteMem(int num, int zoomIn, bool flipH) {
 	if (!chracterSpriteFound[num]) return;
 	dmaCopyWords(1, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer, 0x18000);
+
+	u16 fg = 0;
+	u8 blendAlpha = 0;
+
+	switch (studioBg) {
+		default:
+			break;
+		case 7:
+			fg = RGB15(0, 0, 95/8);	// Tint for Live Music Club 4
+			blendAlpha = 32;
+			break;
+		case 46:
+			fg = RGB15(31/8, 31/8, 95/8);	// Tint for Live Music Club 2
+			blendAlpha = 32;
+			break;
+		case 11:
+			fg = RGB15(191/8, 63/8, 87/8);	// Tint for Cinema
+			blendAlpha = 16;
+			break;
+		case 1:
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+			blendAlpha = 32;
+			if (timeOutside == 1) {
+				fg = RGB15(95/8, 47/8, 0);	// Tint for Sunset
+			} else if (timeOutside == 2) {
+				fg = RGB15(0, 0, 95/8);	// Tint for Nighttime
+			}
+		break;
+	}
+
 	int x2 = 0;
 	for (int y = 0; y < 192; y++) {
 	  x2 = flipH ? 255 : 0;
 	  for (int x = 0; x < 256; x++) {
 		if (charSpriteMem[num][((y*256)+x)+((0x18000/2)*zoomIn)] != 0xFC1F) {
 			bmpImageBuffer[(y*256)+x2] = charSpriteMem[num][((y*256)+x)+((0x18000/2)*zoomIn)];
+			if (blendAlpha > 0) {
+				bmpImageBuffer[(y*256)+x2] = alphablend(fg, bmpImageBuffer[(y*256)+x2], blendAlpha);
+			}
 		}
 		flipH ? x2-- : x2++;
 	  }
