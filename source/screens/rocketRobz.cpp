@@ -1,5 +1,8 @@
 #include "rocketRobz.hpp"
 #include "screenvars.h"
+#ifdef NDS
+#include "lodepng.h"
+#endif
 
 static int subMode = 0;
 static int prevSubMode = -1;
@@ -82,9 +85,13 @@ void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	#ifdef NDS
 	if (!graphicLoaded) {
 		extern int bg3Sub;
-		extern void bmpLoad(const char* filePath, u16* bgPath);
 
-		bmpLoad("nitro:/graphics/logos/rocketRobz.bmp", bgGetGfxPtr(bg3Sub));
+		std::vector<unsigned char> image;
+		unsigned width, height;
+		lodepng::decode(image, width, height, "nitro:/graphics/logos/rocketRobz.png");
+		for(unsigned i=0;i<image.size()/4;i++) {
+			bgGetGfxPtr(bg3Sub)[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+		}
 		graphicLoaded = true;
 	}
 	#endif
