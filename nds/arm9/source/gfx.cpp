@@ -9,7 +9,7 @@
 
 extern void bmpLoad(const char* filePath, u16* bgPath);
 
-u16 bmpImageBuffer[256*192];
+u16 bmpImageBuffer[2][256*192];
 static u16 bgSpriteMem[(256*192)*3] = {0};
 static u16 charSpriteMem[2][(256*192)*3];
 static u8 charSpriteAlpha[2][(256*192)*3];
@@ -375,9 +375,12 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	return true;
 }
 
-void GFX::loadCharSpriteMem(int num, int zoomIn, bool flipH) {
-	if (!chracterSpriteFound[num]) return;
-	dmaCopyWords(0, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer, 0x18000);
+void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
+	dmaCopyWords(0, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer[0], 0x18000);
+	if (!chracterSpriteFound[0]) {
+		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg3Sub), 0x18000);
+		return;
+	}
 
 	u16 fg = 0;
 	u8 blendAlpha = 0;
@@ -391,7 +394,7 @@ void GFX::loadCharSpriteMem(int num, int zoomIn, bool flipH) {
 			break;
 		case 46:
 			fg = RGB15(31/8, 31/8, 95/8);	// Tint for Live Music Club 2
-			blendAlpha = 32;
+			blendAlpha = 24;
 			break;
 		case 11:
 			fg = RGB15(191/8, 63/8, 87/8);	// Tint for Cinema
@@ -411,25 +414,69 @@ void GFX::loadCharSpriteMem(int num, int zoomIn, bool flipH) {
 		break;
 	}
 
+	int buffer = 0;
 	int x2 = 0;
-	for (int y = 0; y < 192; y++) {
-	  x2 = flipH ? 255 : 0;
-	  for (int x = 0; x < 256; x++) {
-		if (charSpriteAlpha[num][((y*256)+x)+((256*192)*zoomIn)] != 0) {
-			u16 color = charSpriteMem[num][((y*256)+x)+((256*192)*zoomIn)];
-			if (blendAlpha > 0) {
-				color = alphablend(fg, charSpriteMem[num][((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+	u16 color = 0;
+	if (chracterSpriteFound[1]) {
+		// Character 1
+		for (int y = 0; y < 192; y++) {
+		  x2 = flipH[0] ? 255 : 0;
+		  x2 -= (zoomIn==1 ? 64 : 26);
+		  for (int x = 0; x < 256; x++) {
+			if (x2 >= 0 && x2 < 256 && charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] != 0) {
+				color = charSpriteMem[0][((y*256)+x)+((256*192)*zoomIn)];
+				if (blendAlpha > 0) {
+					color = alphablend(fg, charSpriteMem[0][((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+				}
+				if (charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] == 255) {
+					bmpImageBuffer[0][(y*256)+x2] = color;
+				} else {
+					bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgSpriteMem[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
+				}
 			}
-			if (charSpriteAlpha[num][((y*256)+x)+((256*192)*zoomIn)] == 255) {
-				bmpImageBuffer[(y*256)+x2] = color;
+			flipH[0] ? x2-- : x2++;
+		  }
+		}
+		// Character 2
+		dmaCopyWords(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		for (int y = 0; y < 192; y++) {
+		  x2 = flipH[1] ? 255 : 0;
+		  x2 += (zoomIn==1 ? 64 : 26);
+		  for (int x = 0; x < 256; x++) {
+			if (x2 >= 0 && x2 < 256 && charSpriteAlpha[1][((y*256)+x)+((256*192)*zoomIn)] != 0) {
+				color = charSpriteMem[1][((y*256)+x)+((256*192)*zoomIn)];
+				if (blendAlpha > 0) {
+					color = alphablend(fg, charSpriteMem[1][((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+				}
+				if (charSpriteAlpha[1][((y*256)+x)+((256*192)*zoomIn)] == 255) {
+					bmpImageBuffer[1][(y*256)+x2] = color;
+				} else {
+					bmpImageBuffer[1][(y*256)+x2] = alphablend(color, bmpImageBuffer[0][(y*256)+x2], charSpriteAlpha[1][((y*256)+x)+((256*192)*zoomIn)]);
+				}
+			}
+			flipH[1] ? x2-- : x2++;
+		  }
+		}
+		buffer++;
+	} else
+	for (int y = 0; y < 192; y++) {
+	  x2 = flipH[0] ? 255 : 0;
+	  for (int x = 0; x < 256; x++) {
+		if (charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] != 0) {
+			color = charSpriteMem[0][((y*256)+x)+((256*192)*zoomIn)];
+			if (blendAlpha > 0) {
+				color = alphablend(fg, charSpriteMem[0][((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+			}
+			if (charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] == 255) {
+				bmpImageBuffer[0][(y*256)+x2] = color;
 			} else {
-				bmpImageBuffer[(y*256)+x2] = alphablend(color, bgSpriteMem[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[num][((y*256)+x)+((256*192)*zoomIn)]);
+				bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgSpriteMem[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
 			}
 		}
-		flipH ? x2-- : x2++;
+		flipH[0] ? x2-- : x2++;
 	  }
 	}
-	dmaCopyWordsAsynch(0, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
+	dmaCopyWordsAsynch(0, bmpImageBuffer[buffer], bgGetGfxPtr(bg3Sub), 0x18000);
 	chracterSpriteLoaded = true;
 }
 

@@ -422,13 +422,13 @@ void PhotoStudio::loadChrImage(void) {
 		#endif
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath2);
 	}
+	#ifdef NDS
+	GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
+	#else
 	if (previewCharacterFound[0] && !characterPicked[1]) {
-		#ifdef NDS
-		GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
-		#else
 		GFX::loadCharSpriteMem(0);
-		#endif
 	}
+	#endif
 	previewCharacter = true;
 }
 
@@ -482,11 +482,15 @@ void PhotoStudio::Draw(void) const {
 			printSmall(false, 6, 6, "<");
 			printSmall(false, 242, 6, ">");
 
+			if (currentCharNum > 0) {
+				printSmall(false, 0, 152, "X: Remove character", Alignment::center);
+			}
+
 			printLarge(false, -60, 166, "L", Alignment::center);
 			printSmall(false, -26, 168, seasonName(), Alignment::center);
 			printLarge(false, 10, 166, "R", Alignment::center);
 
-			printSmall(false, 160, 168, "SELECT: Flip H");
+			printSmall(false, 158, 168, "SELECT: Flip H");
 		}
 
 	  if (!displayNothing) {
@@ -967,7 +971,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	#endif
 
 	#ifdef NDS
-	if (subScreenMode==0 && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3])
+	if (subScreenMode==0 && !characterPicked[3])
 	#else
 	if ((subScreenMode==0 || subScreenMode==2) && (!characterPicked[1] || (characterPicked[1] && !renderTop)) && !characterPicked[3])
 	#endif
@@ -979,7 +983,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				zoomIn = zoomLimit;
 			} else {
 				#ifdef NDS
-				GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
+				GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 				#endif
 				renderTop = true;
 			}
@@ -990,7 +994,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				zoomIn = 0;
 			} else {
 				#ifdef NDS
-				GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
+				GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 				#endif
 				renderTop = true;
 			}
@@ -1072,9 +1076,12 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				subScreenMode = 0;
 				#ifdef NDS
 				redrawText = true;
+				GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 				#endif
 				renderTop = true;
+				#ifndef NDS
 				loadChrImage();
+				#endif
 			} else {
 				sndBack();
 				showMessage = true;
@@ -1085,7 +1092,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndSelect();
 			characterFlipH[currentCharNum] = !characterFlipH[currentCharNum];
 			#ifdef NDS
-			GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
+			GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 			#endif
 			renderTop = true;
 		}
@@ -1222,7 +1229,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			}
 			#ifdef NDS
 			redrawText = true;
-			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
+			if (characterPicked[0]) GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 			#endif
 		}
 
@@ -1266,7 +1273,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			}
 			#ifdef NDS
 			redrawText = true;
-			if (characterPicked[0]) GFX::loadCharSpriteMem(0, zoomIn, characterFlipH[0]);
+			if (characterPicked[0]) GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 			#endif
 		}
 
