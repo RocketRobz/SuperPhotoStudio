@@ -49,6 +49,7 @@ static bool musicLoopPlaying = false;
 static int musicLoopDelay = 0;
 bool clearTop = true;	// Disable in order to render a second character
 bool renderTop = true;	// Disable to prevent second character from flickering
+bool doScreenshot = false;
 
 void loadSettings(void) {
 	bool setting = false;
@@ -273,14 +274,15 @@ int main()
 			}
 		}
 
-		if (hDown & KEY_Y) {
+		if (hDown) {
+			svcSignalEvent(threadRequest);
+		}
+
+		if (doScreenshot) {
 			getFrameForScreenshot();
 			Screenshot_Capture();
 			renderTop = true;
-		}
-
-		if (hDown) {
-			svcSignalEvent(threadRequest);
+			doScreenshot = false;
 		}
 
 		if ((hDown & KEY_UP)

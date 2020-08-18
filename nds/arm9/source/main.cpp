@@ -27,6 +27,7 @@ int studioBg = 0;
 int iFps = 60;
 
 bool renderTop = true;	// Disable to prevent second character from flickering
+bool doScreenshot = false;
 
 static mm_sound_effect snd_select;
 static mm_sound_effect snd_back;
@@ -160,6 +161,12 @@ int main(int argc, char **argv) {
 		touchRead(&touch);
 
 		Gui::ScreenLogic(hDown, hHeld, touch, false); // Call the logic of the current screen here.
+
+		if (doScreenshot) {
+			extern void screenshotbmp(void);
+			screenshotbmp();
+			doScreenshot = false;
+		}
 
 		if ((hDown & KEY_UP)
 		|| (hDown & KEY_DOWN)

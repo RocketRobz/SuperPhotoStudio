@@ -614,6 +614,8 @@ void PhotoStudio::Draw(void) const {
 		cursorY = 52+(40*characterChangeMenu_cursorPositionOnScreen);
 		if (redrawText) {
 			printSmall(false, 6, 6, "What do you want to do?");
+
+			printSmall(false, 162, 168, "Y: Take photo");
 		}
 
 		int i2 = 0;
@@ -1388,6 +1390,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					loadChrImage();
 				}
 			}
+		}
+
+		if (hDown & KEY_Y) {
+			extern bool doScreenshot;
+			doScreenshot = true;
 		}
 	
 		#ifdef _3DS
