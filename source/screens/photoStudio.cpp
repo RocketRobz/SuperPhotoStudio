@@ -637,7 +637,11 @@ void PhotoStudio::Draw(void) const {
 		glSprite(cursorX, cursorY, GL_FLIP_NONE, cursorImage);
 	}
 
-	redrawText = false;
+	if (redrawText) {
+		extern void updateText(bool top);
+		updateText(false);
+		redrawText = false;
+	}
 	#else
 	animateBg = bgCanAnimate;
 

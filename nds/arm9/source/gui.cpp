@@ -234,7 +234,6 @@ void Gui::DrawScreen() {
 	glBegin2D();
 
 	if (usedScreen != nullptr)	usedScreen->Draw();
-	updateText(false);
 
 	glEnd2D();
 	GFX_FLUSH = 0;
