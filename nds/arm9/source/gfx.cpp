@@ -405,7 +405,9 @@ void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		case 13:
 		case 14:
 		case 15:
-			blendAlpha = 32;
+			if (timeOutside > 0) {
+				blendAlpha = 32;
+			}
 			if (timeOutside == 1) {
 				fg = RGB15(95/8, 47/8, 0);	// Tint for Sunset
 			} else if (timeOutside == 2) {
