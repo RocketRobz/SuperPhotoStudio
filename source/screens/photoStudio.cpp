@@ -623,7 +623,11 @@ void PhotoStudio::Draw(void) const {
 		i2 += 40;
 		glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
 		if (redrawText) {
-		if (currentCharNum==2) {
+		if (currentCharNum==4) {
+			printSmall(false, 26, i2, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
+		} else if (currentCharNum==3) {
+			printSmall(false, 26, i2, characterPicked[3] ? "Change character < 4 >" : "Add character < 4 >");
+		} else if (currentCharNum==2) {
 			printSmall(false, 26, i2, characterPicked[2] ? "Change character < 3 >" : "Add character < 3 >");
 		} else if (currentCharNum==1) {
 			printSmall(false, 26, i2, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");

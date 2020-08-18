@@ -15,6 +15,10 @@ static u16 charSpriteMem[2][(256*192)*3];
 static u8 charSpriteAlpha[2][(256*192)*3];
 static u16* charSpriteMem3 = (u16*)0x02480000;
 static u16* charSpriteAlpha3 = (u16*)0x02500000;
+static u16* charSpriteMem4 = (u16*)0x02580000;
+static u16* charSpriteAlpha4 = (u16*)0x02600000;
+static u16* charSpriteMem5 = (u16*)0x02680000;
+static u16* charSpriteAlpha5 = (u16*)0x02700000;
 
 static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
@@ -63,10 +67,17 @@ void GFX::loadSheets() {
 		if (*(vu32*)(0x08240000) == 1) {
 			charSpriteMem3 = (u16*)0x09000000;
 			charSpriteAlpha3 = (u16*)0x09080000;
+			charSpriteMem4 = (u16*)0x09100000;
+			charSpriteAlpha4 = (u16*)0x09180000;
+			charSpriteMem5 = (u16*)0x09200000;
+			charSpriteAlpha5 = (u16*)0x09280000;
 		}
 	}
-	if (isDSiMode() || REG_SCFG_EXT == 0x8307F100 || *(vu32*)(0x08240000) == 1) {
-		characterLimit = 2;
+	// Check for DS Debug RAM or DSi RAM
+	*(vu32*)(0x0279FFFC) = 1;
+	*(vu32*)(0x0239FFFC) = 0;
+	if (*(vu32*)(0x0279FFFC) == 1 || *(vu32*)(0x08240000) == 1) {
+		characterLimit = 4;	// Up the limit from 2 to 5 characters
 	}
 
 	bmpLoad("nitro:/graphics/gui/title.bmp", bgSpriteMem);
@@ -381,7 +392,17 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	std::vector<unsigned char> image;
 	unsigned width, height;
 	lodepng::decode(image, width, height, allSeasons ? t3xPathAllSeasons : t3xPathOneSeason);
-	if (num == 2) {
+	if (num == 4) {
+		for(unsigned i=0;i<image.size()/4;i++) {
+			charSpriteMem5[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			charSpriteAlpha5[i] = image[(i*4)+3];
+		}
+	} else if (num == 3) {
+		for(unsigned i=0;i<image.size()/4;i++) {
+			charSpriteMem4[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			charSpriteAlpha4[i] = image[(i*4)+3];
+		}
+	} else if (num == 2) {
 		for(unsigned i=0;i<image.size()/4;i++) {
 			charSpriteMem3[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 			charSpriteAlpha3[i] = image[(i*4)+3];
@@ -561,6 +582,59 @@ void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		flipH[0] ? x2-- : x2++;
 	  }
 	}
+
+	if (chracterSpriteFound[3]) {
+		// Continued from "if (chracterSpriteFound[2])"
+		// Character 4
+		dmaCopyWords(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		int y2 = 72;
+		for (int y = 0; y < 120; y++) {
+		  x2 = flipH[3] ? 255 : 0;
+		  x2 -= (zoomIn==1 ? 64 : 26);
+		  for (int x = 0; x < 256; x++) {
+			if (x2 >= 0 && x2 < 256 && charSpriteAlpha4[((y*256)+x)+((256*192)*zoomIn)] != 0) {
+				color = charSpriteMem4[((y*256)+x)+((256*192)*zoomIn)];
+				if (blendAlpha > 0) {
+					color = alphablend(fg, charSpriteMem4[((y2*256)+x)+((256*192)*zoomIn)], blendAlpha);
+				}
+				if (charSpriteAlpha4[((y*256)+x)+((256*192)*zoomIn)] == 255) {
+					bmpImageBuffer[1][(y2*256)+x2] = color;
+				} else {
+					bmpImageBuffer[1][(y2*256)+x2] = alphablend(color, bmpImageBuffer[0][(y2*256)+x2], charSpriteAlpha4[((y*256)+x)+((256*192)*zoomIn)]);
+				}
+			}
+			flipH[3] ? x2-- : x2++;
+		  }
+		  y2++;
+		}
+		buffer++;
+	}
+	if (chracterSpriteFound[4]) {
+		// Character 5
+		dmaCopyWords(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
+		int y2 = 72;
+		for (int y = 0; y < 120; y++) {
+		  x2 = flipH[4] ? 255 : 0;
+		  x2 += (zoomIn==1 ? 64 : 26);
+		  for (int x = 0; x < 256; x++) {
+			if (x2 >= 0 && x2 < 256 && charSpriteAlpha5[((y*256)+x)+((256*192)*zoomIn)] != 0) {
+				color = charSpriteMem5[((y*256)+x)+((256*192)*zoomIn)];
+				if (blendAlpha > 0) {
+					color = alphablend(fg, charSpriteMem5[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+				}
+				if (charSpriteAlpha5[((y*256)+x)+((256*192)*zoomIn)] == 255) {
+					bmpImageBuffer[0][(y2*256)+x2] = color;
+				} else {
+					bmpImageBuffer[0][(y2*256)+x2] = alphablend(color, bmpImageBuffer[1][(y2*256)+x2], charSpriteAlpha5[((y*256)+x)+((256*192)*zoomIn)]);
+				}
+			}
+			flipH[4] ? x2-- : x2++;
+		  }
+		  y2++;
+		}
+		buffer--;
+	}
+
 	dmaCopyWordsAsynch(0, bmpImageBuffer[buffer], bgGetGfxPtr(bg3Sub), 0x18000);
 	chracterSpriteLoaded = true;
 }
