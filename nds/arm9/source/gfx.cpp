@@ -10,8 +10,9 @@
 extern void bmpLoad(const char* filePath, u16* bgPath);
 
 u16 bmpImageBuffer[256*192];
-static u16 bgSpriteMem[(charSpriteSize/2)*3] = {0};
-static u16 charSpriteMem[2][(charSpriteSize/2)*3];
+static u16 bgSpriteMem[(256*192)*3] = {0};
+static u16 charSpriteMem[2][(256*192)*3];
+static u8 charSpriteAlpha[2][(256*192)*3];
 
 static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
@@ -366,6 +367,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	lodepng::decode(image, width, height, allSeasons ? t3xPathAllSeasons : t3xPathOneSeason);
 	for(unsigned i=0;i<image.size()/4;i++) {
 		charSpriteMem[num][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+		charSpriteAlpha[num][i] = image[(i*4)+3];
 	}
 
 	chracterSpriteFound[num] = true;
@@ -413,10 +415,15 @@ void GFX::loadCharSpriteMem(int num, int zoomIn, bool flipH) {
 	for (int y = 0; y < 192; y++) {
 	  x2 = flipH ? 255 : 0;
 	  for (int x = 0; x < 256; x++) {
-		if (charSpriteMem[num][((y*256)+x)+((0x18000/2)*zoomIn)] != 0xFC1F) {
-			bmpImageBuffer[(y*256)+x2] = charSpriteMem[num][((y*256)+x)+((0x18000/2)*zoomIn)];
+		if (charSpriteAlpha[num][((y*256)+x)+((256*192)*zoomIn)] != 0) {
+			u16 color = charSpriteMem[num][((y*256)+x)+((256*192)*zoomIn)];
 			if (blendAlpha > 0) {
-				bmpImageBuffer[(y*256)+x2] = alphablend(fg, bmpImageBuffer[(y*256)+x2], blendAlpha);
+				color = alphablend(fg, charSpriteMem[num][((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+			}
+			if (charSpriteAlpha[num][((y*256)+x)+((256*192)*zoomIn)] == 255) {
+				bmpImageBuffer[(y*256)+x2] = color;
+			} else {
+				bmpImageBuffer[(y*256)+x2] = alphablend(color, bgSpriteMem[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[num][((y*256)+x)+((256*192)*zoomIn)]);
 			}
 		}
 		flipH ? x2-- : x2++;
