@@ -13,6 +13,8 @@ u16 bmpImageBuffer[2][256*192];
 static u16 bgSpriteMem[(256*192)*3] = {0};
 static u16 charSpriteMem[2][(256*192)*3];
 static u8 charSpriteAlpha[2][(256*192)*3];
+static u16* charSpriteMem3 = (u16*)0x02480000;
+static u16* charSpriteAlpha3 = (u16*)0x02500000;
 
 static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
@@ -52,7 +54,19 @@ void GFX::resetCharStatus(int num) {
 	chracterSpriteFound[4] = false;
 }
 
+extern int characterLimit;
+
 void GFX::loadSheets() {
+	sysSetCartOwner (BUS_OWNER_ARM9);	// Allow arm9 to access GBA ROM (or in this case, the DS Memory Expansion Pak)
+	*(vu32*)(0x08240000) = 1;
+	if (*(vu32*)(0x08240000) == 1) {
+		charSpriteMem3 = (u16*)0x09000000;
+		charSpriteAlpha3 = (u16*)0x09080000;
+	}
+	if (isDSiMode() || REG_SCFG_EXT == 0x8307F100 || *(vu32*)(0x08240000) == 1) {
+		characterLimit = 2;
+	}
+
 	bmpLoad("nitro:/graphics/gui/title.bmp", bgSpriteMem);
 
 	dmaCopyWords(1, bgSpriteMem, bgSpriteMem+(charSpriteSize/2), 0x18000);
@@ -365,9 +379,16 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	std::vector<unsigned char> image;
 	unsigned width, height;
 	lodepng::decode(image, width, height, allSeasons ? t3xPathAllSeasons : t3xPathOneSeason);
-	for(unsigned i=0;i<image.size()/4;i++) {
-		charSpriteMem[num][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-		charSpriteAlpha[num][i] = image[(i*4)+3];
+	if (num == 2) {
+		for(unsigned i=0;i<image.size()/4;i++) {
+			charSpriteMem3[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			charSpriteAlpha3[i] = image[(i*4)+3];
+		}
+	} else {
+		for(unsigned i=0;i<image.size()/4;i++) {
+			charSpriteMem[num][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			charSpriteAlpha[num][i] = image[(i*4)+3];
+		}
 	}
 
 	chracterSpriteFound[num] = true;
@@ -419,6 +440,66 @@ void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	int buffer = 0;
 	int x2 = 0;
 	u16 color = 0;
+	if (chracterSpriteFound[2]) {
+		// Character 1
+		for (int y = 0; y < 192; y++) {
+		  x2 = flipH[0] ? 255 : 0;
+		  x2 -= (zoomIn==1 ? 96 : 50);
+		  for (int x = 0; x < 256; x++) {
+			if (x2 >= 0 && x2 < 256 && charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] != 0) {
+				color = charSpriteMem[0][((y*256)+x)+((256*192)*zoomIn)];
+				if (blendAlpha > 0) {
+					color = alphablend(fg, charSpriteMem[0][((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+				}
+				if (charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] == 255) {
+					bmpImageBuffer[0][(y*256)+x2] = color;
+				} else {
+					bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgSpriteMem[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
+				}
+			}
+			flipH[0] ? x2-- : x2++;
+		  }
+		}
+		// Character 2
+		dmaCopyWords(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		for (int y = 0; y < 192; y++) {
+		  x2 = flipH[1] ? 255 : 0;
+		  for (int x = 0; x < 256; x++) {
+			if (charSpriteAlpha[1][((y*256)+x)+((256*192)*zoomIn)] != 0) {
+				color = charSpriteMem[1][((y*256)+x)+((256*192)*zoomIn)];
+				if (blendAlpha > 0) {
+					color = alphablend(fg, charSpriteMem[1][((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+				}
+				if (charSpriteAlpha[1][((y*256)+x)+((256*192)*zoomIn)] == 255) {
+					bmpImageBuffer[1][(y*256)+x2] = color;
+				} else {
+					bmpImageBuffer[1][(y*256)+x2] = alphablend(color, bmpImageBuffer[0][(y*256)+x2], charSpriteAlpha[1][((y*256)+x)+((256*192)*zoomIn)]);
+				}
+			}
+			flipH[1] ? x2-- : x2++;
+		  }
+		}
+		// Character 3
+		dmaCopyWords(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
+		for (int y = 0; y < 192; y++) {
+		  x2 = flipH[2] ? 255 : 0;
+		  x2 += (zoomIn==1 ? 96 : 50);
+		  for (int x = 0; x < 256; x++) {
+			if (x2 >= 0 && x2 < 256 && charSpriteAlpha3[((y*256)+x)+((256*192)*zoomIn)] != 0) {
+				color = charSpriteMem3[((y*256)+x)+((256*192)*zoomIn)];
+				if (blendAlpha > 0) {
+					color = alphablend(fg, charSpriteMem3[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+				}
+				if (charSpriteAlpha3[((y*256)+x)+((256*192)*zoomIn)] == 255) {
+					bmpImageBuffer[0][(y*256)+x2] = color;
+				} else {
+					bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bmpImageBuffer[1][(y*256)+x2], charSpriteAlpha3[((y*256)+x)+((256*192)*zoomIn)]);
+				}
+			}
+			flipH[2] ? x2-- : x2++;
+		  }
+		}
+	} else
 	if (chracterSpriteFound[1]) {
 		// Character 1
 		for (int y = 0; y < 192; y++) {
@@ -483,7 +564,7 @@ void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 }
 
 void GFX::showBgSprite(int zoomIn) {
-	if (!bgSpriteLoaded) return;
+	//if (!bgSpriteLoaded) return;
 }
 
 void GFX::animateBgSprite(void) {
@@ -504,64 +585,6 @@ void GFX::animateBgSprite(void) {
 }
 
 void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool lightingEffects) {
-	if (!chracterSpriteLoaded) return;
-
-	int xPos = 0;
-	int yPos = 0;
-	if ((num == 3 || num == 4) && chracterSpriteFound[3]) {
-		if (zoomIn == 0) {
-			return;
-		}
-		yPos += 80;
-		switch (num) {
-			case 3:
-				xPos -= 80;
-				break;
-			case 4:
-				xPos += 80;
-				break;
-		}
-	} else if (chracterSpriteFound[0] && chracterSpriteFound[1] && chracterSpriteFound[2]) {
-		if (zoomIn == 1) {
-		switch (num) {
-			case 0:
-				xPos -= 152;
-				break;
-			case 2:
-				xPos += 152;
-				break;
-		}
-		} else {
-		switch (num) {
-			case 0:
-				xPos -= 64;
-				break;
-			case 2:
-				xPos += 64;
-				break;
-		}
-		}
-	} else if (chracterSpriteFound[0] && chracterSpriteFound[1]) {
-		if (zoomIn == 1) {
-		switch (num) {
-			case 0:
-				xPos -= 80;
-				break;
-			case 1:
-				xPos += 80;
-				break;
-		}
-		} else {
-		switch (num) {
-			case 0:
-				xPos -= 32;
-				break;
-			case 1:
-				xPos += 32;
-				break;
-		}
-		}
-	}
 }
 
 void GFX::DrawSprite(int img, int x, int y, float ScaleX, float ScaleY) {

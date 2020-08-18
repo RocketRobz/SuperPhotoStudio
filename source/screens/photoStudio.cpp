@@ -49,6 +49,10 @@ extern glImage backImage[(64 / 64) * (64 / 64)];
 extern glImage cursorImage[(32 / 32) * (32 / 32)];
 extern glImage itemButtonImage[(256 / 32) * (64 / 32)];
 extern glImage genderImage[2][(64 / 64) * (64 / 64)];
+
+int characterLimit = 1;
+#else
+int characterLimit = 4;
 #endif
 
 static int charPageOrder[] = {
@@ -619,11 +623,7 @@ void PhotoStudio::Draw(void) const {
 		i2 += 40;
 		glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
 		if (redrawText) {
-		if (currentCharNum==4) {
-			printSmall(false, 26, i2, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
-		} else if (currentCharNum==3) {
-			printSmall(false, 26, i2, characterPicked[3] ? "Change character < 4 >" : "Add character < 4 >");
-		} else if (currentCharNum==2) {
+		if (currentCharNum==2) {
 			printSmall(false, 26, i2, characterPicked[2] ? "Change character < 3 >" : "Add character < 3 >");
 		} else if (currentCharNum==1) {
 			printSmall(false, 26, i2, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
@@ -1322,8 +1322,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					if (currentCharNum > charsShown+1) {
 						currentCharNum = charsShown+1;
 					}
-					if (currentCharNum > 4) {
-						currentCharNum = 4;
+					if (currentCharNum > characterLimit) {
+						currentCharNum = characterLimit;
 					}
 					#ifdef NDS
 					else {
