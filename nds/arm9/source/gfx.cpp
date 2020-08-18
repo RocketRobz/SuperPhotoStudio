@@ -341,8 +341,8 @@ void GFX::unloadBgSprite() {
 void GFX::reloadBgSprite() {
 	unloadBgSprite();
 	loadBgSprite();
-	dmaCopyWords(1, bgSpriteMem, bmpImageBuffer, 0x18000);
-	dmaCopyWordsAsynch(1, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
+	dmaCopyWords(0, bgSpriteMem, bmpImageBuffer, 0x18000);
+	dmaCopyWordsAsynch(0, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
 }
 
 bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
@@ -377,7 +377,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 
 void GFX::loadCharSpriteMem(int num, int zoomIn, bool flipH) {
 	if (!chracterSpriteFound[num]) return;
-	dmaCopyWords(1, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer, 0x18000);
+	dmaCopyWords(0, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer, 0x18000);
 
 	u16 fg = 0;
 	u8 blendAlpha = 0;
@@ -429,7 +429,7 @@ void GFX::loadCharSpriteMem(int num, int zoomIn, bool flipH) {
 		flipH ? x2-- : x2++;
 	  }
 	}
-	dmaCopyWordsAsynch(1, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
+	dmaCopyWordsAsynch(0, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
 	chracterSpriteLoaded = true;
 }
 
