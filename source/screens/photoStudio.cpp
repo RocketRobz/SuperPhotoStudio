@@ -68,8 +68,9 @@ static int charPageOrder[] = {
 	2,	// Style Savvy: Fashion Forward
 	3};	// Style Savvy: Styling Star
 
-#ifndef NDS
 static int metalXpos = 0;
+#ifdef NDS
+static bool metalDelay = false;
 #endif
 static int currentCharacterRendered = 0;
 extern bool musicPlayStarted;
@@ -441,6 +442,16 @@ void PhotoStudio::Draw(void) const {
 	#ifdef NDS	// Bottom screen only
 	if (redrawText) {
 		clearText(false);
+	}
+
+	if (showScrollingBg) {
+	  if (!metalDelay) {
+		metalXpos++;
+		if (metalXpos > 96) {
+			metalXpos = 0;
+		}
+	  }
+		metalDelay = !metalDelay;
 	}
 
 	cursorX = 200;
@@ -965,15 +976,8 @@ void PhotoStudio::preview() const {
 
 void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	#ifdef NDS
-	if (!graphicLoaded) {
-		extern int bg3Sub;
-		extern int bg3Main;
-		extern void bmpLoad(const char* filePath, u16* bgPath);
-
-		bmpLoad("nitro:/graphics/gui/title.bmp", bgGetGfxPtr(bg3Sub));
-		bmpLoad("nitro:/graphics/gui/photo_bg.bmp", bgGetGfxPtr(bg3Main));
-		graphicLoaded = true;
-	}
+	extern void updateTitleScreen(const int metalXposBase);
+	updateTitleScreen(metalXpos);
 	#endif
 
 	#ifdef NDS

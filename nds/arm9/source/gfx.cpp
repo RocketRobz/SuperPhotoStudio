@@ -7,8 +7,6 @@
 
 #define charSpriteSize 0x18000
 
-extern void bmpLoad(const char* filePath, u16* bgPath);
-
 u16 bmpImageBuffer[2][256*192];
 static u16 bgSpriteMem[(256*192)*3] = {0};
 static u16 charSpriteMem[2][(256*192)*3];
@@ -23,6 +21,9 @@ static u16* charSpriteAlpha5 = (u16*)0x02700000;
 static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
 static bool bgSpriteLoaded = false;
+
+static bool titleBottomLoaded = false;
+static bool animateTitle = true;
 
 extern int studioBg;
 extern u8 settingBits;
@@ -80,13 +81,72 @@ void GFX::loadSheets() {
 		characterLimit = 4;	// Up the limit from 2 to 5 characters
 	}
 
-	bmpLoad("nitro:/graphics/gui/title.bmp", bgSpriteMem);
+	int metalXpos = 0;
+	int metalYpos = 0;
 
-	dmaCopyWords(1, bgSpriteMem, bgSpriteMem+(charSpriteSize/2), 0x18000);
-	dmaCopyWords(1, bgSpriteMem, bgSpriteMem+((charSpriteSize/2)*2), 0x18000);
+	std::vector<unsigned char> image;
+	unsigned width, height;
+	lodepng::decode(image, width, height, "nitro:/graphics/gui/titleMetal.png");
+	for(unsigned i=0;i<image.size()/4;i++) {
+		charSpriteMem[0][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+	}
+	image.clear();
+	lodepng::decode(image, width, height, "nitro:/graphics/gui/title.png");
+	for(unsigned i=0;i<image.size()/4;i++) {
+		bmpImageBuffer[1][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+		charSpriteAlpha[0][i] = image[(i*4)+3];
+		if (i >= 256*72 && i < 256*131) {
+			metalXpos++;
+			if (metalXpos == 256) {
+				metalXpos = 0;
+				metalYpos++;
+			}
+		}
+		if (image[(i*4)+3] == 255) {
+			bmpImageBuffer[0][i] = bmpImageBuffer[1][i];
+		} else if (image[(i*4)+3] == 0) {
+			bmpImageBuffer[0][i] = charSpriteMem[0][(metalYpos*384)+metalXpos];
+		} else if (i >= 256*72 && i < 256*131) {
+			bmpImageBuffer[0][i] = alphablend(bmpImageBuffer[1][i], charSpriteMem[0][(metalYpos*384)+metalXpos], image[(i*4)+3]);
+		}
+	}
+	image.clear();
+	lodepng::decode(image, width, height, "nitro:/graphics/gui/photo_bg.png");
+	for(unsigned i=0;i<image.size()/4;i++) {
+		charSpriteMem[1][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+	}
+
+	dmaCopyWords(0, bmpImageBuffer[0], bgSpriteMem, 0x18000);
+	dmaCopyWords(0, bmpImageBuffer[0], bgSpriteMem+(charSpriteSize/2), 0x18000);
+	dmaCopyWords(0, bmpImageBuffer[0], bgSpriteMem+((charSpriteSize/2)*2), 0x18000);
 }
 
-void GFX::unloadSheets() {
+void updateTitleScreen(const int metalXposBase) {
+	if (!animateTitle) return;
+
+	int metalXpos = metalXposBase;
+	int metalYpos = 0;
+
+	for (int i = 256*72; i < 256*131; i++) {
+		metalXpos++;
+		if (metalXpos == 256+metalXposBase) {
+			metalXpos = metalXposBase;
+			metalYpos++;
+		}
+		if (charSpriteAlpha[0][i] != 255) {
+		  if (charSpriteAlpha[0][i] == 0) {
+			bmpImageBuffer[0][i] = charSpriteMem[0][(metalYpos*384)+metalXpos];
+		  } else if (i >= 256*72 && i < 256*131) {
+			bmpImageBuffer[0][i] = alphablend(bmpImageBuffer[1][i], charSpriteMem[0][(metalYpos*384)+metalXpos], charSpriteAlpha[0][i]);
+		  }
+		}
+	}
+
+	dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg3Sub), 0x18000);
+	if (!titleBottomLoaded) {
+		dmaCopyWordsAsynch(1, charSpriteMem[1], bgGetGfxPtr(bg3Main), 0x18000);
+		titleBottomLoaded = true;
+	}
 }
 
 static inline bool isDaytime(int hour, int minutes) {
@@ -107,6 +167,8 @@ static inline bool isEvening(int hour, int minutes) {
 
 void GFX::loadBgSprite(void) {
 	if (bgSpriteLoaded) return;
+
+	animateTitle = false;
 
 	dmaFillWords(0xFFFFFFFF, bgGetGfxPtr(bg3Sub), 0x18000);
 
@@ -368,11 +430,13 @@ void GFX::unloadBgSprite() {
 void GFX::reloadBgSprite() {
 	unloadBgSprite();
 	loadBgSprite();
-	dmaCopyWords(0, bgSpriteMem, bmpImageBuffer, 0x18000);
-	dmaCopyWordsAsynch(0, bmpImageBuffer, bgGetGfxPtr(bg3Sub), 0x18000);
+	dmaCopyWords(0, bgSpriteMem, bmpImageBuffer[0], 0x18000);
+	dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg3Sub), 0x18000);
 }
 
 bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
+	animateTitle = false;
+
 	if (chracterSpriteLoaded) {
 		chracterSpriteLoaded = false;
 	}
