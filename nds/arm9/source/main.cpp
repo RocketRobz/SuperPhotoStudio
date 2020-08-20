@@ -86,7 +86,18 @@ int main(int argc, char **argv) {
 		stop();
 	}
 
-	if (!nitroFSInit(argv[0])) {
+	bool nitroFSInited = nitroFSInit(argv[0]);
+
+	if (!nitroFSInited && isDSiMode()) {
+		// Mount from SDNAND
+		char fileName[128];
+		sprintf(fileName, *(u8*)0x02FFE01E > 0xF
+			? "sd:/title/000%x/%x/content/000000%x.app" : "sd:/title/000%x/%x/content/0000000%x.app",
+			*(unsigned int*)0x02FFE234, *(unsigned int*)0x02FFE230, *(u8*)0x02FFE01E);
+		nitroFSInited = nitroFSInit(fileName);
+	}
+
+	if (!nitroFSInited) {
 		consoleDemoInit();
 		iprintf("NitroFS init failed!");
 		stop();
