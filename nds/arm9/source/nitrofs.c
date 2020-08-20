@@ -165,7 +165,7 @@ nitroFSInit(const char *ndsfile)
             return (1);
         }
     }
-	if (!isDSiMode() || strncmp((const char*)0x4FFFA00, "no$gba", 6) == 0) {
+	if (!isDSiMode() || PersonalData->name[0]==0 /* Regular NO$GBA */ || strncmp((const char*)0x4FFFA00, "no$gba", 6) == 0) {
 		sysSetCartOwner (BUS_OWNER_ARM9); //give us gba slot ownership
 		if ((strncmp(((const char *)GBAROM) + LOADERSTROFFSET, LOADERSTR, strlen(LOADERSTR)) == 0)
 		 || (strncmp(((const char *)GBAROM) + 0xC, __NDSHeader->gameCode, 4) == 0))
