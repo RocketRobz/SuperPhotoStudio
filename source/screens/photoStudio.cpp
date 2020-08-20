@@ -652,7 +652,10 @@ void PhotoStudio::Draw(void) const {
 		if (redrawText) {
 			printSmall(false, 6, 6, "What do you want to do?");
 
-			printSmall(false, 162, 168, "Y: Take photo");
+			extern bool fatInited;
+			if (fatInited) {
+				printSmall(false, 162, 168, "Y: Take photo");
+			}
 		}
 
 		int i2 = 0;
