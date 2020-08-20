@@ -14,6 +14,7 @@
 #include "conkerCharNames.h"
 #include "banjokCharNames.h"
 #include "pacCharNames.h"
+#include "swapCharNames.h"
 
 #include "import_ss1bgnames.h"
 #include "import_ss2bgnames.h"
@@ -61,12 +62,13 @@ static int charPageOrder[] = {
 	8,	// Conker series
 	7,	// Jet Force Gemini
 	10,	// Pac-Man series
-	5,	// Super Mario series
 	6,	// Sonic the Hedgehog series
 	0,	// Style Savvy
 	1,	// Style Savvy: Trendsetters
 	2,	// Style Savvy: Fashion Forward
-	3};	// Style Savvy: Styling Star
+	3,	// Style Savvy: Styling Star
+	5,	// Super Mario series
+	11};	// Swapnote/Swapdoodle
 
 static int metalXpos = 0;
 #ifdef NDS
@@ -132,6 +134,7 @@ void PhotoStudio::getMaxChars() {
 				import_totalCharacters = 3;
 				break;
 			case 6:
+			case 11:
 				import_totalCharacters = 0;
 				break;
 			case 7:
@@ -185,6 +188,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return banjokCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 10:
 			return pacCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 11:
+			return swapCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -279,6 +284,17 @@ const char* PhotoStudio::import_characterFileName(void) const {
 			case 3:
 				return pacCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
 		}
+		case 11:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return swapCharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return swapCharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return swapCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return swapCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
 	}
 	return "null";
 }
@@ -367,6 +383,96 @@ const char* PhotoStudio::ss4Title(void) const {
 	#else
 	return "Style Savvy: Styling Star";
 	#endif
+}
+
+const char* PhotoStudio::charGameTitle(void) const {
+	switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
+		case 0:
+			return ss1Title();
+		case 1:
+			return ss2Title();
+		case 2:
+			return ss3Title();
+		case 3:
+			return ss4Title();
+		case 4:
+			return "Super Photo Studio";
+		case 5:
+			return "Super Mario series";
+		case 6:
+			return "Sonic the Hedgehog series";
+		case 7:
+			return "Jet Force Gemini";
+		case 8:
+			return "Conker series";
+		case 9:
+			return "Banjo-Kazooie series";
+		case 10:
+			return "Pac-Man series";
+		case 11:
+			return "Swapnote/Swapdoodle";
+	}
+	return "???";
+}
+
+bool PhotoStudio::charGender(int i) const {
+	switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
+		case 0:
+			return import_ss1CharacterGenders[i];
+		case 1:
+			return import_ss2CharacterGenders[i];
+		case 2:
+			return import_ss3CharacterGenders[i];
+		case 3:
+			return import_ss4CharacterGenders[i];
+		case 4:
+			return rocketCharacterGenders[i];
+		case 5:
+			return smCharacterGenders[i];
+		case 6:
+			return sthCharacterGenders[i];
+		case 7:
+			return jfgCharacterGenders[i];
+		case 8:
+			return conkerCharacterGenders[i];
+		case 9:
+			return banjokCharacterGenders[i];
+		case 10:
+			return pacCharacterGenders[i];
+		case 11:
+			return swapCharacterGenders[i];
+	}
+	return true;
+}
+
+const char* PhotoStudio::charName(int i) const {
+	switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
+		case 0:
+			return import_ss1CharacterNames[i];
+		case 1:
+			return import_ss2CharacterNames[i];
+		case 2:
+			return import_ss3CharacterNames[i];
+		case 3:
+			return import_ss4CharacterNames[i];
+		case 4:
+			return rocketCharacterNames[i];
+		case 5:
+			return smCharacterNames[i];
+		case 6:
+			return sthCharacterNames[i];
+		case 7:
+			return jfgCharacterNames[i];
+		case 8:
+			return conkerCharacterNames[i];
+		case 9:
+			return banjokCharacterNames[i];
+		case 10:
+			return pacCharacterNames[i];
+		case 11:
+			return swapCharacterNames[i];
+	}
+	return "???";
 }
 
 int PhotoStudio::getBgNum(void) const {
@@ -458,42 +564,7 @@ void PhotoStudio::Draw(void) const {
 	if (subScreenMode == 2) {
 		cursorY = 52+(40*importCharacterList_cursorPositionOnScreen[currentCharNum]);
 		if (redrawText) {
-		// Game name
-		switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
-			case 10:
-				printSmall(false, 0, 6, "Pac-Man series", Alignment::center);
-				break;
-			case 9:
-				printSmall(false, 0, 6, "Banjo-Kazooie series", Alignment::center);
-				break;
-			case 8:
-				printSmall(false, 0, 6, "Conker series", Alignment::center);
-				break;
-			case 7:
-				printSmall(false, 0, 6, "Jet Force Gemini", Alignment::center);
-				break;
-			case 6:
-				printSmall(false, 0, 6, "Sonic the Hedgehog series", Alignment::center);
-				break;
-			case 5:
-				printSmall(false, 0, 6, "Super Mario series", Alignment::center);
-				break;
-			case 4:
-				printSmall(false, 0, 6, "Super Photo Studio", Alignment::center);
-				break;
-			case 3:
-				printSmall(false, 0, 6, ss4Title(), Alignment::center);
-				break;
-			case 2:
-				printSmall(false, 0, 6, ss3Title(), Alignment::center);
-				break;
-			case 1:
-				printSmall(false, 0, 6, ss2Title(), Alignment::center);
-				break;
-			case 0:
-				printSmall(false, 0, 6, ss1Title(), Alignment::center);
-				break;
-		}
+			printSmall(false, 0, 6, charGameTitle(), Alignment::center);
 			printSmall(false, 6, 6, "<");
 			printSmall(false, 242, 6, ">");
 
@@ -511,55 +582,10 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 40;
 		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
-			if (charPageOrder[char_highlightedGame[currentCharNum]] == 10) {
-				if (i >= 2) break;
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[pacCharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, pacCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 9) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[banjokCharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, banjokCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 8) {
-				if (i >= 2) break;
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[conkerCharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, conkerCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 7) {
-				if (i >= 2) break;
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[jfgCharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, jfgCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 6) {
-				if (i >= 1) break;
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[sthCharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, sthCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 5) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[smCharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, smCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 4) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[rocketCharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, rocketCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 3) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[import_ss4CharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, import_ss4CharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 2) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[import_ss3CharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, import_ss3CharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 1) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[import_ss2CharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, import_SS2CharacterNames(i));
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 0) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				glSprite(12, i2-6, GL_FLIP_NONE, genderImage[import_ss1CharacterGenders[i]]);
-				if (redrawText) printSmall(false, 54, i2, import_ss1CharacterNames[i]);
-			}
+			if (i >= import_totalCharacters+1) break;
+			glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+			glSprite(12, i2-6, GL_FLIP_NONE, genderImage[charGender(i)]);
+			if (redrawText) printSmall(false, 54, i2, charName(i));
 			i2 += 40;
 		}
 	  }
@@ -737,42 +763,7 @@ void PhotoStudio::Draw(void) const {
 	} else if (subScreenMode == 2) {
 		cursorY = 64+(48*importCharacterList_cursorPositionOnScreen[currentCharNum]);
 
-		// Game name
-		switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
-			case 10:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Pac-Man series");
-				break;
-			case 9:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Banjo-Kazooie series");
-				break;
-			case 8:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Conker series");
-				break;
-			case 7:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Jet Force Gemini");
-				break;
-			case 6:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Sonic the Hedgehog series");
-				break;
-			case 5:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Mario series");
-				break;
-			case 4:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Photo Studio");
-				break;
-			case 3:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss4Title());
-				break;
-			case 2:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss3Title());
-				break;
-			case 1:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss2Title());
-				break;
-			case 0:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss1Title());
-				break;
-		}
+		Gui::DrawStringCentered(0, 8, 0.50, WHITE, charGameTitle());
 		Gui::DrawString(8, 8, 0.50, WHITE, "<");
 		Gui::DrawString(304, 8, 0.50, WHITE, ">");
 
@@ -792,55 +783,10 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
-			if (charPageOrder[char_highlightedGame[currentCharNum]] == 10) {
-				if (i >= 2) break;
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((pacCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, pacCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 9) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((banjokCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, banjokCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 8) {
-				if (i >= 2) break;
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((conkerCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, conkerCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 7) {
-				if (i >= 2) break;
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((jfgCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, jfgCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 6) {
-				if (i >= 1) break;
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((sthCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, sthCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 5) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((smCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, smCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 4) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((rocketCharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, rocketCharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 3) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((import_ss4CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, import_ss4CharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 2) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((import_ss3CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, import_ss3CharacterNames[i]);
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 1) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((import_ss2CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx)/*+import_ss2CharacterTieColors[i]*/, 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, import_SS2CharacterNames(i));
-			} else if (charPageOrder[char_highlightedGame[currentCharNum]] == 0) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				GFX::DrawSprite((import_ss1CharacterGenders[i] ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
-				Gui::DrawString(66, i2, 0.65, WHITE, import_ss1CharacterNames[i]);
-			}
+			if (i >= import_totalCharacters+1) break;
+			GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+			GFX::DrawSprite((charGender(i) ? sprites_icon_male_idx : sprites_icon_female_idx), 14, i2-8);
+			Gui::DrawString(66, i2, 0.65, WHITE, charName(i));
 			i2 += 48;
 		}
 	  }
@@ -1110,7 +1056,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
 			char_highlightedGame[currentCharNum]--;
-			if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = 10;
+			if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = 11;
 			getMaxChars();
 			renderTop = true;
 		}
@@ -1118,7 +1064,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
 			char_highlightedGame[currentCharNum]++;
-			if (char_highlightedGame[currentCharNum] > 10) char_highlightedGame[currentCharNum] = 0;
+			if (char_highlightedGame[currentCharNum] > 11) char_highlightedGame[currentCharNum] = 0;
 			getMaxChars();
 			renderTop = true;
 		}

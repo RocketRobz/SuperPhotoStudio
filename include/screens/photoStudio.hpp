@@ -28,6 +28,9 @@ private:
 	const char* ss2Title(void) const;
 	const char* ss3Title(void) const;
 	const char* ss4Title(void) const;
+	const char* charGameTitle(void) const;
+	bool charGender(int i) const;
+	const char* charName(int i) const;
 	int getBgNum(void) const;
 	void drawMsg(void) const;
 	void loadChrImage(void);
