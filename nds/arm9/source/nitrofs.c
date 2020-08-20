@@ -47,6 +47,9 @@
     
     2018-09-05 v0.9 - modernize devoptab (by RonnChyran)
         * Updated for libsysbase change in devkitARM r46 and above. 
+    
+    2020-08-20 v0.10 - modernize GBA SLOT support (by RocketRobz)
+        * Updated GBA SLOT detection to check for game code and header CRC. 
 
 */
 
@@ -55,11 +58,6 @@
 #include <nds.h>
 #include "nitrofs.h"
 #include "tonccpy.h"
-
-//This seems to be a typo! memory.h has REG_EXEMEMCNT
-#ifndef REG_EXMEMCNT
-#define REG_EXMEMCNT (*(vuint16 *)0x04000204)
-#endif
 
 #define __itcm __attribute__((section(".itcm")))
 
@@ -137,33 +135,30 @@ nitroFSInit(const char *ndsfile)
     chdirpathid = NITROROOT;
     ndsFileLastpos = 0;
     ndsFile = NULL;
-	bool noLoader = ((strncmp((const char *)0x02FFFC38, __NDSHeader->gameCode, 4) == 0)
+	bool headerFirst = ((strncmp((const char *)0x02FFFC38, __NDSHeader->gameCode, 4) == 0)
 	              && (*(u16*)0x02FFFC36 == __NDSHeader->headerCRC16));
-	if (!isDSiMode() || noLoader)
+	if (!isDSiMode() || headerFirst)
 	{
 		sysSetCartOwner (BUS_OWNER_ARM9); //give us gba slot ownership
-		if ((strncmp(((const char *)GBAROM) + LOADERSTROFFSET, LOADERSTR, strlen(LOADERSTR)) == 0) || noLoader)
-		{ // We has gba rahm
-			//printf("yes i think this is GBA?!\n");
-			if ((strncmp(((const char *)GBAROM) + 0x20C, __NDSHeader->gameCode, 4) == 0)
-			 && (*(u16*)0x0800035E == __NDSHeader->headerCRC16))
-			{ //Look for second magic string, if found its a sc.nds or nds.gba
-				//printf("sc/gba\n");
-				fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET + LOADEROFFSET)) + LOADEROFFSET;
-				fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET + LOADEROFFSET)) + LOADEROFFSET;
-				hasLoader = true;
-				AddDevice(&nitroFSdevoptab);
-				return (1);
-			}
-			else
-			{ //Ok, its not a .gba build, so must be emulator
-				//printf("gba, must be emu\n");
-				fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET));
-				fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET));
-				hasLoader = false;
-				AddDevice(&nitroFSdevoptab);
-				return (1);
-			}
+		// We has gba rahm
+		//printf("yes i think this is GBA?!\n");
+		if (strncmp(((const char *)GBAROM) + LOADERSTROFFSET, LOADERSTR, strlen(LOADERSTR)) == 0)
+		{ //Look for second magic string, if found its a sc.nds or nds.gba
+			//printf("sc/gba\n");
+			fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET + LOADEROFFSET)) + LOADEROFFSET;
+			fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET + LOADEROFFSET)) + LOADEROFFSET;
+			hasLoader = true;
+			AddDevice(&nitroFSdevoptab);
+			return (1);
+		}
+		else if (headerFirst)
+		{ //Ok, its not a .gba build, so must be emulator
+			//printf("gba, must be emu\n");
+			fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET));
+			fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET));
+			hasLoader = false;
+			AddDevice(&nitroFSdevoptab);
+			return (1);
 		}
 	}
     if (ndsfile != NULL)
