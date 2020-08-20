@@ -1,6 +1,7 @@
 #include "common.hpp"
 #include "color.h"
 #include "lodepng.h"
+#include "tonccpy.h"
 
 #include <ctime>
 #include <unistd.h>
@@ -12,11 +13,11 @@ static u16 bgSpriteMem[(256*192)*3] = {0};
 static u16 charSpriteMem[2][(256*192)*3];
 static u8 charSpriteAlpha[2][(256*192)*3];
 static u16* charSpriteMem3 = (u16*)0x02480000;
-static u16* charSpriteAlpha3 = (u16*)0x02500000;
-static u16* charSpriteMem4 = (u16*)0x02580000;
-static u16* charSpriteAlpha4 = (u16*)0x02600000;
-static u16* charSpriteMem5 = (u16*)0x02680000;
-static u16* charSpriteAlpha5 = (u16*)0x02700000;
+static u16* charSpriteMem4 = (u16*)0x024C8000;
+static u16* charSpriteMem5 = (u16*)0x02510000;
+static u8* charSpriteAlpha3 = (u8*)0x02558000;
+static u8* charSpriteAlpha4 = (u8*)0x0257C000;
+static u8* charSpriteAlpha5 = (u8*)0x025A0000;
 
 static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
@@ -67,11 +68,11 @@ void GFX::loadSheets() {
 		*(vu32*)(0x08240000) = 1;
 		if (*(vu32*)(0x08240000) == 1) {
 			charSpriteMem3 = (u16*)0x09000000;
-			charSpriteAlpha3 = (u16*)0x09080000;
-			charSpriteMem4 = (u16*)0x09100000;
-			charSpriteAlpha4 = (u16*)0x09180000;
-			charSpriteMem5 = (u16*)0x09200000;
-			charSpriteAlpha5 = (u16*)0x09280000;
+			charSpriteMem4 = (u16*)0x09048000;
+			charSpriteMem5 = (u16*)0x09090000;
+			charSpriteAlpha3 = (u8*)0x090D8000;
+			charSpriteAlpha4 = (u8*)0x090FC000;
+			charSpriteAlpha5 = (u8*)0x09120000;
 		}
 	}
 	// Check for DS Debug RAM or DSi RAM
@@ -459,17 +460,17 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	if (num == 4) {
 		for(unsigned i=0;i<image.size()/4;i++) {
 			charSpriteMem5[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-			charSpriteAlpha5[i] = image[(i*4)+3];
+			tonccpy(&charSpriteAlpha5[i], &image[(i*4)+3], 1);
 		}
 	} else if (num == 3) {
 		for(unsigned i=0;i<image.size()/4;i++) {
 			charSpriteMem4[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-			charSpriteAlpha4[i] = image[(i*4)+3];
+			tonccpy(&charSpriteAlpha4[i], &image[(i*4)+3], 1);
 		}
 	} else if (num == 2) {
 		for(unsigned i=0;i<image.size()/4;i++) {
 			charSpriteMem3[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-			charSpriteAlpha3[i] = image[(i*4)+3];
+			tonccpy(&charSpriteAlpha3[i], &image[(i*4)+3], 1);
 		}
 	} else {
 		for(unsigned i=0;i<image.size()/4;i++) {
