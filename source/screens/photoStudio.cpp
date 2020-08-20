@@ -450,7 +450,7 @@ const char* PhotoStudio::charName(int i) const {
 		case 0:
 			return import_ss1CharacterNames[i];
 		case 1:
-			return import_ss2CharacterNames[i];
+			return import_SS2CharacterNames(i);
 		case 2:
 			return import_ss3CharacterNames[i];
 		case 3:
