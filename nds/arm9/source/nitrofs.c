@@ -137,6 +137,35 @@ nitroFSInit(const char *ndsfile)
     chdirpathid = NITROROOT;
     ndsFileLastpos = 0;
     ndsFile = NULL;
+	bool noLoader = ((strncmp((const char *)0x02FFFC38, __NDSHeader->gameCode, 4) == 0)
+	              && (*(u16*)0x02FFFC36 == __NDSHeader->headerCRC16));
+	if (!isDSiMode() || noLoader)
+	{
+		sysSetCartOwner (BUS_OWNER_ARM9); //give us gba slot ownership
+		if ((strncmp(((const char *)GBAROM) + LOADERSTROFFSET, LOADERSTR, strlen(LOADERSTR)) == 0) || noLoader)
+		{ // We has gba rahm
+			//printf("yes i think this is GBA?!\n");
+			if ((strncmp(((const char *)GBAROM) + 0x20C, __NDSHeader->gameCode, 4) == 0)
+			 && (*(u16*)0x0800035E == __NDSHeader->headerCRC16))
+			{ //Look for second magic string, if found its a sc.nds or nds.gba
+				//printf("sc/gba\n");
+				fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET + LOADEROFFSET)) + LOADEROFFSET;
+				fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET + LOADEROFFSET)) + LOADEROFFSET;
+				hasLoader = true;
+				AddDevice(&nitroFSdevoptab);
+				return (1);
+			}
+			else
+			{ //Ok, its not a .gba build, so must be emulator
+				//printf("gba, must be emu\n");
+				fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET));
+				fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET));
+				hasLoader = false;
+				AddDevice(&nitroFSdevoptab);
+				return (1);
+			}
+		}
+	}
     if (ndsfile != NULL)
     {
         if ((ndsFile = fopen(ndsfile, "rb")))
@@ -165,32 +194,6 @@ nitroFSInit(const char *ndsfile)
             return (1);
         }
     }
-	if (!isDSiMode() || PersonalData->name[0]==0 /* Regular NO$GBA */ || strncmp((const char*)0x4FFFA00, "no$gba", 6) == 0) {
-		sysSetCartOwner (BUS_OWNER_ARM9); //give us gba slot ownership
-		if ((strncmp(((const char *)GBAROM) + LOADERSTROFFSET, LOADERSTR, strlen(LOADERSTR)) == 0)
-		 || (strncmp(((const char *)GBAROM) + 0xC, __NDSHeader->gameCode, 4) == 0))
-		{ // We has gba rahm
-			//printf("yes i think this is GBA?!\n");
-			if (strncmp(((const char *)GBAROM) + LOADERSTROFFSET + LOADEROFFSET, LOADERSTR, strlen(LOADERSTR)) == 0)
-			{ //Look for second magic string, if found its a sc.nds or nds.gba
-				//printf("sc/gba\n");
-				fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET + LOADEROFFSET)) + LOADEROFFSET;
-				fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET + LOADEROFFSET)) + LOADEROFFSET;
-				hasLoader = true;
-				AddDevice(&nitroFSdevoptab);
-				return (1);
-			}
-			else
-			{ //Ok, its not a .gba build, so must be emulator
-				//printf("gba, must be emu\n");
-				fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET));
-				fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET));
-				hasLoader = false;
-				AddDevice(&nitroFSdevoptab);
-				return (1);
-			}
-		}
-	}
     return (0);
 }
 

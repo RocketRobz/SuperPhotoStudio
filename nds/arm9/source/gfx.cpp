@@ -63,7 +63,7 @@ extern int characterLimit;
 
 void GFX::loadSheets() {
 	if (!isDSiMode()) {
-		sysSetCartOwner (BUS_OWNER_ARM9);	// Allow arm9 to access GBA ROM (or in this case, the DS Memory Expansion Pak)
+		//sysSetCartOwner (BUS_OWNER_ARM9);	// Allow arm9 to access GBA ROM (or in this case, the DS Memory Expansion Pak)
 		*(vu32*)(0x08240000) = 1;
 		if (*(vu32*)(0x08240000) == 1) {
 			charSpriteMem3 = (u16*)0x09000000;
