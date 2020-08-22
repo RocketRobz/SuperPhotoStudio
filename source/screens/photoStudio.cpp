@@ -15,6 +15,7 @@
 #include "banjokCharNames.h"
 #include "pacCharNames.h"
 #include "swapCharNames.h"
+#include "metroidCharNames.h"
 
 #include "import_ss1bgnames.h"
 #include "import_ss2bgnames.h"
@@ -56,11 +57,12 @@ int characterLimit = 1;
 int characterLimit = 4;
 #endif
 
-static int charPageOrder[] = {
+static u8 charPageOrder[] = {
 	4,	// Super Photo Studio (Original Characters)
 	9,	// Banjo-Kazooie series
 	8,	// Conker series
 	7,	// Jet Force Gemini
+	12,	// Metroid Series
 	10,	// Pac-Man series
 	6,	// Sonic the Hedgehog series
 	0,	// Style Savvy
@@ -190,6 +192,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return pacCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 11:
 			return swapCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 12:
+			return metroidCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -294,6 +298,17 @@ const char* PhotoStudio::import_characterFileName(void) const {
 				return swapCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
 			case 3:
 				return swapCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
+		case 12:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return metroidCharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return metroidCharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return metroidCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return metroidCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
 		}
 	}
 	return "null";
@@ -411,6 +426,8 @@ const char* PhotoStudio::charGameTitle(void) const {
 			return "Pac-Man series";
 		case 11:
 			return "Swapnote/Swapdoodle";
+		case 12:
+			return "Metroid";
 	}
 	return "???";
 }
@@ -441,6 +458,8 @@ bool PhotoStudio::charGender(int i) const {
 			return pacCharacterGenders[i];
 		case 11:
 			return swapCharacterGenders[i];
+		case 12:
+			return metroidCharacterGenders[i];
 	}
 	return true;
 }
@@ -471,6 +490,8 @@ const char* PhotoStudio::charName(int i) const {
 			return pacCharacterNames[i];
 		case 11:
 			return swapCharacterNames[i];
+		case 12:
+			return metroidCharacterNames[i];
 	}
 	return "???";
 }
@@ -1059,7 +1080,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
 			char_highlightedGame[currentCharNum]--;
-			if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = 11;
+			if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = (int)sizeof(charPageOrder)-1;
 			getMaxChars();
 			renderTop = true;
 		}
@@ -1067,7 +1088,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
 			char_highlightedGame[currentCharNum]++;
-			if (char_highlightedGame[currentCharNum] > 11) char_highlightedGame[currentCharNum] = 0;
+			if (char_highlightedGame[currentCharNum] > (int)sizeof(charPageOrder)-1) char_highlightedGame[currentCharNum] = 0;
 			getMaxChars();
 			renderTop = true;
 		}
