@@ -484,7 +484,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	return true;
 }
 
-void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
+ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	dmaCopyWords(0, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer[0], 0x18000);
 	if (!chracterSpriteFound[0]) {
 		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg3Sub), 0x18000);
@@ -660,7 +660,7 @@ void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 			if (x2 >= 0 && x2 < 256 && charSpriteAlpha4[((y*256)+x)+((256*192)*zoomIn)] != 0) {
 				color = charSpriteMem4[((y*256)+x)+((256*192)*zoomIn)];
 				if (blendAlpha > 0) {
-					color = alphablend(fg, charSpriteMem4[((y2*256)+x)+((256*192)*zoomIn)], blendAlpha);
+					color = alphablend(fg, charSpriteMem4[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
 				}
 				if (charSpriteAlpha4[((y*256)+x)+((256*192)*zoomIn)] == 255) {
 					bmpImageBuffer[1][(y2*256)+x2] = color;
