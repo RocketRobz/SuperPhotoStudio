@@ -1,6 +1,7 @@
 # Binary File
 *.nds
 *.NDS
+*.gba
 *.cia
 *.app
 *.elf
