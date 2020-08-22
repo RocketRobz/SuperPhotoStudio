@@ -16,6 +16,7 @@
 #include "pacCharNames.h"
 #include "swapCharNames.h"
 #include "metroidCharNames.h"
+#include "sc5CharNames.h"
 
 #include "import_ss1bgnames.h"
 #include "import_ss2bgnames.h"
@@ -65,6 +66,7 @@ static u8 charPageOrder[] = {
 	12,	// Metroid Series
 	10,	// Pac-Man series
 	6,	// Sonic the Hedgehog series
+	13,	// Space Channel 5
 	0,	// Style Savvy
 	1,	// Style Savvy: Trendsetters
 	2,	// Style Savvy: Fashion Forward
@@ -142,6 +144,8 @@ void PhotoStudio::getMaxChars() {
 			case 7:
 			case 8:
 			case 10:
+			case 12:
+			case 13:
 				import_totalCharacters = 1;
 				break;
 			case 9:
@@ -194,6 +198,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return swapCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 12:
 			return metroidCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 13:
+			return sc5CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -309,6 +315,17 @@ const char* PhotoStudio::import_characterFileName(void) const {
 				return metroidCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
 			case 3:
 				return metroidCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
+		case 13:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return sc5CharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return sc5CharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return sc5CharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return sc5CharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
 		}
 	}
 	return "null";
@@ -427,7 +444,9 @@ const char* PhotoStudio::charGameTitle(void) const {
 		case 11:
 			return "Swapnote/Swapdoodle";
 		case 12:
-			return "Metroid";
+			return "Metroid series";
+		case 13:
+			return "Space Channel 5";
 	}
 	return "???";
 }
@@ -460,6 +479,8 @@ bool PhotoStudio::charGender(int i) const {
 			return swapCharacterGenders[i];
 		case 12:
 			return metroidCharacterGenders[i];
+		case 13:
+			return sc5CharacterGenders[i];
 	}
 	return true;
 }
@@ -492,6 +513,8 @@ const char* PhotoStudio::charName(int i) const {
 			return swapCharacterNames[i];
 		case 12:
 			return metroidCharacterNames[i];
+		case 13:
+			return sc5CharacterNames[i];
 	}
 	return "???";
 }
