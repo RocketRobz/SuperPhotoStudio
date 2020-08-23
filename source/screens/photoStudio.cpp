@@ -76,6 +76,7 @@ static u8 charPageOrder[] = {
 
 static int metalXpos = 0;
 #ifdef NDS
+extern bool displayChars;
 static bool metalDelay = false;
 #endif
 static int currentCharacterRendered = 0;
@@ -1243,6 +1244,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				zoomIn = 1;
 			}
 			#ifdef NDS
+			displayChars = true;
 			redrawText = true;
 			if (characterPicked[0]) GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 			#endif
@@ -1287,6 +1289,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				zoomIn = 1;
 			}
 			#ifdef NDS
+			displayChars = true;
 			redrawText = true;
 			if (characterPicked[0]) GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 			#endif
@@ -1356,6 +1359,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				getMaxChars();
 				previewCharacter = false;
 				#ifdef NDS
+				displayChars = false;
 				redrawText = true;
 				#endif
 				int bgNum = getBgNum();

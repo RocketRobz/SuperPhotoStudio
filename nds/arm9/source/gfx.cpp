@@ -38,6 +38,7 @@ extern int bg3Sub;
 extern bool showCursor;
 extern int cursorAlpha;
 
+bool displayChars = true;
 bool animateBg = false;
 static int bgAnimationFrame = 0;
 static int bgAnimationCurrent = 0;
@@ -521,7 +522,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	}
 
 	dmaCopyWords(0, bgLoc+((256*192)*zoomIn), bmpImageBuffer[0], 0x18000);
-	if (!chracterSpriteFound[0]) {
+	if (!displayChars || !chracterSpriteFound[0]) {
 		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg3Sub), 0x18000);
 		return;
 	}
