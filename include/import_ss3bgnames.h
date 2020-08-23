@@ -8,6 +8,7 @@ const char* import_ss3BgNames[] {
 	"Maple Crescent",
 	"Bougainville",
 	"Lover's Bell",
+	"Live Music Club",
 };
 
 int import_ss3BgNums[] {
@@ -20,4 +21,5 @@ int import_ss3BgNums[] {
 	15,
 	2,
 	1,
+	51,
 };

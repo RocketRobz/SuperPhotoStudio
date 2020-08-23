@@ -42,7 +42,7 @@ bool animateBg = false;
 static int bgAnimationFrame = 0;
 static int bgAnimationCurrent = 0;
 static int bgAnimationTime = 0;
-//static int bgAnimationDelay = 0;
+static int bgAnimationDelay = 0;
 static int bgAnimation[8] = {100};
 
 static int timeOutside = 0;	// 0 == Day, 1 == Sunset, 2 == Night
@@ -378,6 +378,9 @@ void GFX::loadBgSprite(void) {
 		case 50:
 			bgPath = "nitro:/graphics/bg/peachCastle.png";
 			break;
+		case 51:
+			bgPath = "nitro:/graphics/bg/liveMusicClub3_0.png";
+			break;
 	}
 	std::vector<unsigned char> image;
 	unsigned width, height;
@@ -393,9 +396,12 @@ void GFX::loadBgSprite(void) {
 	animateBg = false;
 
 	// Load animated parts
-	if (*(vu32*)(0x0279FFFC) == 1 && studioBg == 12 && (timeOutside == 0 || timeOutside == 1)) {
+	if (*(vu32*)(0x0279FFFC) == 1 && (studioBg == 12 || studioBg == 51)
+	&& (timeOutside == 0 || timeOutside == 1 || studioBg == 51)) {
 		image.clear();
-		if (timeOutside == 0) {
+		if (studioBg == 51) {
+			bgPath = "nitro:/graphics/bg/liveMusicClub3_1.png";
+		} else if (timeOutside == 0) {
 			bgPath = "nitro:/graphics/bg/Day_tropicaBeach_1.png";
 		} else {
 			bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_1.png";
@@ -405,7 +411,9 @@ void GFX::loadBgSprite(void) {
 			bgSpriteMemExt[0][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 		}
 		image.clear();
-		if (timeOutside == 0) {
+		if (studioBg == 51) {
+			bgPath = "nitro:/graphics/bg/liveMusicClub3_2.png";
+		} else if (timeOutside == 0) {
 			bgPath = "nitro:/graphics/bg/Day_tropicaBeach_2.png";
 		} else {
 			bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_2.png";
@@ -414,11 +422,25 @@ void GFX::loadBgSprite(void) {
 		for(unsigned i=0;i<image.size()/4;i++) {
 			bgSpriteMemExt[1][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 		}
-		//bgAnimationDelay = iFps;
-		bgAnimation[0] = 0;
-		bgAnimation[1] = 1;
-		bgAnimation[2] = 2;
-		bgAnimation[3] = 1;
+		if (studioBg == 51) {
+			image.clear();
+			bgPath = "nitro:/graphics/bg/liveMusicClub3_3.png";
+			lodepng::decode(image, width, height, bgPath);
+			for(unsigned i=0;i<image.size()/4;i++) {
+				bgSpriteMemExt[2][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			}
+			bgAnimationDelay = iFps/2;
+			bgAnimation[0] = 0;
+			bgAnimation[1] = 1;
+			bgAnimation[2] = 2;
+			bgAnimation[3] = 3;
+		} else {
+			bgAnimationDelay = iFps;
+			bgAnimation[0] = 0;
+			bgAnimation[1] = 1;
+			bgAnimation[2] = 2;
+			bgAnimation[3] = 1;
+		}
 		bgAnimation[4] = 100;
 		animateBg = true;
 	}
@@ -535,7 +557,15 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 			} else if (timeOutside == 2) {
 				fg = RGB15(0, 0, 95/8);	// Tint for Nighttime
 			}
-		break;
+			break;
+		case 51:
+			fg = RGB15(0, 0, 0);	// Tint for Live Music Club 3
+			if (bgAnimationFrame==1 || bgAnimationFrame==3) {
+				blendAlpha = 16;
+			} else {
+				blendAlpha = 40;
+			}
+			break;
 	}
 
 	int buffer = 0;
@@ -726,7 +756,7 @@ void GFX::animateBgSprite(int zoomIn, bool* flipH) {
 
 	// Animate background
 	bgAnimationTime++;
-	if (bgAnimationTime >= iFps) {
+	if (bgAnimationTime >= bgAnimationDelay) {
 		bgAnimationCurrent++;
 		if (bgAnimation[bgAnimationCurrent] == 100) {
 			// Reset animation

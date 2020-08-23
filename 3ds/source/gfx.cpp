@@ -27,7 +27,7 @@ bool bgCanAnimate = false;
 static int bgAnimationFrame = 0;
 static int bgAnimationCurrent = 0;
 static int bgAnimationTime = 0;
-//static int bgAnimationDelay = 0;
+static int bgAnimationDelay = 0;
 static int bgAnimation[8] = {100};
 
 static int timeOutside = 0;	// 0 == Day, 1 == Sunset, 2 == Night
@@ -285,6 +285,9 @@ void GFX::loadBgSprite(void) {
 		case 50:
 			bgPath = "romfs:/gfx/bg_peachCastle.t3x";
 			break;
+		case 51:
+			bgPath = "romfs:/gfx/bg_liveMusicClub3_0.t3x";
+			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
 	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);
@@ -298,8 +301,10 @@ void GFX::loadBgSprite(void) {
 	bgCanAnimate = false;
 
 	// Load animated parts
-	if (studioBg == 12 && (timeOutside == 0 || timeOutside == 1)) {
-		if (timeOutside == 0) {
+	if ((studioBg == 12 || studioBg == 51) && (timeOutside == 0 || timeOutside == 1 || studioBg == 51)) {
+		if (studioBg == 51) {
+			bgPath = "romfs:/gfx/bg_liveMusicClub3_1.t3x";
+		} else if (timeOutside == 0) {
 			bgPath = "romfs:/gfx/bgDay_tropicaBeach_1.t3x";
 		} else {
 			bgPath = "romfs:/gfx/bgSunset_tropicaBeach_1.t3x";
@@ -307,7 +312,9 @@ void GFX::loadBgSprite(void) {
 		bgFile = fopen(bgPath, "rb");
 		fread((void*)bgSpriteMem[1], 1, 0x200000, bgFile);
 		fclose(bgFile);
-		if (timeOutside == 0) {
+		if (studioBg == 51) {
+			bgPath = "romfs:/gfx/bg_liveMusicClub3_2.t3x";
+		} else if (timeOutside == 0) {
 			bgPath = "romfs:/gfx/bgDay_tropicaBeach_2.t3x";
 		} else {
 			bgPath = "romfs:/gfx/bgSunset_tropicaBeach_2.t3x";
@@ -315,11 +322,23 @@ void GFX::loadBgSprite(void) {
 		bgFile = fopen(bgPath, "rb");
 		fread((void*)bgSpriteMem[2], 1, 0x200000, bgFile);
 		fclose(bgFile);
-		//bgAnimationDelay = iFps;
-		bgAnimation[0] = 0;
-		bgAnimation[1] = 1;
-		bgAnimation[2] = 2;
-		bgAnimation[3] = 1;
+		if (studioBg == 51) {
+			bgPath = "romfs:/gfx/bg_liveMusicClub3_3.t3x";
+			bgFile = fopen(bgPath, "rb");
+			fread((void*)bgSpriteMem[3], 1, 0x200000, bgFile);
+			fclose(bgFile);
+			bgAnimationDelay = iFps/2;
+			bgAnimation[0] = 0;
+			bgAnimation[1] = 1;
+			bgAnimation[2] = 2;
+			bgAnimation[3] = 3;
+		} else {
+			bgAnimationDelay = iFps;
+			bgAnimation[0] = 0;
+			bgAnimation[1] = 1;
+			bgAnimation[2] = 2;
+			bgAnimation[3] = 1;
+		}
 		bgAnimation[4] = 100;
 		bgCanAnimate = true;
 	}
@@ -398,7 +417,7 @@ void GFX::animateBgSprite(void) {
 
 	// Animate background
 	bgAnimationTime++;
-	if (bgAnimationTime >= iFps) {
+	if (bgAnimationTime >= bgAnimationDelay) {
 		bgAnimationCurrent++;
 		if (bgAnimation[bgAnimationCurrent] == 100) {
 			// Reset animation
@@ -520,6 +539,14 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 						C2D_PlainImageTint(&tint, C2D_Color32(95, 47, 0, 255), 0.15);	// Tint for Sunset
 					} else if (timeOutside == 2) {
 						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 95, 255), 0.15);	// Tint for Nighttime
+					}
+					break;
+				case 51:
+					// Tint for Live Music Club 3
+					if (bgAnimationFrame==1 || bgAnimationFrame==3) {
+						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 0, 255), 0.15);
+					} else {
+						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 0, 255), 0.30);
 					}
 					break;
 			}
