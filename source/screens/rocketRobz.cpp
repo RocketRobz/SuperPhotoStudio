@@ -5,7 +5,9 @@
 #endif
 
 static int subMode = 0;
+#ifdef _3DS
 static int prevSubMode = -1;
+#endif
 extern int delay;
 static int rr_fadeAlpha = 0;
 static int rr_fadeType = true;

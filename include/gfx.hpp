@@ -71,7 +71,11 @@ namespace GFX {
 	void unloadBgSprite(void);
 	void reloadBgSprite(void);
 	void showBgSprite(int zoomIn);
+	#ifdef _3DS
 	void animateBgSprite(void);
+	#else
+	void animateBgSprite(int zoomIn, bool* flipH);
+	#endif
 	void showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool lightingEffects = false);
 	void DrawSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);
 	void DrawSpriteLinear(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);

@@ -18,6 +18,7 @@ static u16* charSpriteMem5 = (u16*)0x02510000;
 static u8* charSpriteAlpha3 = (u8*)0x02558000;
 static u8* charSpriteAlpha4 = (u8*)0x0257C000;
 static u8* charSpriteAlpha5 = (u8*)0x025A0000;
+static u16* bgSpriteMemExt[3] = {(u16*)0x025C8000, (u16*)0x02610000, (u16*)0x02658000};
 
 static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
@@ -38,7 +39,6 @@ extern bool showCursor;
 extern int cursorAlpha;
 
 bool animateBg = false;
-bool bgCanAnimate = false;
 static int bgAnimationFrame = 0;
 static int bgAnimationCurrent = 0;
 static int bgAnimationTime = 0;
@@ -73,6 +73,9 @@ void GFX::loadSheets() {
 			charSpriteAlpha3 = (u8*)0x090D8000;
 			charSpriteAlpha4 = (u8*)0x090FC000;
 			charSpriteAlpha5 = (u8*)0x09120000;
+			bgSpriteMemExt[0] = (u16*)0x09148000;
+			bgSpriteMemExt[1] = (u16*)0x09190000;
+			bgSpriteMemExt[2] = (u16*)0x091D8000;
 		}
 	}
 	// Check for DS Debug RAM or DSi RAM
@@ -232,9 +235,9 @@ void GFX::loadBgSprite(void) {
 			break;
 		case 12:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/Day_tropicaBeach.png";
+				bgPath = "nitro:/graphics/bg/Day_tropicaBeach_0.png";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach.png";
+				bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_0.png";
 			} else {
 				bgPath = "nitro:/graphics/bg/Night_tropicaBeach.png";
 			}
@@ -387,34 +390,38 @@ void GFX::loadBgSprite(void) {
 	bgAnimationFrame = 0;
 	bgAnimationCurrent = 0;
 	bgAnimationTime = 0;
-	bgCanAnimate = false;
+	animateBg = false;
 
 	// Load animated parts
-	/*if (studioBg == 12 && (timeOutside == 0 || timeOutside == 1)) {
+	if (*(vu32*)(0x0279FFFC) == 1 && studioBg == 12 && (timeOutside == 0 || timeOutside == 1)) {
+		image.clear();
 		if (timeOutside == 0) {
-			bgPath = "nitro:/graphics/bg/bgDay_tropicaBeach_1.png";
+			bgPath = "nitro:/graphics/bg/Day_tropicaBeach_1.png";
 		} else {
-			bgPath = "nitro:/graphics/bg/bgSunset_tropicaBeach_1.png";
+			bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_1.png";
 		}
-		bgFile = fopen(bgPath, "rb");
-		//fread((void*)bgSpriteMem[1], 1, 0x200000, bgFile);
-		fclose(bgFile);
+		lodepng::decode(image, width, height, bgPath);
+		for(unsigned i=0;i<image.size()/4;i++) {
+			bgSpriteMemExt[0][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+		}
+		image.clear();
 		if (timeOutside == 0) {
-			bgPath = "nitro:/graphics/bg/bgDay_tropicaBeach_2.png";
+			bgPath = "nitro:/graphics/bg/Day_tropicaBeach_2.png";
 		} else {
-			bgPath = "nitro:/graphics/bg/bgSunset_tropicaBeach_2.png";
+			bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_2.png";
 		}
-		bgFile = fopen(bgPath, "rb");
-		//fread((void*)bgSpriteMem[2], 1, 0x200000, bgFile);
-		fclose(bgFile);
+		lodepng::decode(image, width, height, bgPath);
+		for(unsigned i=0;i<image.size()/4;i++) {
+			bgSpriteMemExt[1][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+		}
 		//bgAnimationDelay = iFps;
 		bgAnimation[0] = 0;
 		bgAnimation[1] = 1;
 		bgAnimation[2] = 2;
 		bgAnimation[3] = 1;
 		bgAnimation[4] = 100;
-		bgCanAnimate = true;
-	}*/
+		animateBg = true;
+	}
 
 	bgSpriteLoaded = true;
 }
@@ -423,7 +430,6 @@ void GFX::unloadBgSprite() {
 	if (!bgSpriteLoaded) return;
 
 	animateBg = false;
-	bgCanAnimate = false;
 
 	bgSpriteLoaded = false;
 }
@@ -485,7 +491,14 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 }
 
 ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
-	dmaCopyWords(0, bgSpriteMem+((0x18000/2)*zoomIn), bmpImageBuffer[0], 0x18000);
+	u16* bgLoc = 0;
+	if (bgAnimationFrame == 0) {
+		bgLoc = bgSpriteMem;
+	} else {
+		bgLoc = bgSpriteMemExt[bgAnimationFrame-1];
+	}
+
+	dmaCopyWords(0, bgLoc+((256*192)*zoomIn), bmpImageBuffer[0], 0x18000);
 	if (!chracterSpriteFound[0]) {
 		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg3Sub), 0x18000);
 		return;
@@ -542,7 +555,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 				if (charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] == 255) {
 					bmpImageBuffer[0][(y*256)+x2] = color;
 				} else {
-					bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgSpriteMem[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
+					bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgLoc[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
 				}
 			}
 			flipH[0] ? x2-- : x2++;
@@ -602,7 +615,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 				if (charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] == 255) {
 					bmpImageBuffer[0][(y*256)+x2] = color;
 				} else {
-					bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgSpriteMem[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
+					bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgLoc[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
 				}
 			}
 			flipH[0] ? x2-- : x2++;
@@ -641,7 +654,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 			if (charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)] == 255) {
 				bmpImageBuffer[0][(y*256)+x2] = color;
 			} else {
-				bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgSpriteMem[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
+				bmpImageBuffer[0][(y*256)+x2] = alphablend(color, bgLoc[((y*256)+x2)+((256*192)*zoomIn)], charSpriteAlpha[0][((y*256)+x)+((256*192)*zoomIn)]);
 			}
 		}
 		flipH[0] ? x2-- : x2++;
@@ -708,7 +721,7 @@ void GFX::showBgSprite(int zoomIn) {
 	//if (!bgSpriteLoaded) return;
 }
 
-void GFX::animateBgSprite(void) {
+void GFX::animateBgSprite(int zoomIn, bool* flipH) {
 	if (!animateBg) return;
 
 	// Animate background
@@ -720,7 +733,7 @@ void GFX::animateBgSprite(void) {
 			bgAnimationCurrent = 0;
 		}
 		bgAnimationFrame = bgAnimation[bgAnimationCurrent];
-		//bgSprite = C2D_SpriteSheetLoadFromMem(bgSpriteMem[bgAnimationFrame], 0x200000);
+		loadCharSpriteMem(zoomIn, flipH);
 		bgAnimationTime = 0;
 	}
 }

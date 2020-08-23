@@ -982,6 +982,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	#ifdef NDS
 	extern void updateTitleScreen(const int metalXposBase);
 	updateTitleScreen(metalXpos);
+	GFX::animateBgSprite(zoomIn, &characterFlipH[0]);
 	#endif
 
 	#ifdef NDS
