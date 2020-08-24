@@ -382,6 +382,15 @@ void GFX::loadBgSprite(void) {
 		case 51:
 			bgPath = "nitro:/graphics/bg/liveMusicClub3_0.png";
 			break;
+		case 52:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Day_outdoorStage.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Sunset_outdoorStage.png";
+			} else {
+				bgPath = "nitro:/graphics/bg/Night_outdoorStage.png";
+			}
+			break;
 	}
 	std::vector<unsigned char> image;
 	unsigned width, height;

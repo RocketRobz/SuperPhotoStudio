@@ -288,6 +288,15 @@ void GFX::loadBgSprite(void) {
 		case 51:
 			bgPath = "romfs:/gfx/bg_liveMusicClub3_0.t3x";
 			break;
+		case 52:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgDay_outdoorStage.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_outdoorStage.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_outdoorStage.t3x";
+			}
+			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
 	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);
