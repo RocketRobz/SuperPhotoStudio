@@ -559,6 +559,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		case 13:
 		case 14:
 		case 15:
+		case 52:
 			if (timeOutside > 0) {
 				blendAlpha = 32;
 			}

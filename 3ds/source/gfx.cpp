@@ -544,6 +544,7 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 				case 13:
 				case 14:
 				case 15:
+				case 52:
 					if (timeOutside == 1) {
 						C2D_PlainImageTint(&tint, C2D_Color32(95, 47, 0, 255), 0.15);	// Tint for Sunset
 					} else if (timeOutside == 2) {
