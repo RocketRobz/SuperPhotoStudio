@@ -51,6 +51,9 @@
     2020-08-20 v0.10 - modernize GBA SLOT support (by RocketRobz)
         * Updated GBA SLOT detection to check for game code and header CRC. 
 
+    2020-08-24 v0.11 - SDNAND support (by RocketRobz)
+        * Added support for being mounted from SDNAND, if app is launched by hiyaCFW. 
+
 */
 
 #include <string.h>
@@ -160,6 +163,13 @@ nitroFSInit(const char *ndsfile)
 			AddDevice(&nitroFSdevoptab);
 			return (1);
 		}
+	}
+	if (isDSiMode() && ndsfile == NULL)
+	{
+		// Try SDNAND path
+		char fileName[64];
+		sprintf(fileName, "sd:/title/%08x/%08x/content/000000%02x.app", *(unsigned int*)0x02FFE234, *(unsigned int*)0x02FFE230, *(u8*)0x02FFE01E);
+		ndsfile = fileName;
 	}
     if (ndsfile != NULL)
     {

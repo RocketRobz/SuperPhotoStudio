@@ -84,13 +84,6 @@ int main(int argc, char **argv) {
 	fatInited = fatInitDefault();
 	bool nitroFSInited = nitroFSInit(argv[0]);
 
-	if (!nitroFSInited && isDSiMode()) {
-		// Mount from SDNAND
-		char fileName[128];
-		sprintf(fileName, "sd:/title/%08x/%08x/content/000000%02x.app", *(unsigned int*)0x02FFE234, *(unsigned int*)0x02FFE230, *(u8*)0x02FFE01E);
-		nitroFSInited = nitroFSInit(fileName);
-	}
-
 	if (!fatInited && !nitroFSInited) {
 		consoleDemoInit();
 		iprintf("fatInitDefault failed!");
