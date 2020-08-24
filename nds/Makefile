@@ -27,7 +27,10 @@ $(TARGET).nds:	makearm7 makearm9
 			-g HPHA 00 "SUPERPHOTO" -z 80040000 -u 00030004 -a 00000138 -b icon.bmp "Super Photo Studio;RocketRobz"
 
 $(TARGET).ds.gba:	$(TARGET).nds
-	cat loader.bin $(TARGET).nds > $(TARGET).ds.gba
+	ndstool	-c $(TARGET)_ds.nds -7 $(TARGET).arm7.elf -9 $(TARGET).arm9.elf -d $(NITRODATA) \
+			-h 0x200 -g HPHA 00 "SUPERPHOTO" -b icon.bmp "Super Photo Studio;RocketRobz"
+	cat loader.bin $(TARGET)_ds.nds > $(TARGET).ds.gba
+	@rm -fr $(TARGET)_ds.nds
 
 clean:
 	@echo clean ...
