@@ -391,6 +391,33 @@ void GFX::loadBgSprite(void) {
 				bgPath = "nitro:/graphics/bg/Night_outdoorStage.png";
 			}
 			break;
+		case 53:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Day_park4.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Sunset_park4.png";
+			} else {
+				bgPath = "nitro:/graphics/bg/Night_park4.png";
+			}
+			break;
+		case 54:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Day_cafe4.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Sunset_cafe4.png";
+			} else {
+				bgPath = "nitro:/graphics/bg/Night_cafe4.png";
+			}
+			break;
+		case 55:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Day_seaside.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Sunset_seaside.png";
+			} else {
+				bgPath = "nitro:/graphics/bg/Night_seaside.png";
+			}
+			break;
 	}
 	std::vector<unsigned char> image;
 	unsigned width, height;
@@ -560,6 +587,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		case 14:
 		case 15:
 		case 52:
+		case 53:
+		case 55:
 			if (timeOutside > 0) {
 				blendAlpha = 32;
 			}
@@ -575,6 +604,17 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 				blendAlpha = 16;
 			} else {
 				blendAlpha = 40;
+			}
+			break;
+		case 54:
+			// Tint for Cafe 4
+			if (timeOutside > 0) {
+				blendAlpha = 32;
+			}
+			if (timeOutside == 1) {
+				fg = RGB15(95/8, 47/8, 0);	// Tint for Sunset
+			} else if (timeOutside == 2) {
+				fg = RGB15(0, 0, 63/8);	// Tint for Nighttime
 			}
 			break;
 	}

@@ -297,6 +297,33 @@ void GFX::loadBgSprite(void) {
 				bgPath = "romfs:/gfx/bgNight_outdoorStage.t3x";
 			}
 			break;
+		case 53:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgDay_park4.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_park4.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_park4.t3x";
+			}
+			break;
+		case 54:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgDay_cafe4.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_cafe4.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_cafe4.t3x";
+			}
+			break;
+		case 55:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgDay_seaside.t3x";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_seaside.t3x";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_seaside.t3x";
+			}
+			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
 	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);
@@ -545,6 +572,8 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 				case 14:
 				case 15:
 				case 52:
+				case 53:
+				case 55:
 					if (timeOutside == 1) {
 						C2D_PlainImageTint(&tint, C2D_Color32(95, 47, 0, 255), 0.15);	// Tint for Sunset
 					} else if (timeOutside == 2) {
@@ -557,6 +586,14 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 0, 255), 0.15);
 					} else {
 						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 0, 255), 0.30);
+					}
+					break;
+				case 54:
+					// Tint for Cafe 4
+					if (timeOutside == 1) {
+						C2D_PlainImageTint(&tint, C2D_Color32(95, 47, 0, 255), 0.15);	// Tint for Sunset
+					} else if (timeOutside == 2) {
+						C2D_PlainImageTint(&tint, C2D_Color32(0, 0, 63, 255), 0.15);	// Tint for Nighttime
 					}
 					break;
 			}
