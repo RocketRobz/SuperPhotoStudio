@@ -84,6 +84,7 @@ void GFX::loadBgSprite(void) {
 	if (bgSpriteLoaded) return;
 
 	timeOutside = 2;	// Default is Nighttime
+	int aniFrames = 0;
 
 	const char* bgPath;
 	time_t t = time(0);
@@ -143,8 +144,10 @@ void GFX::loadBgSprite(void) {
 		case 12:
 			if (isDaytime(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgDay_tropicaBeach_0.t3x";
+				aniFrames = 2;
 			} else if (isEvening(hour, minutes)) {
 				bgPath = "romfs:/gfx/bgSunset_tropicaBeach_0.t3x";
+				aniFrames = 2;
 			} else {
 				bgPath = "romfs:/gfx/bgNight_tropicaBeach.t3x";
 			}
@@ -287,6 +290,7 @@ void GFX::loadBgSprite(void) {
 			break;
 		case 51:
 			bgPath = "romfs:/gfx/bg_liveMusicClub3_0.t3x";
+			aniFrames = 3;
 			break;
 		case 52:
 			if (isDaytime(hour, minutes)) {
@@ -326,39 +330,62 @@ void GFX::loadBgSprite(void) {
 			break;
 		case 56:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "romfs:/gfx/bgDay_countrysideSpring.png";
+				bgPath = "romfs:/gfx/bgDay_countrysideSpring.t3x";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "romfs:/gfx/bgSunset_countrysideSpring.png";
+				bgPath = "romfs:/gfx/bgSunset_countrysideSpring.t3x";
 			} else {
-				bgPath = "romfs:/gfx/bgNight_countrysideSpring.png";
+				bgPath = "romfs:/gfx/bgNight_countrysideSpring.t3x";
 			}
 			break;
 		case 57:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "romfs:/gfx/bgDay_countrysideSummer.png";
+				bgPath = "romfs:/gfx/bgDay_countrysideSummer.t3x";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "romfs:/gfx/bgSunset_countrysideSummer.png";
+				bgPath = "romfs:/gfx/bgSunset_countrysideSummer.t3x";
 			} else {
-				bgPath = "romfs:/gfx/bgNight_countrysideSummer.png";
+				bgPath = "romfs:/gfx/bgNight_countrysideSummer.t3x";
 			}
 			break;
 		case 58:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "romfs:/gfx/bgDay_countrysideFall.png";
+				bgPath = "romfs:/gfx/bgDay_countrysideFall.t3x";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "romfs:/gfx/bgSunset_countrysideFall.png";
+				bgPath = "romfs:/gfx/bgSunset_countrysideFall.t3x";
 			} else {
-				bgPath = "romfs:/gfx/bgNight_countrysideFall.png";
+				bgPath = "romfs:/gfx/bgNight_countrysideFall.t3x";
 			}
 			break;
 		case 59:
 			if (isDaytime(hour, minutes)) {
-				bgPath = "romfs:/gfx/bgDay_countrysideWinter.png";
+				bgPath = "romfs:/gfx/bgDay_countrysideWinter.t3x";
 			} else if (isEvening(hour, minutes)) {
-				bgPath = "romfs:/gfx/bgSunset_countrysideWinter.png";
+				bgPath = "romfs:/gfx/bgSunset_countrysideWinter.t3x";
 			} else {
-				bgPath = "romfs:/gfx/bgNight_countrysideWinter.png";
+				bgPath = "romfs:/gfx/bgNight_countrysideWinter.t3x";
 			}
+			break;
+		case 60:
+			bgPath = "romfs:/gfx/bg_lifestyleShop4.t3x";
+			break;
+		case 61:
+			bgPath = "romfs:/gfx/bg_florist.t3x";
+			break;
+		case 62:
+			bgPath = "romfs:/gfx/bg_cakeShop4.t3x";
+			break;
+		case 63:
+			bgPath = "romfs:/gfx/bg_livelyStage_0.t3x";
+			aniFrames = 3;
+			break;
+		case 64:
+			bgPath = "romfs:/gfx/bg_girlyStage_0.t3x";
+			aniFrames = 1;
+			break;
+		case 65:
+			bgPath = "romfs:/gfx/bg_concertHall.t3x";
+			break;
+		case 66:
+			bgPath = "romfs:/gfx/bg_charityStage.t3x";
 			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
@@ -373,32 +400,38 @@ void GFX::loadBgSprite(void) {
 	bgCanAnimate = false;
 
 	// Load animated parts
-	if ((studioBg == 12 || studioBg == 51) && (timeOutside == 0 || timeOutside == 1 || studioBg == 51)) {
-		if (studioBg == 51) {
-			bgPath = "romfs:/gfx/bg_liveMusicClub3_1.t3x";
-		} else if (timeOutside == 0) {
-			bgPath = "romfs:/gfx/bgDay_tropicaBeach_1.t3x";
-		} else {
-			bgPath = "romfs:/gfx/bgSunset_tropicaBeach_1.t3x";
+	if (aniFrames > 0) {
+		switch (studioBg) {
+			case 12:
+				if (timeOutside == 0) {
+					bgPath = "romfs:/gfx/bgDay_tropicaBeach_%i.t3x";
+				} else {
+					bgPath = "romfs:/gfx/bgSunset_tropicaBeach_%i.t3x";
+				}
+				break;
+			case 51:
+				bgPath = "romfs:/gfx/bg_liveMusicClub3_%i.t3x";
+				break;
+			case 63:
+				bgPath = "romfs:/gfx/bg_livelyStage_%i.t3x";
+				break;
+			case 64:
+				bgPath = "romfs:/gfx/bg_girlyStage_%i.t3x";
+				break;
 		}
-		bgFile = fopen(bgPath, "rb");
-		fread((void*)bgSpriteMem[1], 1, 0x200000, bgFile);
-		fclose(bgFile);
-		if (studioBg == 51) {
-			bgPath = "romfs:/gfx/bg_liveMusicClub3_2.t3x";
-		} else if (timeOutside == 0) {
-			bgPath = "romfs:/gfx/bgDay_tropicaBeach_2.t3x";
-		} else {
-			bgPath = "romfs:/gfx/bgSunset_tropicaBeach_2.t3x";
-		}
-		bgFile = fopen(bgPath, "rb");
-		fread((void*)bgSpriteMem[2], 1, 0x200000, bgFile);
-		fclose(bgFile);
-		if (studioBg == 51) {
-			bgPath = "romfs:/gfx/bg_liveMusicClub3_3.t3x";
-			bgFile = fopen(bgPath, "rb");
-			fread((void*)bgSpriteMem[3], 1, 0x200000, bgFile);
+		char bgAniPath[64];
+		for (int i = 1; i <= aniFrames; i++) {
+			sprintf(bgAniPath, bgPath, i);
+			bgFile = fopen(bgAniPath, "rb");
+			fread((void*)bgSpriteMem[i], 1, 0x200000, bgFile);
 			fclose(bgFile);
+		}
+		if (studioBg == 64) {
+			bgAnimationDelay = iFps/2;
+			bgAnimation[0] = 0;
+			bgAnimation[1] = 1;
+			bgAnimation[2] = 100;
+		} else if (studioBg == 51 || studioBg == 63) {
 			bgAnimationDelay = iFps/2;
 			bgAnimation[0] = 0;
 			bgAnimation[1] = 1;

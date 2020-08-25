@@ -178,6 +178,7 @@ void GFX::loadBgSprite(void) {
 	dmaFillWords(0xFFFFFFFF, bgGetGfxPtr(bg3Sub), 0x18000);
 
 	timeOutside = 2;	// Default is Nighttime
+	int aniFrames = 0;
 
 	const char* bgPath;
 	time_t t = time(0);
@@ -237,8 +238,10 @@ void GFX::loadBgSprite(void) {
 		case 12:
 			if (isDaytime(hour, minutes)) {
 				bgPath = "nitro:/graphics/bg/Day_tropicaBeach_0.png";
+				aniFrames = 2;
 			} else if (isEvening(hour, minutes)) {
 				bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_0.png";
+				aniFrames = 2;
 			} else {
 				bgPath = "nitro:/graphics/bg/Night_tropicaBeach.png";
 			}
@@ -381,6 +384,7 @@ void GFX::loadBgSprite(void) {
 			break;
 		case 51:
 			bgPath = "nitro:/graphics/bg/liveMusicClub3_0.png";
+			aniFrames = 3;
 			break;
 		case 52:
 			if (isDaytime(hour, minutes)) {
@@ -454,6 +458,29 @@ void GFX::loadBgSprite(void) {
 				bgPath = "nitro:/graphics/bg/Night_countrysideWinter.png";
 			}
 			break;
+		case 60:
+			bgPath = "nitro:/graphics/bg/lifestyleShop4.png";
+			break;
+		case 61:
+			bgPath = "nitro:/graphics/bg/florist.png";
+			break;
+		case 62:
+			bgPath = "nitro:/graphics/bg/cakeShop4.png";
+			break;
+		case 63:
+			bgPath = "nitro:/graphics/bg/livelyStage_0.png";
+			aniFrames = 3;
+			break;
+		case 64:
+			bgPath = "nitro:/graphics/bg/girlyStage_0.png";
+			aniFrames = 1;
+			break;
+		case 65:
+			bgPath = "nitro:/graphics/bg/concertHall.png";
+			break;
+		case 66:
+			bgPath = "nitro:/graphics/bg/charityStage.png";
+			break;
 	}
 	std::vector<unsigned char> image;
 	unsigned width, height;
@@ -469,39 +496,40 @@ void GFX::loadBgSprite(void) {
 	animateBg = false;
 
 	// Load animated parts
-	if (*(vu32*)(0x0279FFFC) == 1 && (studioBg == 12 || studioBg == 51)
-	&& (timeOutside == 0 || timeOutside == 1 || studioBg == 51)) {
-		image.clear();
-		if (studioBg == 51) {
-			bgPath = "nitro:/graphics/bg/liveMusicClub3_1.png";
-		} else if (timeOutside == 0) {
-			bgPath = "nitro:/graphics/bg/Day_tropicaBeach_1.png";
-		} else {
-			bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_1.png";
+	if (*(vu32*)(0x0279FFFC) == 1 && aniFrames > 0) {
+		switch (studioBg) {
+			case 12:
+				if (timeOutside == 0) {
+					bgPath = "nitro:/graphics/bg/Day_tropicaBeach_%i.png";
+				} else {
+					bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_%i.png";
+				}
+				break;
+			case 51:
+				bgPath = "nitro:/graphics/bg/liveMusicClub3_%i.png";
+				break;
+			case 63:
+				bgPath = "nitro:/graphics/bg/livelyStage_%i.png";
+				break;
+			case 64:
+				bgPath = "nitro:/graphics/bg/girlyStage_%i.png";
+				break;
 		}
-		lodepng::decode(image, width, height, bgPath);
-		for(unsigned i=0;i<image.size()/4;i++) {
-			bgSpriteMemExt[0][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-		}
-		image.clear();
-		if (studioBg == 51) {
-			bgPath = "nitro:/graphics/bg/liveMusicClub3_2.png";
-		} else if (timeOutside == 0) {
-			bgPath = "nitro:/graphics/bg/Day_tropicaBeach_2.png";
-		} else {
-			bgPath = "nitro:/graphics/bg/Sunset_tropicaBeach_2.png";
-		}
-		lodepng::decode(image, width, height, bgPath);
-		for(unsigned i=0;i<image.size()/4;i++) {
-			bgSpriteMemExt[1][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-		}
-		if (studioBg == 51) {
+		char bgAniPath[64];
+		for (int i = 1; i <= aniFrames; i++) {
+			sprintf(bgAniPath, bgPath, i);
 			image.clear();
-			bgPath = "nitro:/graphics/bg/liveMusicClub3_3.png";
-			lodepng::decode(image, width, height, bgPath);
-			for(unsigned i=0;i<image.size()/4;i++) {
-				bgSpriteMemExt[2][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			lodepng::decode(image, width, height, bgAniPath);
+			for(unsigned p=0;p<image.size()/4;p++) {
+				bgSpriteMemExt[i-1][p] = image[p*4]>>3 | (image[(p*4)+1]>>3)<<5 | (image[(p*4)+2]>>3)<<10 | BIT(15);
 			}
+		}
+		if (studioBg == 64) {
+			bgAnimationDelay = iFps/2;
+			bgAnimation[0] = 0;
+			bgAnimation[1] = 1;
+			bgAnimation[2] = 100;
+		} else if (studioBg == 51 || studioBg == 63) {
 			bgAnimationDelay = iFps/2;
 			bgAnimation[0] = 0;
 			bgAnimation[1] = 1;

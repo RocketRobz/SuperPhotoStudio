@@ -15,10 +15,17 @@ const char* import_ss4BgNames[] {
 	"Beautician",
 	"Hair Salon",
 	"Live Music Club",
+	"Lifestyle Shop",
+	"Florist",
+	"Cake Shop",
 	"Menswear Shop",
 	"VIP Room",
 	"Restauraunt",
+	"Lively Stage",
+	"Girly Stage",
+	"Concert Hall",
 	"Cinema",
+	"Charity Stage"
 };
 
 int import_ss4BgNums[] {
@@ -38,8 +45,15 @@ int import_ss4BgNums[] {
 	4,
 	5,
 	7,
+	60,
+	61,
+	62,
 	8,
 	9,
 	10,
-	11
+	63,
+	64,
+	65,
+	11,
+	66
 };
