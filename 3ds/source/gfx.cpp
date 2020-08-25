@@ -324,6 +324,42 @@ void GFX::loadBgSprite(void) {
 				bgPath = "romfs:/gfx/bgNight_seaside.t3x";
 			}
 			break;
+		case 56:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgDay_countrysideSpring.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_countrysideSpring.png";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_countrysideSpring.png";
+			}
+			break;
+		case 57:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgDay_countrysideSummer.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_countrysideSummer.png";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_countrysideSummer.png";
+			}
+			break;
+		case 58:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgDay_countrysideFall.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_countrysideFall.png";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_countrysideFall.png";
+			}
+			break;
+		case 59:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgDay_countrysideWinter.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "romfs:/gfx/bgSunset_countrysideWinter.png";
+			} else {
+				bgPath = "romfs:/gfx/bgNight_countrysideWinter.png";
+			}
+			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
 	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);
@@ -574,6 +610,10 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 				case 52:
 				case 53:
 				case 55:
+				case 56:
+				case 57:
+				case 58:
+				case 59:
 					if (timeOutside == 1) {
 						C2D_PlainImageTint(&tint, C2D_Color32(95, 47, 0, 255), 0.15);	// Tint for Sunset
 					} else if (timeOutside == 2) {

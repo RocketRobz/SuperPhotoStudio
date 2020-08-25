@@ -418,6 +418,42 @@ void GFX::loadBgSprite(void) {
 				bgPath = "nitro:/graphics/bg/Night_seaside.png";
 			}
 			break;
+		case 56:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Day_countrysideSpring.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Sunset_countrysideSpring.png";
+			} else {
+				bgPath = "nitro:/graphics/bg/Night_countrysideSpring.png";
+			}
+			break;
+		case 57:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Day_countrysideSummer.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Sunset_countrysideSummer.png";
+			} else {
+				bgPath = "nitro:/graphics/bg/Night_countrysideSummer.png";
+			}
+			break;
+		case 58:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Day_countrysideFall.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Sunset_countrysideFall.png";
+			} else {
+				bgPath = "nitro:/graphics/bg/Night_countrysideFall.png";
+			}
+			break;
+		case 59:
+			if (isDaytime(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Day_countrysideWinter.png";
+			} else if (isEvening(hour, minutes)) {
+				bgPath = "nitro:/graphics/bg/Sunset_countrysideWinter.png";
+			} else {
+				bgPath = "nitro:/graphics/bg/Night_countrysideWinter.png";
+			}
+			break;
 	}
 	std::vector<unsigned char> image;
 	unsigned width, height;
@@ -589,6 +625,10 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		case 52:
 		case 53:
 		case 55:
+		case 56:
+		case 57:
+		case 58:
+		case 59:
 			if (timeOutside > 0) {
 				blendAlpha = 32;
 			}
