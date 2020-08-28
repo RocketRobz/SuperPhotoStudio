@@ -387,6 +387,21 @@ void GFX::loadBgSprite(void) {
 		case 66:
 			bgPath = "romfs:/gfx/bg_charityStage.t3x";
 			break;
+		case 67:
+			bgPath = "romfs:/gfx/bg_RocketRobz.t3x";
+			break;
+		case 68:
+			bgPath = "romfs:/gfx/bg_Nintendo.t3x";
+			break;
+		case 69:
+			bgPath = "romfs:/gfx/bg_segaGen.t3x";
+			break;
+		case 70:
+			bgPath = "romfs:/gfx/bg_twlMenu.t3x";
+			break;
+		case 71:
+			bgPath = "romfs:/gfx/bg_hiyaCFW.t3x";
+			break;
 	}
 	FILE* bgFile = fopen(bgPath, "rb");
 	fread((void*)bgSpriteMem[0], 1, 0x200000, bgFile);

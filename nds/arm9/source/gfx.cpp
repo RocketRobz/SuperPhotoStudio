@@ -481,6 +481,21 @@ void GFX::loadBgSprite(void) {
 		case 66:
 			bgPath = "nitro:/graphics/bg/charityStage.png";
 			break;
+		case 67:
+			bgPath = "nitro:/graphics/bg/RocketRobz.png";
+			break;
+		case 68:
+			bgPath = "nitro:/graphics/bg/Nintendo.png";
+			break;
+		case 69:
+			bgPath = "nitro:/graphics/bg/segaGen.png";
+			break;
+		case 70:
+			bgPath = "nitro:/graphics/bg/twlMenu.png";
+			break;
+		case 71:
+			bgPath = "nitro:/graphics/bg/hiyaCFW.png";
+			break;
 	}
 	std::vector<unsigned char> image;
 	unsigned width, height;

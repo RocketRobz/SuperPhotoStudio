@@ -18,6 +18,7 @@
 #include "metroidCharNames.h"
 #include "sc5CharNames.h"
 
+#include "logobgnames.h"
 #include "import_ss1bgnames.h"
 #include "import_ss2bgnames.h"
 #include "import_ss3bgnames.h"
@@ -58,6 +59,15 @@ int characterLimit = 1;
 int characterLimit = 4;
 #endif
 
+static u8 bgPageOrder[] = {
+	4,	// Logos
+	5,	// Perfect Dark
+	0,	// Style Savvy
+	1,	// Style Savvy: Trendsetters
+	2,	// Style Savvy: Fashion Forward
+	3,	// Style Savvy: Styling Star
+	6};	// Super Mario series
+
 static u8 charPageOrder[] = {
 	4,	// Super Photo Studio (Original Characters)
 	9,	// Banjo-Kazooie series
@@ -97,7 +107,7 @@ void PhotoStudio::getList() {
 void PhotoStudio::getMaxChars() {
 	if (subScreenMode == 1) {
 		// Locations
-		switch (photo_highlightedGame) {
+		switch (bgPageOrder[photo_highlightedGame]) {
 			case 0:
 				import_totalCharacters = 2;
 				break;
@@ -111,6 +121,8 @@ void PhotoStudio::getMaxChars() {
 				import_totalCharacters = 26;
 				break;
 			case 4:
+				import_totalCharacters = 4;
+				break;
 			case 5:
 				import_totalCharacters = 0;
 				break;
@@ -429,6 +441,26 @@ const char* PhotoStudio::ss4Title(void) const {
 	#endif
 }
 
+const char* PhotoStudio::bgGameTitle(void) const {
+	switch (bgPageOrder[photo_highlightedGame]) {
+		case 0:
+			return ss1Title();
+		case 1:
+			return ss2Title();
+		case 2:
+			return ss3Title();
+		case 3:
+			return ss4Title();
+		case 4:
+			return "Logos";
+		case 5:
+			return "Perfect Dark";
+		case 6:
+			return "Super Mario series";
+	}
+	return "???";
+}
+
 const char* PhotoStudio::charGameTitle(void) const {
 	switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
 		case 0:
@@ -497,6 +529,26 @@ bool PhotoStudio::charGender(int i) const {
 	return true;
 }
 
+const char* PhotoStudio::bgName(int i) const {
+	switch (bgPageOrder[photo_highlightedGame]) {
+		case 0:
+			return import_ss1BgNames[i];
+		case 1:
+			return import_ss2BgNames[i];
+		case 2:
+			return import_ss3BgNames[i];
+		case 3:
+			return import_ss4BgNames[i];
+		case 4:
+			return logoBgNames[i];
+		case 5:
+			return pdarkBgNames[i];
+		case 6:
+			return smBgNames[i];
+	}
+	return "???";
+}
+
 const char* PhotoStudio::charName(int i) const {
 	switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
 		case 0:
@@ -532,7 +584,7 @@ const char* PhotoStudio::charName(int i) const {
 }
 
 int PhotoStudio::getBgNum(void) const {
-	switch (photo_highlightedGame) {
+	switch (bgPageOrder[photo_highlightedGame]) {
 		case 0:
 			return import_ss1BgNums[bgList_cursorPosition];
 		case 1:
@@ -541,6 +593,8 @@ int PhotoStudio::getBgNum(void) const {
 			return import_ss3BgNums[bgList_cursorPosition];
 		case 3:
 			return import_ss4BgNums[bgList_cursorPosition];
+		case 4:
+			return logoBgNums[bgList_cursorPosition];
 		case 5:
 			return pdarkBgNums[bgList_cursorPosition];
 		case 6:
@@ -648,30 +702,7 @@ void PhotoStudio::Draw(void) const {
 	} else if (subScreenMode == 1) {
 		cursorY = 52+(40*bgList_cursorPositionOnScreen);
 		if (redrawText) {
-		// Game name
-		switch (photo_highlightedGame) {
-			case 6:
-				printSmall(false, 0, 6, "Super Mario series", Alignment::center);
-				break;
-			case 5:
-				printSmall(false, 0, 6, "Perfect Dark", Alignment::center);
-				break;
-			case 4:
-				printSmall(false, 0, 6, "Super Photo Studio", Alignment::center);
-				break;
-			case 3:
-				printSmall(false, 0, 6, ss4Title(), Alignment::center);
-				break;
-			case 2:
-				printSmall(false, 0, 6, ss3Title(), Alignment::center);
-				break;
-			case 1:
-				printSmall(false, 0, 6, ss2Title(), Alignment::center);
-				break;
-			case 0:
-				printSmall(false, 0, 6, ss1Title(), Alignment::center);
-				break;
-		}
+			printSmall(false, 0, 6, bgGameTitle(), Alignment::center);
 			printSmall(false, 6, 6, "<");
 			printSmall(false, 242, 6, ">");
 		}
@@ -679,27 +710,9 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 40;
 		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
-			if (photo_highlightedGame == 6) {
-				if (i >= 2) break;
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 26, i2, smBgNames[i]);
-			} else if (photo_highlightedGame == 5) {
-				if (i >= 1) break;
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 26, i2, pdarkBgNames[i]);
-			} else if (photo_highlightedGame == 3) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 26, i2, import_ss4BgNames[i]);
-			} else if (photo_highlightedGame == 2) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 26, i2, import_ss3BgNames[i]);
-			} else if (photo_highlightedGame == 1) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 26, i2, import_ss2BgNames[i]);
-			} else if (photo_highlightedGame == 0) {
-				glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-				if (redrawText) printSmall(false, 26, i2, import_ss1BgNames[i]);
-			}
+			if (i >= import_totalCharacters+1) break;
+			glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+			if (redrawText) printSmall(false, 26, i2, bgName(i));
 			i2 += 40;
 		}
 	  }
@@ -852,30 +865,7 @@ void PhotoStudio::Draw(void) const {
 	} else if (subScreenMode == 1) {
 		cursorY = 64+(48*bgList_cursorPositionOnScreen);
 
-		// Game name
-		switch (photo_highlightedGame) {
-			case 6:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Mario series");
-				break;
-			case 5:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Perfect Dark");
-				break;
-			case 4:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Super Photo Studio");
-				break;
-			case 3:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss4Title());
-				break;
-			case 2:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss3Title());
-				break;
-			case 1:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss2Title());
-				break;
-			case 0:
-				Gui::DrawStringCentered(0, 8, 0.50, WHITE, ss1Title());
-				break;
-		}
+		Gui::DrawStringCentered(0, 8, 0.50, WHITE, bgGameTitle());
 		Gui::DrawString(8, 8, 0.50, WHITE, "<");
 		Gui::DrawString(304, 8, 0.50, WHITE, ">");
 
@@ -889,27 +879,9 @@ void PhotoStudio::Draw(void) const {
 	  if (!displayNothing) {
 		int i2 = 48;
 		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
-			if (photo_highlightedGame == 6) {
-				if (i >= 2) break;
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				Gui::DrawString(32, i2, 0.65, WHITE, smBgNames[i]);
-			} else if (photo_highlightedGame == 5) {
-				if (i >= 1) break;
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				Gui::DrawString(32, i2, 0.65, WHITE, pdarkBgNames[i]);
-			} else if (photo_highlightedGame == 3) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				Gui::DrawString(32, i2, 0.65, WHITE, import_ss4BgNames[i]);
-			} else if (photo_highlightedGame == 2) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				Gui::DrawString(32, i2, 0.65, WHITE, import_ss3BgNames[i]);
-			} else if (photo_highlightedGame == 1) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				Gui::DrawString(32, i2, 0.65, WHITE, import_ss2BgNames[i]);
-			} else if (photo_highlightedGame == 0) {
-				GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-				Gui::DrawString(32, i2, 0.65, WHITE, import_ss1BgNames[i]);
-			}
+			if (i >= import_totalCharacters+1) break;
+			GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+			Gui::DrawString(32, i2, 0.65, WHITE, bgName(i));
 			i2 += 48;
 		}
 	  }
@@ -1253,16 +1225,14 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_DLEFT) {
 			sndHighlight();
 			photo_highlightedGame--;
-			if (photo_highlightedGame == 4) photo_highlightedGame--;	// Skip Rocket Photo Shoot page for now
-			if (photo_highlightedGame < 0) photo_highlightedGame = 6;
+			if (photo_highlightedGame < 0) photo_highlightedGame = (int)sizeof(bgPageOrder)-1;
 			getMaxChars();
 		}
 
 		if (hDown & KEY_DRIGHT) {
 			sndHighlight();
 			photo_highlightedGame++;
-			if (photo_highlightedGame == 4) photo_highlightedGame++;	// Skip Rocket Photo Shoot page for now
-			if (photo_highlightedGame > 6) photo_highlightedGame = 0;
+			if (photo_highlightedGame > (int)sizeof(bgPageOrder)-1) photo_highlightedGame = 0;
 			getMaxChars();
 		}
 
