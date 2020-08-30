@@ -39,7 +39,10 @@
 #include <unistd.h>
 
 std::unique_ptr<Screen> usedScreen, tempScreen; // tempScreen used for "fade" effects.
+extern u16* frameBuffer[2];
+extern u16* frameBufferBot[2];
 bool currentScreen = false;
+bool secondFrame = false;
 bool fadeout = false;
 bool fadein = false;
 int fadealpha = 0;
@@ -237,6 +240,10 @@ void Gui::DrawScreen() {
 
 	glEnd2D();
 	GFX_FLUSH = 0;
+
+	dmaCopyWordsAsynch(2, frameBuffer[secondFrame], bgGetGfxPtr(bg3Sub), 0x18000);
+	//dmaCopyWordsAsynch(3, frameBufferBot[secondFrame], bgGetGfxPtr(bg3Main), 0x18000);
+	secondFrame = !secondFrame;
 }
 
 // Do the current screen's logic.

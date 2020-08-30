@@ -79,6 +79,9 @@ void doPause() {
 }
 
 int main(int argc, char **argv) {
+	extern void dsiOnly(void);
+	dsiOnly();
+
 	defaultExceptionHandler();
 
 	fatInited = fatInitDefault();

@@ -1,0 +1,9 @@
+-W3
+# disable alpha and set opaque bit for all pixels
+-gT!
+
+# use lz77 compression
+-gzl
+
+# Set the bit depth to 16
+-gB16
