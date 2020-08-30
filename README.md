@@ -29,7 +29,7 @@ and more!
 (*Homebrew dev)
 
 # Available for
-* Nintendo DS/DSi
+* Nintendo DSi
 * Nintendo 3DS/2DS
 
 # Credits
