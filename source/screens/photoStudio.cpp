@@ -1358,8 +1358,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#ifdef NDS
 					else {
 						redrawText = true;
-						swiWaitForVBlank();
-						oamUpdate(&oamSub);
 					}
 					#endif
 				}
@@ -1375,8 +1373,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#ifdef NDS
 					else {
 						redrawText = true;
-						swiWaitForVBlank();
-						oamUpdate(&oamSub);
 					}
 					#endif
 				}
