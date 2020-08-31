@@ -642,14 +642,12 @@ void PhotoStudio::loadChrImage(void) {
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath2);
 	}
 	#ifdef NDS
+	ditherlaceOnVBlank = false;
 	GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 	#else
 	if (previewCharacterFound[0] && !characterPicked[1]) {
 		GFX::loadCharSpriteMem(0);
 	}
-	#endif
-	#ifdef NDS
-	ditherlaceOnVBlank = false;
 	#endif
 	previewCharacter = true;
 }
