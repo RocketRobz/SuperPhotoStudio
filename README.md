@@ -37,6 +37,6 @@ and more!
 * Universal Team: Universal Core
 * SuperSaiyajinStackZ: StackZ and Stackie avatars
 * Pk11: DS(i) version's font rendering code
-* chyyran: DS(i) version's alpha blanding code
+* chyyran: DS(i) version's alpha blending code
 * joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)
 * Freepik: [Camera icon](https://www.flaticon.com/free-icon/camera_2965705?term=camera&page=1&position=12)
