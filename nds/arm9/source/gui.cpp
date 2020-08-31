@@ -88,6 +88,11 @@ void Gui__ChangeBrightness() {
 
 // Initialize GUI.
 void Gui::init(void) {
+	*(u16*)0x0400006C |= BIT(14);
+	*(u16*)0x0400006C &= BIT(15);
+	SetBrightness(0, 31);
+	SetBrightness(1, 31);
+
 	videoSetMode(MODE_5_2D | DISPLAY_BG3_ACTIVE);
 	videoSetModeSub(MODE_5_2D | DISPLAY_BG3_ACTIVE);
 
