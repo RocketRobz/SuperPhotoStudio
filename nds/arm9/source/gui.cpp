@@ -41,7 +41,7 @@
 #include <unistd.h>
 
 std::unique_ptr<Screen> usedScreen, tempScreen; // tempScreen used for "fade" effects.
-bool ditherlaceOnVBlank = true;
+bool ditherlaceOnVBlank = false;
 bool currentScreen = false;
 bool secondFrame = false;
 bool fadeout = false;
@@ -74,6 +74,16 @@ void Gui::clearTextBufs(void) {  }
 
 // Draw a sprite from the sheet.
 void Gui::DrawSprite(int imgindex, int x, int y) {
+}
+
+void Gui__ChangeBrightness() {
+	if (ditherlaceOnVBlank) {
+		secondFrame ? bgShow(bg3Main) : bgHide(bg3Main);
+		secondFrame = !secondFrame;
+	}
+
+	SetBrightness(0, (fadecolor==255 ? fadealpha : -fadealpha)/8);
+	SetBrightness(1, (fadecolor==255 ? fadealpha : -fadealpha)/8);
 }
 
 // Initialize GUI.
@@ -262,7 +272,7 @@ void Gui::init(void) {
 		);
 	}
 
-	irqSet(IRQ_VBLANK, DrawScreen);
+	irqSet(IRQ_VBLANK, Gui__ChangeBrightness);
 	irqEnable(IRQ_VBLANK);
 
 	fontInit();
@@ -316,14 +326,6 @@ bool Gui::Draw_Rect(int x, int y, int w, int h, int color) {
 
 // Draw's the current screen's draw.
 void Gui::DrawScreen() {
-	if (ditherlaceOnVBlank) {
-		secondFrame ? bgShow(bg3Main) : bgHide(bg3Main);
-		secondFrame = !secondFrame;
-	}
-
-	SetBrightness(0, (fadecolor==255 ? fadealpha : -fadealpha)/8);
-	SetBrightness(1, (fadecolor==255 ? fadealpha : -fadealpha)/8);
-
 	if (usedScreen != nullptr)	usedScreen->Draw();
 }
 

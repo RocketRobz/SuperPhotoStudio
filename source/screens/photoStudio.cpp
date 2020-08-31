@@ -1045,6 +1045,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
 					#ifdef NDS
 					redrawText = true;
+					Gui::DrawScreen();
 					#endif
 				}
 				#ifdef NDS
@@ -1073,6 +1074,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 2;
 					#ifdef NDS
 					redrawText = true;
+					Gui::DrawScreen();
 					#endif
 				}
 				#ifdef NDS
@@ -1089,6 +1091,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			subScreenMode = 0;
 			#ifdef NDS
 			redrawText = true;
+			Gui::DrawScreen();
 			#endif
 		}
 
@@ -1103,6 +1106,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				subScreenMode = 0;
 				#ifdef NDS
 				redrawText = true;
+				Gui::DrawScreen();
 				swiWaitForVBlank();
 				oamUpdate(&oamSub);
 				GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
@@ -1159,6 +1163,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			getMaxChars();
 			#ifdef NDS
 			redrawText = true;
+			Gui::DrawScreen();
 			swiWaitForVBlank();
 			oamUpdate(&oamSub);
 			#endif
@@ -1173,6 +1178,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (seasonNo[currentCharNum] < 0) seasonNo[currentCharNum] = 3;
 				#ifdef NDS
 				redrawText = true;
+				Gui::DrawScreen();
 				swiWaitForVBlank();
 				oamUpdate(&oamSub);
 				#endif
@@ -1186,6 +1192,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (seasonNo[currentCharNum] > 3) seasonNo[currentCharNum] = 0;
 				#ifdef NDS
 				redrawText = true;
+				Gui::DrawScreen();
 				swiWaitForVBlank();
 				oamUpdate(&oamSub);
 				#endif
@@ -1199,6 +1206,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			subScreenMode = 0;
 			#ifdef NDS
 			redrawText = true;
+			Gui::DrawScreen();
 			#endif
 		}
 
@@ -1221,6 +1229,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#endif
 				}
 				#ifdef NDS
+				Gui::DrawScreen();
 				swiWaitForVBlank();
 				oamUpdate(&oamSub);
 				#endif
@@ -1252,6 +1261,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#endif
 				}
 				#ifdef NDS
+				Gui::DrawScreen();
 				swiWaitForVBlank();
 				oamUpdate(&oamSub);
 				#endif
@@ -1273,6 +1283,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			#ifdef NDS
 			displayChars = true;
 			redrawText = true;
+			Gui::DrawScreen();
 			if (characterPicked[0]) GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 			#endif
 		}
@@ -1298,6 +1309,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			getMaxChars();
 			#ifdef NDS
 			redrawText = true;
+			Gui::DrawScreen();
 			swiWaitForVBlank();
 			oamUpdate(&oamSub);
 			#endif
@@ -1318,6 +1330,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			#ifdef NDS
 			displayChars = true;
 			redrawText = true;
+			Gui::DrawScreen();
 			if (characterPicked[0]) GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 			#endif
 		}
@@ -1358,6 +1371,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#ifdef NDS
 					else {
 						redrawText = true;
+						Gui::DrawScreen();
 					}
 					#endif
 				}
@@ -1373,6 +1387,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#ifdef NDS
 					else {
 						redrawText = true;
+						Gui::DrawScreen();
 					}
 					#endif
 				}
@@ -1388,7 +1403,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				#ifdef NDS
 				displayChars = false;
 				redrawText = true;
-				ditherlaceOnVBlank = false;
+				Gui::DrawScreen();
 				swiWaitForVBlank();
 				oamUpdate(&oamSub);
 				#endif
@@ -1427,7 +1442,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				#ifdef NDS
 				redrawText = true;
-				ditherlaceOnVBlank = false;
+				Gui::DrawScreen();
 				swiWaitForVBlank();
 				oamUpdate(&oamSub);
 				#endif

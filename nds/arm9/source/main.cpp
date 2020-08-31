@@ -170,6 +170,11 @@ int main(int argc, char **argv) {
 
 		touchRead(&touch);
 
+		if (!ditherlaceOnVBlank) {
+			secondFrame ? bgShow(bg3Main) : bgHide(bg3Main);
+			secondFrame = !secondFrame;
+		}
+		Gui::DrawScreen();
 		Gui::ScreenLogic(hDown, hHeld, touch, false); // Call the logic of the current screen here.
 
 		if (doScreenshot && fatInited) {
@@ -205,11 +210,6 @@ int main(int argc, char **argv) {
 		}
 
 		Gui::fadeEffects(fadeFPS, fadeFPS);
-
-		if (!ditherlaceOnVBlank) {
-			secondFrame ? bgShow(bg3Main) : bgHide(bg3Main);
-			secondFrame = !secondFrame;
-		}
 
 		swiWaitForVBlank();
 		oamUpdate(&oamSub);
