@@ -1045,9 +1045,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
 					#ifdef NDS
 					redrawText = true;
-					Gui::DrawScreen();
 					#endif
 				}
+				#ifdef NDS
+				Gui::DrawScreen();
+				#endif
 				renderTop = true;
 				loadChrImage();
 			}
@@ -1070,9 +1072,11 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 2;
 					#ifdef NDS
 					redrawText = true;
-					Gui::DrawScreen();
 					#endif
 				}
+				#ifdef NDS
+				Gui::DrawScreen();
+				#endif
 				renderTop = true;
 				loadChrImage();
 			}
