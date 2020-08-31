@@ -178,9 +178,11 @@ int main(int argc, char **argv) {
 		Gui::ScreenLogic(hDown, hHeld, touch, false); // Call the logic of the current screen here.
 
 		if (doScreenshot && fatInited) {
+			ditherlaceOnVBlank = true;
 			extern void screenshotbmp(void);
 			screenshotbmp();
 			doScreenshot = false;
+			ditherlaceOnVBlank = false;
 		}
 
 		if ((hDown & KEY_UP)
