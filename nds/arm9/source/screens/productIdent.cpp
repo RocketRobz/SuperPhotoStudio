@@ -25,14 +25,15 @@ void ProductIdent::Draw(void) const {
 
 void ProductIdent::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	if (!graphicLoaded) {
-		extern u16* frameBuffer[2];
+		extern int bg2Main;
+		extern int bg3Main;
 
 		std::vector<unsigned char> image;
 		unsigned width, height;
 		lodepng::decode(image, width, height, "nitro:/graphics/logos/productIdent.png");
 		for(unsigned i=0;i<image.size()/4;i++) {
-			frameBuffer[0][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-			frameBuffer[1][i] = frameBuffer[0][i];
+			bgGetGfxPtr(bg2Main)[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			bgGetGfxPtr(bg3Main)[i] = bgGetGfxPtr(bg2Main)[i];
 		}
 		graphicLoaded = true;
 	}

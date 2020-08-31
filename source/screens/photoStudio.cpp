@@ -29,8 +29,6 @@
 #include <unistd.h>
 
 #ifdef NDS
-#include <gl2d.h>
-
 #include "fontHandler.h"
 
 #define KEY_CPAD_UP KEY_X
@@ -48,11 +46,7 @@ void gspWaitForVBlank(void) {
 }
 
 static bool redrawText = true;
-
-extern glImage backImage[(64 / 64) * (64 / 64)];
-extern glImage cursorImage[(32 / 32) * (32 / 32)];
-extern glImage itemButtonImage[(256 / 32) * (64 / 32)];
-extern glImage genderImage[2][(64 / 64) * (64 / 64)];
+extern bool ditherlaceOnVBlank;
 
 int characterLimit = 1;
 #else
@@ -620,7 +614,11 @@ void PhotoStudio::drawMsg(void) const {
 
 void PhotoStudio::loadChrImage(void) {
 	previewCharacter = false;
+	#ifdef NDS
+	ditherlaceOnVBlank = true;
+	#else
 	gspWaitForVBlank();
+	#endif
 	if (charPageOrder[char_highlightedGame[currentCharNum]] >= 2) {
 		/*if (numberOfExportedCharacters > 0) {
 			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", 4, getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));	// All Seasons
@@ -649,6 +647,9 @@ void PhotoStudio::loadChrImage(void) {
 	if (previewCharacterFound[0] && !characterPicked[1]) {
 		GFX::loadCharSpriteMem(0);
 	}
+	#endif
+	#ifdef NDS
+	ditherlaceOnVBlank = false;
 	#endif
 	previewCharacter = true;
 }
@@ -691,12 +692,24 @@ void PhotoStudio::Draw(void) const {
 
 	  if (!displayNothing) {
 		int i2 = 40;
+		int i3 = 0;
+		// Reset gender icon and item button Y positions
+		for (int i = 0; i < 3; i++) {
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[(2+i)+(x*3)].y = 192;
+			}
+			oamSub.oamMemory[14+i].y = 192;
+			oamSub.oamMemory[17+i].y = 192;
+		}
 		for (int i = import_characterShownFirst[currentCharNum]; i < import_characterShownFirst[currentCharNum]+3; i++) {
 			if (i >= import_totalCharacters+1) break;
-			glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
-			glSprite(12, i2-6, GL_FLIP_NONE, genderImage[charGender(i)]);
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[(2+i3)+(x*3)].y = i2-16;
+			}
+			oamSub.oamMemory[(charGender(i) ? 17 : 14)+i3].y = i2-6;
 			if (redrawText) printSmall(false, 54, i2, charName(i));
 			i2 += 40;
+			i3++;
 		}
 	  }
 	} else if (subScreenMode == 1) {
@@ -709,11 +722,21 @@ void PhotoStudio::Draw(void) const {
 
 	  if (!displayNothing) {
 		int i2 = 40;
+		int i3 = 0;
+		// Reset item button Y positions
+		for (int i = 0; i < 3; i++) {
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[(2+i)+(x*3)].y = 192;
+			}
+		}
 		for (int i = import_bgShownFirst; i < import_bgShownFirst+3; i++) {
 			if (i >= import_totalCharacters+1) break;
-			glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[(2+i3)+(x*3)].y = i2-16;
+			}
 			if (redrawText) printSmall(false, 26, i2, bgName(i));
 			i2 += 40;
+			i3++;
 		}
 	  }
 	} else {
@@ -727,12 +750,25 @@ void PhotoStudio::Draw(void) const {
 			}
 		}
 
+		// Reset gender icon Y positions
+		for (int i = 0; i < 3; i++) {
+			oamSub.oamMemory[14+i].y = 192;
+			oamSub.oamMemory[17+i].y = 192;
+		}
 		int i2 = 0;
 		i2 += 40;
-		glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+		for (int x = 0; x < 4; x++) {
+			oamSub.oamMemory[2+(x*3)].y = i2-16;
+		}
 		if (redrawText) printSmall(false, 26, i2, "Change location");
 		i2 += 40;
-		glSprite(16, i2-16, GL_FLIP_NONE, itemButtonImage);
+		for (int x = 0; x < 4; x++) {
+			oamSub.oamMemory[3+(x*3)].y = i2-16;
+		}
+		// Hide 3rd button
+		for (int x = 0; x < 4; x++) {
+			oamSub.oamMemory[4+(x*3)].y = 192;
+		}
 		if (redrawText) {
 		if (currentCharNum==4) {
 			printSmall(false, 26, i2, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
@@ -748,13 +784,8 @@ void PhotoStudio::Draw(void) const {
 		}
 	}
 
-	if (subScreenMode != 0) {
-		glSprite(5, 156, GL_FLIP_NONE, backImage);
-	}
-
-	if (showCursor) {
-		glSprite(cursorX, cursorY, GL_FLIP_NONE, cursorImage);
-	}
+	oamSub.oamMemory[0].y = (subScreenMode != 0) ? 156 : 192;
+	oamSetXY(&oamSub, 1, cursorX, showCursor ? cursorY : 192);
 
 	if (redrawText) {
 		extern void updateText(bool top);
@@ -1016,6 +1047,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					redrawText = true;
 					#endif
 				}
+				#ifdef NDS
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
+				#endif
 				renderTop = true;
 				loadChrImage();
 			}
@@ -1040,6 +1075,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					redrawText = true;
 					#endif
 				}
+				#ifdef NDS
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
+				#endif
 				renderTop = true;
 				loadChrImage();
 			}
@@ -1064,6 +1103,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				subScreenMode = 0;
 				#ifdef NDS
 				redrawText = true;
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
 				GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 				#endif
 				renderTop = true;
@@ -1118,6 +1159,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			getMaxChars();
 			#ifdef NDS
 			redrawText = true;
+			swiWaitForVBlank();
+			oamUpdate(&oamSub);
 			#endif
 			renderTop = true;
 			loadChrImage();
@@ -1130,6 +1173,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (seasonNo[currentCharNum] < 0) seasonNo[currentCharNum] = 3;
 				#ifdef NDS
 				redrawText = true;
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
 				#endif
 				loadChrImage();
 				renderTop = true;
@@ -1141,6 +1186,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (seasonNo[currentCharNum] > 3) seasonNo[currentCharNum] = 0;
 				#ifdef NDS
 				redrawText = true;
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
 				#endif
 				loadChrImage();
 				renderTop = true;
@@ -1173,6 +1220,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					redrawText = true;
 					#endif
 				}
+				#ifdef NDS
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
+				#endif
 				studioBg = getBgNum();
 				displayStudioBg = false;
 				gspWaitForVBlank();
@@ -1200,6 +1251,10 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					redrawText = true;
 					#endif
 				}
+				#ifdef NDS
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
+				#endif
 				studioBg = getBgNum();
 				displayStudioBg = false;
 				gspWaitForVBlank();
@@ -1243,6 +1298,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			getMaxChars();
 			#ifdef NDS
 			redrawText = true;
+			swiWaitForVBlank();
+			oamUpdate(&oamSub);
 			#endif
 			studioBg = getBgNum();
 			displayStudioBg = false;
@@ -1301,6 +1358,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#ifdef NDS
 					else {
 						redrawText = true;
+						swiWaitForVBlank();
+						oamUpdate(&oamSub);
 					}
 					#endif
 				}
@@ -1316,6 +1375,8 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#ifdef NDS
 					else {
 						redrawText = true;
+						swiWaitForVBlank();
+						oamUpdate(&oamSub);
 					}
 					#endif
 				}
@@ -1331,6 +1392,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				#ifdef NDS
 				displayChars = false;
 				redrawText = true;
+				ditherlaceOnVBlank = false;
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
 				#endif
 				int bgNum = getBgNum();
 				//if (studioBg != bgNum) {
@@ -1367,6 +1431,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				#ifdef NDS
 				redrawText = true;
+				ditherlaceOnVBlank = false;
+				swiWaitForVBlank();
+				oamUpdate(&oamSub);
 				#endif
 				if (doCharLoad) {
 					renderTop = true;

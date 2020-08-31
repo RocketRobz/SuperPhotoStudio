@@ -3,6 +3,8 @@
 #include "lodepng.h"
 #include "tonccpy.h"
 
+#include "photo_bg.h"
+
 #include <ctime>
 #include <unistd.h>
 
@@ -10,8 +12,6 @@
 
 u16 bmpImageBuffer[2][256*192];
 u16 bmpImageBuffer2[2][256*192];
-u16* frameBuffer[2] = {(u16*)0x02F00000, (u16*)0x02F18000};
-u16* frameBufferBot[2] = {(u16*)0x02FC0000, (u16*)0x02FD8000};
 static u16 bgSpriteMem[(256*192)*3] = {0};
 static u16 charSpriteMem[2][(256*192)*3];
 static u8 charSpriteAlpha[2][(256*192)*3];
@@ -40,8 +40,8 @@ extern int studioBg;
 extern u8 settingBits;
 extern int iFps;
 
-extern int bg3Main;
 extern int bg2Main;
+extern int bg3Main;
 extern int bg3Sub;
 
 extern bool showCursor;
@@ -245,11 +245,11 @@ void updateTitleScreen(const int metalXposBase) {
 		}
 	}
 
-	dmaCopyWordsAsynch(0, bmpImageBuffer[0], frameBuffer[0], 0x18000);
-	dmaCopyWordsAsynch(1, bmpImageBuffer2[0], frameBuffer[1], 0x18000);
+	dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
+	dmaCopyWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 	if (!titleBottomLoaded) {
-		dmaCopyWordsAsynch(3, charSpriteMem[1], bgGetGfxPtr(bg3Main), 0x18000);
-		//dmaCopyWords(0, charSpriteMem[1]+(256*192), frameBufferBot[1], 0x18000);
+		tonccpy(bgGetGfxPtr(bg3Sub), photo_bgBitmap, photo_bgBitmapLen);
+		tonccpy(BG_PALETTE_SUB + 0x10, photo_bgPal, photo_bgPalLen);
 		titleBottomLoaded = true;
 	}
 }
@@ -275,8 +275,9 @@ void GFX::loadBgSprite(void) {
 
 	animateTitle = false;
 
-	dmaFillWords(0xFFFFFFFF, frameBuffer[0], 0x18000);
-	dmaFillWords(0xFFFFFFFF, frameBuffer[1], 0x18000);
+	swiWaitForVBlank();	// Prevent screen tearing
+	dmaFillWords(0xFFFFFFFF, bgGetGfxPtr(bg2Main), 0x18000);
+	dmaFillWords(0xFFFFFFFF, bgGetGfxPtr(bg3Main), 0x18000);
 
 	timeOutside = 2;	// Default is Nighttime
 	int aniFrames = 0;
@@ -755,8 +756,9 @@ void GFX::reloadBgSprite() {
 	loadBgSprite();
 	dmaCopyWords(0, bgSpriteMem, bmpImageBuffer[0], 0x18000);
 	dmaCopyWords(1, bgSpriteMem2, bmpImageBuffer2[0], 0x18000);
-	dmaCopyWordsAsynch(0, bmpImageBuffer[0], frameBuffer[0], 0x18000);
-	dmaCopyWordsAsynch(1, bmpImageBuffer2[0], frameBuffer[1], 0x18000);
+	swiWaitForVBlank();	// Prevent screen tearing
+	dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
+	dmaCopyWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 }
 
 bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
@@ -978,8 +980,9 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	dmaCopyWords(0, bgLoc+((256*192)*zoomIn), bmpImageBuffer[0], 0x18000);
 	dmaCopyWords(1, bgLoc2+((256*192)*zoomIn), bmpImageBuffer2[0], 0x18000);
 	if (!displayChars || !chracterSpriteFound[0]) {
-		dmaCopyWordsAsynch(0, bmpImageBuffer[0], frameBuffer[0], 0x18000);
-		dmaCopyWordsAsynch(1, bmpImageBuffer2[0], frameBuffer[1], 0x18000);
+		swiWaitForVBlank();	// Prevent screen tearing
+		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
+		dmaCopyWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 		return;
 	}
 
@@ -1072,8 +1075,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		  }
 		}
 		// Character 2
-		dmaCopyWords(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
-		dmaCopyWords(0, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
+		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		dmaCopyWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
 		for (int y = 0; y < 192; y++) {
 		  x2 = flipH[1] ? 255 : 0;
 		  for (int x = 0; x < 256; x++) {
@@ -1096,8 +1099,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		  }
 		}
 		// Character 3
-		dmaCopyWords(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
-		dmaCopyWords(0, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000);
+		dmaCopyWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
+		dmaCopyWords(1, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000);
 		for (int y = 0; y < 192; y++) {
 		  x2 = flipH[2] ? 255 : 0;
 		  x2 += (zoomIn==1 ? 96 : 50);
@@ -1146,8 +1149,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		  }
 		}
 		// Character 2
-		dmaCopyWords(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
-		dmaCopyWords(0, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
+		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		dmaCopyWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
 		for (int y = 0; y < 192; y++) {
 		  x2 = flipH[1] ? 255 : 0;
 		  x2 += (zoomIn==1 ? 64 : 26);
@@ -1197,8 +1200,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	if (chracterSpriteFound[3]) {
 		// Continued from "if (chracterSpriteFound[2])"
 		// Character 4
-		dmaCopyWords(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
-		dmaCopyWords(0, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
+		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		dmaCopyWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
 		int y2 = 72;
 		for (int y = 0; y < 120; y++) {
 		  x2 = flipH[3] ? 255 : 0;
@@ -1227,8 +1230,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	}
 	if (chracterSpriteFound[4]) {
 		// Character 5
-		dmaCopyWords(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
-		dmaCopyWords(0, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000);
+		dmaCopyWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
+		dmaCopyWords(1, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000);
 		int y2 = 72;
 		for (int y = 0; y < 120; y++) {
 		  x2 = flipH[4] ? 255 : 0;
@@ -1256,8 +1259,9 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		buffer--;
 	}
 
-	dmaCopyWordsAsynch(0, bmpImageBuffer[buffer], frameBuffer[0], 0x18000);
-	dmaCopyWordsAsynch(1, bmpImageBuffer2[buffer], frameBuffer[1], 0x18000);
+	swiWaitForVBlank();	// Prevent screen tearing
+	dmaCopyWordsAsynch(0, bmpImageBuffer[buffer], bgGetGfxPtr(bg2Main), 0x18000);
+	dmaCopyWordsAsynch(1, bmpImageBuffer2[buffer], bgGetGfxPtr(bg3Main), 0x18000);
 	chracterSpriteLoaded = true;
 }
 

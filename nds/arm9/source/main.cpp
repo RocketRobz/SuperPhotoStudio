@@ -27,6 +27,9 @@ char verText[32];
 int studioBg = 0;
 int iFps = 60;
 
+extern int bg3Main;
+extern bool ditherlaceOnVBlank;
+extern bool secondFrame;
 bool renderTop = true;	// Disable to prevent second character from flickering
 bool doScreenshot = false;
 
@@ -203,7 +206,13 @@ int main(int argc, char **argv) {
 
 		Gui::fadeEffects(fadeFPS, fadeFPS);
 
+		if (!ditherlaceOnVBlank) {
+			secondFrame ? bgShow(bg3Main) : bgHide(bg3Main);
+			secondFrame = !secondFrame;
+		}
+
 		swiWaitForVBlank();
+		oamUpdate(&oamSub);
 	}
 
 	return 0;
