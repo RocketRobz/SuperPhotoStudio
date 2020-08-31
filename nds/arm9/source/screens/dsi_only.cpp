@@ -1,6 +1,7 @@
 #include <nds.h>
 #include "dsiOnly_top.h"
 #include "dsiOnly_bot.h"
+#include "tonccpy.h"
 
 static void dsiOnly_setBrightness(u8 screen, s8 bright) {
 	u16 mode = 1 << 14;
@@ -32,13 +33,13 @@ void dsiOnly(void) {
 	vramSetBankD(VRAM_D_LCD);
 
 	// Display DSi Only screen
-	int bg3 = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 1, 0);
-	bgSetScroll(bg3, 0, 0);
+	int bg3 = bgInit(3, BgType_Bmp8, BgSize_B8_256x256, 1, 0);
 	decompress(dsiOnly_topBitmap, bgGetGfxPtr(bg3), LZ77Vram);
+	tonccpy(BG_PALETTE, dsiOnly_topPal, dsiOnly_topPalLen);
 
-	int bg3sub = bgInitSub(3, BgType_Bmp16, BgSize_B16_256x256, 1, 0);
-	bgSetScroll(bg3sub, 0, 0);
+	int bg3sub = bgInitSub(3, BgType_Bmp8, BgSize_B8_256x256, 1, 0);
 	decompress(dsiOnly_botBitmap, bgGetGfxPtr(bg3sub), LZ77Vram);
+	tonccpy(BG_PALETTE_SUB, dsiOnly_botPal, dsiOnly_botPalLen);
 
 	dsiOnly_setBrightness(0, 0);
 	dsiOnly_setBrightness(1, 0);
