@@ -170,56 +170,13 @@ void GFX::loadSheets() {
 		}
 		alternatePixel = !alternatePixel;
 	}
-	image.clear();
-	lodepng::decode(image, width, height, "nitro:/graphics/gui/photo_bg.png");
-	for(unsigned i=0;i<image.size()/4;i++) {
-		/*image[(i*4)+3] = 0;
-		if (alternatePixel) {
-			if (image[(i*4)] >= 0x4) {
-				image[(i*4)] -= 0x4;
-				image[(i*4)+3] |= BIT(0);
-			}
-			if (image[(i*4)+1] >= 0x4) {
-				image[(i*4)+1] -= 0x4;
-				image[(i*4)+3] |= BIT(1);
-			}
-			if (image[(i*4)+2] >= 0x4) {
-				image[(i*4)+2] -= 0x4;
-				image[(i*4)+3] |= BIT(2);
-			}
-		}*/
-		charSpriteMem[1][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-		/*if (alternatePixel) {
-			if (image[(i*4)+3] & BIT(0)) {
-				image[(i*4)] += 0x4;
-			}
-			if (image[(i*4)+3] & BIT(1)) {
-				image[(i*4)+1] += 0x4;
-			}
-			if (image[(i*4)+3] & BIT(2)) {
-				image[(i*4)+2] += 0x4;
-			}
-		} else {
-			if (image[(i*4)] >= 0x4) {
-				image[(i*4)] -= 0x4;
-			}
-			if (image[(i*4)+1] >= 0x4) {
-				image[(i*4)+1] -= 0x4;
-			}
-			if (image[(i*4)+2] >= 0x4) {
-				image[(i*4)+2] -= 0x4;
-			}
-		}
-		charSpriteMem[1][(256*192)+i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-		alternatePixel = !alternatePixel;*/
-	}
 
-	dmaCopyWords(0, bmpImageBuffer[0], bgSpriteMem, 0x18000);
-	dmaCopyWords(0, bmpImageBuffer2[0], bgSpriteMem2, 0x18000);
-	dmaCopyWords(0, bmpImageBuffer[0], bgSpriteMem+(charSpriteSize/2), 0x18000);
-	dmaCopyWords(0, bmpImageBuffer2[0], bgSpriteMem2+(charSpriteSize/2), 0x18000);
-	dmaCopyWords(0, bmpImageBuffer[0], bgSpriteMem+((charSpriteSize/2)*2), 0x18000);
-	dmaCopyWords(0, bmpImageBuffer2[0], bgSpriteMem2+((charSpriteSize/2)*2), 0x18000);
+	dmaCopyHalfWords(0, bmpImageBuffer[0], bgSpriteMem, 0x18000);
+	dmaCopyHalfWords(1, bmpImageBuffer2[0], bgSpriteMem2, 0x18000);
+	dmaCopyHalfWords(0, bmpImageBuffer[0], bgSpriteMem+(charSpriteSize/2), 0x18000);
+	dmaCopyHalfWords(1, bmpImageBuffer2[0], bgSpriteMem2+(charSpriteSize/2), 0x18000);
+	dmaCopyHalfWords(0, bmpImageBuffer[0], bgSpriteMem+((charSpriteSize/2)*2), 0x18000);
+	dmaCopyHalfWords(1, bmpImageBuffer2[0], bgSpriteMem2+((charSpriteSize/2)*2), 0x18000);
 }
 
 void updateTitleScreen(const int metalXposBase) {
@@ -245,8 +202,8 @@ void updateTitleScreen(const int metalXposBase) {
 		}
 	}
 
-	dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
-	dmaCopyWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
+	dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
+	dmaCopyHalfWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 	if (!titleBottomLoaded) {
 		tonccpy(bgGetGfxPtr(bg3Sub), photo_bgBitmap, photo_bgBitmapLen);
 		tonccpy(BG_PALETTE_SUB + 0x10, photo_bgPal, photo_bgPalLen);
@@ -276,8 +233,8 @@ void GFX::loadBgSprite(void) {
 	animateTitle = false;
 
 	swiWaitForVBlank();	// Prevent screen tearing
-	dmaFillWords(0xFFFFFFFF, bgGetGfxPtr(bg2Main), 0x18000);
-	dmaFillWords(0xFFFFFFFF, bgGetGfxPtr(bg3Main), 0x18000);
+	dmaFillHalfWords(0xFFFF, bgGetGfxPtr(bg2Main), 0x18000);
+	dmaFillHalfWords(0xFFFF, bgGetGfxPtr(bg3Main), 0x18000);
 
 	timeOutside = 2;	// Default is Nighttime
 	int aniFrames = 0;
@@ -754,11 +711,11 @@ void GFX::unloadBgSprite() {
 void GFX::reloadBgSprite() {
 	unloadBgSprite();
 	loadBgSprite();
-	dmaCopyWords(0, bgSpriteMem, bmpImageBuffer[0], 0x18000);
-	dmaCopyWords(1, bgSpriteMem2, bmpImageBuffer2[0], 0x18000);
+	dmaCopyHalfWords(0, bgSpriteMem, bmpImageBuffer[0], 0x18000);
+	dmaCopyHalfWords(1, bgSpriteMem2, bmpImageBuffer2[0], 0x18000);
 	swiWaitForVBlank();	// Prevent screen tearing
-	dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
-	dmaCopyWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
+	dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
+	dmaCopyHalfWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 }
 
 bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
@@ -977,12 +934,12 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		bgLoc2 = bgSpriteMemExt2[bgAnimationFrame-1];
 	}
 
-	dmaCopyWords(0, bgLoc+((256*192)*zoomIn), bmpImageBuffer[0], 0x18000);
-	dmaCopyWords(1, bgLoc2+((256*192)*zoomIn), bmpImageBuffer2[0], 0x18000);
+	dmaCopyHalfWords(0, bgLoc+((256*192)*zoomIn), bmpImageBuffer[0], 0x18000);
+	dmaCopyHalfWords(1, bgLoc2+((256*192)*zoomIn), bmpImageBuffer2[0], 0x18000);
 	if (!displayChars || !chracterSpriteFound[0]) {
 		swiWaitForVBlank();	// Prevent screen tearing
-		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
-		dmaCopyWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
+		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
+		dmaCopyHalfWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 		return;
 	}
 
@@ -1075,8 +1032,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		  }
 		}
 		// Character 2
-		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
-		dmaCopyWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
+		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		dmaCopyHalfWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
 		for (int y = 0; y < 192; y++) {
 		  x2 = flipH[1] ? 255 : 0;
 		  for (int x = 0; x < 256; x++) {
@@ -1099,8 +1056,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		  }
 		}
 		// Character 3
-		dmaCopyWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
-		dmaCopyWords(1, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000);
+		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
+		dmaCopyHalfWords(1, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000);
 		for (int y = 0; y < 192; y++) {
 		  x2 = flipH[2] ? 255 : 0;
 		  x2 += (zoomIn==1 ? 96 : 50);
@@ -1149,8 +1106,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 		  }
 		}
 		// Character 2
-		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
-		dmaCopyWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
+		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		dmaCopyHalfWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
 		for (int y = 0; y < 192; y++) {
 		  x2 = flipH[1] ? 255 : 0;
 		  x2 += (zoomIn==1 ? 64 : 26);
@@ -1200,8 +1157,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	if (chracterSpriteFound[3]) {
 		// Continued from "if (chracterSpriteFound[2])"
 		// Character 4
-		dmaCopyWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
-		dmaCopyWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
+		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
+		dmaCopyHalfWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000);
 		int y2 = 72;
 		for (int y = 0; y < 120; y++) {
 		  x2 = flipH[3] ? 255 : 0;
@@ -1230,8 +1187,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	}
 	if (chracterSpriteFound[4]) {
 		// Character 5
-		dmaCopyWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
-		dmaCopyWords(1, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000);
+		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
+		dmaCopyHalfWords(1, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000);
 		int y2 = 72;
 		for (int y = 0; y < 120; y++) {
 		  x2 = flipH[4] ? 255 : 0;
@@ -1260,8 +1217,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
 	}
 
 	swiWaitForVBlank();	// Prevent screen tearing
-	dmaCopyWordsAsynch(0, bmpImageBuffer[buffer], bgGetGfxPtr(bg2Main), 0x18000);
-	dmaCopyWordsAsynch(1, bmpImageBuffer2[buffer], bgGetGfxPtr(bg3Main), 0x18000);
+	dmaCopyHalfWordsAsynch(0, bmpImageBuffer[buffer], bgGetGfxPtr(bg2Main), 0x18000);
+	dmaCopyHalfWordsAsynch(1, bmpImageBuffer2[buffer], bgGetGfxPtr(bg3Main), 0x18000);
 	chracterSpriteLoaded = true;
 }
 

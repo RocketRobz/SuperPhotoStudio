@@ -35,8 +35,8 @@ void ProductIdent::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		for(unsigned i=0;i<image.size()/4;i++) {
 			bgLoc[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 		}
-		dmaCopyWordsAsynch(0, bgLoc, bgGetGfxPtr(bg2Main), 0x18000);
-		dmaCopyWordsAsynch(1, bgLoc, bgGetGfxPtr(bg3Main), 0x18000);
+		dmaCopyHalfWordsAsynch(0, bgLoc, bgGetGfxPtr(bg2Main), 0x18000);
+		dmaCopyHalfWordsAsynch(1, bgLoc, bgGetGfxPtr(bg3Main), 0x18000);
 		graphicLoaded = true;
 	}
 }

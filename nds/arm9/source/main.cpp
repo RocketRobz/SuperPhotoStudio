@@ -103,10 +103,10 @@ int main(int argc, char **argv) {
 	}
 
 	FILE* soundBank = fopen("nitro:/soundbank.bin", "rb");
-	fread((void*)0x02FA0000, 1, 0x20000, soundBank);
+	fread((void*)0x02FD0000, 1, 0x20000, soundBank);
 	fclose(soundBank);
 
-	mmInitDefaultMem((mm_addr)0x02FA0000);
+	mmInitDefaultMem((mm_addr)0x02FD0000);
 
 	mmLoadEffect( SFX_SELECT );
 	mmLoadEffect( SFX_BACK );
