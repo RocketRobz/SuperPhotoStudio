@@ -25,6 +25,7 @@ void ProductIdent::Draw(void) const {
 
 void ProductIdent::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	if (!graphicLoaded) {
+		u16* bgLoc = (u16*)0x02F00000;
 		extern int bg2Main;
 		extern int bg3Main;
 
@@ -32,9 +33,10 @@ void ProductIdent::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		unsigned width, height;
 		lodepng::decode(image, width, height, "nitro:/graphics/logos/productIdent.png");
 		for(unsigned i=0;i<image.size()/4;i++) {
-			bgGetGfxPtr(bg2Main)[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
-			bgGetGfxPtr(bg3Main)[i] = bgGetGfxPtr(bg2Main)[i];
+			bgLoc[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 		}
+		dmaCopyWordsAsynch(0, bgLoc, bgGetGfxPtr(bg2Main), 0x18000);
+		dmaCopyWordsAsynch(1, bgLoc, bgGetGfxPtr(bg3Main), 0x18000);
 		graphicLoaded = true;
 	}
 }
