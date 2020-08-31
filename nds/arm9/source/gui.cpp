@@ -327,6 +327,7 @@ bool Gui::Draw_Rect(int x, int y, int w, int h, int color) {
 // Draw's the current screen's draw.
 void Gui::DrawScreen() {
 	if (usedScreen != nullptr)	usedScreen->Draw();
+	oamUpdate(&oamSub);
 }
 
 // Do the current screen's logic.

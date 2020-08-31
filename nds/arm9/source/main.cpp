@@ -212,7 +212,6 @@ int main(int argc, char **argv) {
 		Gui::fadeEffects(fadeFPS, fadeFPS);
 
 		swiWaitForVBlank();
-		oamUpdate(&oamSub);
 	}
 
 	return 0;

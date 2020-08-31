@@ -1048,10 +1048,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					Gui::DrawScreen();
 					#endif
 				}
-				#ifdef NDS
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
-				#endif
 				renderTop = true;
 				loadChrImage();
 			}
@@ -1077,10 +1073,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					Gui::DrawScreen();
 					#endif
 				}
-				#ifdef NDS
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
-				#endif
 				renderTop = true;
 				loadChrImage();
 			}
@@ -1107,8 +1099,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
 				GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
 				#endif
 				renderTop = true;
@@ -1164,8 +1154,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			#ifdef NDS
 			redrawText = true;
 			Gui::DrawScreen();
-			swiWaitForVBlank();
-			oamUpdate(&oamSub);
 			#endif
 			renderTop = true;
 			loadChrImage();
@@ -1179,8 +1167,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
 				#endif
 				loadChrImage();
 				renderTop = true;
@@ -1193,8 +1179,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
 				#endif
 				loadChrImage();
 				renderTop = true;
@@ -1230,8 +1214,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				#ifdef NDS
 				Gui::DrawScreen();
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
 				#endif
 				studioBg = getBgNum();
 				displayStudioBg = false;
@@ -1262,8 +1244,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				#ifdef NDS
 				Gui::DrawScreen();
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
 				#endif
 				studioBg = getBgNum();
 				displayStudioBg = false;
@@ -1310,8 +1290,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			#ifdef NDS
 			redrawText = true;
 			Gui::DrawScreen();
-			swiWaitForVBlank();
-			oamUpdate(&oamSub);
 			#endif
 			studioBg = getBgNum();
 			displayStudioBg = false;
@@ -1371,7 +1349,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#ifdef NDS
 					else {
 						redrawText = true;
-						Gui::DrawScreen();
 					}
 					#endif
 				}
@@ -1387,7 +1364,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					#ifdef NDS
 					else {
 						redrawText = true;
-						Gui::DrawScreen();
 					}
 					#endif
 				}
@@ -1404,8 +1380,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				displayChars = false;
 				redrawText = true;
 				Gui::DrawScreen();
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
 				#endif
 				int bgNum = getBgNum();
 				//if (studioBg != bgNum) {
@@ -1443,8 +1417,6 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();
-				swiWaitForVBlank();
-				oamUpdate(&oamSub);
 				#endif
 				if (doCharLoad) {
 					renderTop = true;
