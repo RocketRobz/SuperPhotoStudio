@@ -2,7 +2,7 @@
 
 const char* sthCharacterNames[] = {
 	"Sonic",
-	"",	// TODO: Tails
+	"Tails",
 	"",	// TODO: Knuckles
 };
 
@@ -14,13 +14,17 @@ bool sthCharacterGenders[] = {
 
 const char* sthCharacterFileNamesSpring[] = {
 	"sth_Sonic",
+	"sth_Tails",
 };
 const char* sthCharacterFileNamesSummer[] = {
 	"sth_Sonic",
+	"sth_Tails",
 };
 const char* sthCharacterFileNamesFall[] = {
 	"sth_Sonic",
+	"sth_Tails",
 };
 const char* sthCharacterFileNamesWinter[] = {
 	"sth_Sonic",
+	"sth_Tails",
 };

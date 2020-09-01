@@ -144,10 +144,10 @@ void PhotoStudio::getMaxChars() {
 			case 5:
 				import_totalCharacters = 3;
 				break;
-			case 6:
 			case 11:
 				import_totalCharacters = 0;
 				break;
+			case 6:
 			case 7:
 			case 8:
 			case 10:
