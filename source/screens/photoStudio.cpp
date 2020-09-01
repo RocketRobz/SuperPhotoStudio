@@ -655,6 +655,9 @@ void PhotoStudio::loadChrImage(void) {
 
 void PhotoStudio::Draw(void) const {
 	#ifdef NDS	// Bottom screen only
+	extern void Play_Music();
+	Play_Music();
+
 	if (redrawText) {
 		clearText(false);
 	}

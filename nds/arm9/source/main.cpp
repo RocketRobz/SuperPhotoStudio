@@ -6,12 +6,11 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-#include <gl2d.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "nitrofs.h"
-#include "soundbank.h"
+#include "sound.h"
 #include "photoStudio.hpp"
 #include "productIdent.hpp"
 #include "rocketRobz.hpp"
@@ -33,23 +32,22 @@ extern bool secondFrame;
 bool renderTop = true;	// Disable to prevent second character from flickering
 bool doScreenshot = false;
 
-static mm_sound_effect snd_select;
-static mm_sound_effect snd_back;
-static mm_sound_effect snd_highlight;
-
+static bool streamStarted = false;
 void Play_Music(void) {
+	streamStarted ? snd().updateStream() : snd().beginStream();
+	streamStarted = true;
 }
 
 void sndSelect(void) {
-	mmEffectEx(&snd_select);
+	snd().playSelect();
 }
 
 void sndBack(void) {
-	mmEffectEx(&snd_back);
+	snd().playBack();
 }
 
 void sndHighlight(void) {
-	mmEffectEx(&snd_highlight);
+	snd().playHighlight();
 }
 
 bool showCursor = false;
@@ -102,39 +100,7 @@ int main(int argc, char **argv) {
 		stop();
 	}
 
-	FILE* soundBank = fopen("nitro:/soundbank.bin", "rb");
-	fread((void*)0x02FD0000, 1, 0x20000, soundBank);
-	fclose(soundBank);
-
-	mmInitDefaultMem((mm_addr)0x02FD0000);
-
-	mmLoadEffect( SFX_SELECT );
-	mmLoadEffect( SFX_BACK );
-	mmLoadEffect( SFX_HIGHLIGHT );
-
-	snd_select = {
-		{ SFX_SELECT } ,			// id
-		(int)(1.0f * (1<<10)),	// rate
-		0,		// handle
-		255,	// volume
-		128,	// panning
-	};
-
-	snd_back = {
-		{ SFX_BACK } ,			// id
-		(int)(1.0f * (1<<10)),	// rate
-		0,		// handle
-		255,	// volume
-		128,	// panning
-	};
-
-	snd_highlight = {
-		{ SFX_HIGHLIGHT } ,			// id
-		(int)(1.0f * (1<<10)),	// rate
-		0,		// handle
-		255,	// volume
-		128,	// panning
-	};
+	snd();
 
 	Gui::init();
 	GFX::loadSheets();

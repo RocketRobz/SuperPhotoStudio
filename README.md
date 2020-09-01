@@ -36,7 +36,7 @@ and more!
 * devkitPro: libnds, libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Universal Team: Universal Core
 * SuperSaiyajinStackZ: StackZ and Stackie avatars
-* Pk11: DS(i) version's font rendering code
-* chyyran: DS(i) version's alpha blending code
+* Pk11: DSi version's font rendering code
+* chyyran: DSi version's alpha blending and sound streaming code
 * joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)
 * Freepik: [Camera icon](https://www.flaticon.com/free-icon/camera_2965705?term=camera&page=1&position=12)
