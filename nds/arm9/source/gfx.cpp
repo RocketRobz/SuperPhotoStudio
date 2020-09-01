@@ -676,7 +676,7 @@ void GFX::loadBgSprite(void) {
 					}
 				}
 				bgSpriteMemExt2[i-1][p] = image[p*4]>>3 | (image[(p*4)+1]>>3)<<5 | (image[(p*4)+2]>>3)<<10 | BIT(15);
-				if ((i % 256) == 255) alternatePixel = !alternatePixel;
+				if ((p % 256) == 255) alternatePixel = !alternatePixel;
 				alternatePixel = !alternatePixel;
 			}
 		}
