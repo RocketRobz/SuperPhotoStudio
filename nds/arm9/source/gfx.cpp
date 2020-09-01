@@ -2,6 +2,7 @@
 #include "color.h"
 #include "lodepng.h"
 #include "tonccpy.h"
+#include "sound.h"
 
 #include "photo_bg.h"
 
@@ -630,6 +631,7 @@ void GFX::loadBgSprite(void) {
 		}
 		char bgAniPath[64];
 		for (int i = 1; i <= aniFrames; i++) {
+			snd().updateStream();
 			sprintf(bgAniPath, bgPath, i);
 			image.clear();
 			lodepng::decode(image, width, height, bgAniPath);
