@@ -70,10 +70,10 @@ void GFX::resetCharStatus(int num) {
 	chracterSpriteFound[4] = false;
 }
 
-extern int characterLimit;
+//extern int characterLimit;
 
 void GFX::loadSheets() {
-	if (!isDSiMode()) {
+	/*if (!isDSiMode()) {
 		//sysSetCartOwner (BUS_OWNER_ARM9);	// Allow arm9 to access GBA ROM (or in this case, the DS Memory Expansion Pak)
 		*(vu32*)(0x08240000) = 1;
 		if (*(vu32*)(0x08240000) == 1) {
@@ -93,7 +93,7 @@ void GFX::loadSheets() {
 	*(vu32*)(0x0239FFFC) = 0;
 	if (*(vu32*)(0x0279FFFC) == 1 || *(vu32*)(0x08240000) == 1) {
 		characterLimit = 4;	// Up the limit from 2 to 5 characters
-	}
+	}*/
 
 	int metalXpos = 0;
 	int metalYpos = 0;
@@ -609,7 +609,7 @@ void GFX::loadBgSprite(void) {
 	animateBg = false;
 
 	// Load animated parts
-	if (*(vu32*)(0x0279FFFC) == 1 && aniFrames > 0) {
+	if (aniFrames > 0) {
 		switch (studioBg) {
 			case 12:
 				if (timeOutside == 0) {
