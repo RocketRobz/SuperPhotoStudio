@@ -132,6 +132,7 @@ void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			}
 			bgGetGfxPtr(bg3Main)[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}
 		graphicLoaded = true;

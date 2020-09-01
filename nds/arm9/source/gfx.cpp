@@ -169,6 +169,7 @@ void GFX::loadSheets() {
 		} else if (i >= 256*72 && i < 256*131) {
 			bmpImageBuffer2[0][i] = alphablend(bmpImageBuffer2[1][i], charSpriteMem[0][(metalYpos*384)+metalXpos], charSpriteAlpha[0][i]);
 		}
+		if ((i % 256) == 255) alternatePixel = !alternatePixel;
 		alternatePixel = !alternatePixel;
 	}
 
@@ -600,6 +601,7 @@ void GFX::loadBgSprite(void) {
 			}
 		}
 		bgSpriteMem2[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+		if ((i % 256) == 255) alternatePixel = !alternatePixel;
 		alternatePixel = !alternatePixel;
 	}
 
@@ -674,6 +676,7 @@ void GFX::loadBgSprite(void) {
 					}
 				}
 				bgSpriteMemExt2[i-1][p] = image[p*4]>>3 | (image[(p*4)+1]>>3)<<5 | (image[(p*4)+2]>>3)<<10 | BIT(15);
+				if ((i % 256) == 255) alternatePixel = !alternatePixel;
 				alternatePixel = !alternatePixel;
 			}
 		}
@@ -785,6 +788,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 				}
 			}
 			charSpriteMem5_2[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}
 	} else if (num == 3) {
@@ -829,6 +833,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 				}
 			}
 			charSpriteMem4_2[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}
 	} else if (num == 2) {
@@ -873,6 +878,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 				}
 			}
 			charSpriteMem3_2[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}
 	} else {
@@ -916,6 +922,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 				}
 			}
 			charSpriteMem_2[num][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}
 	}

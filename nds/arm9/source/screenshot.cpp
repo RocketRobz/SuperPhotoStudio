@@ -120,22 +120,22 @@ void screenshotbmp(void) {
 	write32(&infoheader->ncolours, 0);
 
 	extern int bg2Main;
-	extern int bg3Main;
-	bool screenshotSecondFrame = false;
+	//extern int bg3Main;
+	//bool screenshotSecondFrame = false;
 
 	for(int y=0;y<192;y++)
 	{
 		for(int x=0;x<256;x++)
 		{
 			u16 color=0;
-			if(screenshotSecondFrame)
+			/*if(screenshotSecondFrame)
 			{
 				color=bgGetGfxPtr(bg3Main)[256*191-y*256+x];
 			}
 			else
-			{
+			{*/
 				color=bgGetGfxPtr(bg2Main)[256*191-y*256+x];
-			}
+			//}
 
 			u8 b=(color&31)<<3;
 			u8 g=((color>>5)&31)<<3;
@@ -145,7 +145,7 @@ void screenshotbmp(void) {
 			temp[((y*256)+x)*3+1+sizeof(INFOHEADER)+sizeof(HEADER)]=g;
 			temp[((y*256)+x)*3+2+sizeof(INFOHEADER)+sizeof(HEADER)]=b;
 
-			screenshotSecondFrame = !screenshotSecondFrame;
+			//screenshotSecondFrame = !screenshotSecondFrame;
 		}
 	}
 
