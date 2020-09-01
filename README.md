@@ -19,6 +19,7 @@ and more!
 
 # Characters and Locations by
 * Namco
+* Nicalis
 * Nintendo
 * Rare
 * RocketRobz*
