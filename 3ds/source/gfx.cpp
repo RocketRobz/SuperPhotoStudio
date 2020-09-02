@@ -632,7 +632,7 @@ void GFX::showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool li
 				case 43:	// Hair Salon (Girls Mode/Style Savvy/Style Boutique)
 				case 48:	// Carrington Institute (Perfect Dark)
 					C2D_PlainImageTint(&tint, C2D_Color32(255, 255, 255, 127), 0);
-					C2D_DrawImageAt(image, xPos, yPosRefl-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, xScale, -((cinemaWide ? 0.7f : 1)/2));
+					C2D_DrawImageAt(image, xPos, yPosRefl-(shiftBySubPixel ? 0.5f : 0), 0.5f, &tint, xScale, -(cinemaWide ? 0.7f : 1));
 					break;
 			}
 		}
