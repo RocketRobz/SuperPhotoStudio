@@ -54,6 +54,7 @@ private:
 
 	char chrFilePath[256];
 	char chrFilePath2[256];
+	char chrCounter[24];
 
 	bool displayNothing = false;
 	bool displayStudioBg = false;

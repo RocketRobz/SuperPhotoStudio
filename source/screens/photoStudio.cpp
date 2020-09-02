@@ -679,6 +679,7 @@ void PhotoStudio::Draw(void) const {
 
 	if (redrawText) {
 		clearText(false);
+		sprintf((char*)chrCounter, "%d/%d", (subScreenMode==1 ? bgList_cursorPosition : importCharacterList_cursorPosition[currentCharNum])+1, import_totalCharacters+1);
 	}
 
 	if (showScrollingBg) {
@@ -700,8 +701,9 @@ void PhotoStudio::Draw(void) const {
 			printSmall(false, 242, 6, ">");
 
 			if (currentCharNum > 0) {
-				printSmall(false, 0, 152, "X: Remove character", Alignment::center);
+				printSmall(false, 24, 152, "X: Remove", Alignment::center);
 			}
+			printSmall(false, 56, 152, chrCounter);
 
 			printLarge(false, -60, 166, "L", Alignment::center);
 			printSmall(false, -26, 168, seasonName(), Alignment::center);
@@ -738,6 +740,7 @@ void PhotoStudio::Draw(void) const {
 			printSmall(false, 0, 6, bgGameTitle(), Alignment::center);
 			printSmall(false, 6, 6, "<");
 			printSmall(false, 242, 6, ">");
+			printSmall(false, 56, 152, chrCounter);
 		}
 
 	  if (!displayNothing) {
@@ -878,6 +881,7 @@ void PhotoStudio::Draw(void) const {
 		return;
 	}
 	Gui::ScreenDraw(Bottom);
+	sprintf((char*)chrCounter, "%d/%d", (subScreenMode==1 ? bgList_cursorPosition : importCharacterList_cursorPosition[currentCharNum])+1, import_totalCharacters+1);
 	GFX::DrawSprite(sprites_photo_bg_idx, 0, 0);
 
 	cursorX = 248;
@@ -891,8 +895,9 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawString(304, 8, 0.50, WHITE, ">");
 
 		if (currentCharNum > 0) {
-			Gui::DrawString(96, 184, 0.55, WHITE, ": Remove character");
+			Gui::DrawStringCentered(12, 184, 0.55, WHITE, ": Remove");
 		}
+		Gui::DrawString(64, 184, 0.55, WHITE, chrCounter);
 
 		//if (charPageOrder[char_highlightedGame[currentCharNum]] != 4) {
 			// Selected season
@@ -919,6 +924,7 @@ void PhotoStudio::Draw(void) const {
 		Gui::DrawStringCentered(0, 8, 0.50, WHITE, bgGameTitle());
 		Gui::DrawString(8, 8, 0.50, WHITE, "<");
 		Gui::DrawString(304, 8, 0.50, WHITE, ">");
+		Gui::DrawString(64, 184, 0.55, WHITE, chrCounter);
 
 		/*if (photo_highlightedGame != 4) {
 			// Selected season
@@ -1063,11 +1069,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (importCharacterList_cursorPositionOnScreen[currentCharNum] < 0) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
-					#ifdef NDS
-					redrawText = true;
-					#endif
 				}
 				#ifdef NDS
+				redrawText = true;
 				Gui::DrawScreen();
 				#endif
 				renderTop = true;
@@ -1090,11 +1094,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (importCharacterList_cursorPositionOnScreen[currentCharNum] > 2) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 2;
-					#ifdef NDS
-					redrawText = true;
-					#endif
 				}
 				#ifdef NDS
+				redrawText = true;
 				Gui::DrawScreen();
 				#endif
 				renderTop = true;
@@ -1232,11 +1234,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (bgList_cursorPositionOnScreen < 0) {
 					bgList_cursorPositionOnScreen = 0;
-					#ifdef NDS
-					redrawText = true;
-					#endif
 				}
 				#ifdef NDS
+				redrawText = true;
 				Gui::DrawScreen();
 				#endif
 				studioBg = getBgNum();
@@ -1262,11 +1262,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (bgList_cursorPositionOnScreen > 2) {
 					bgList_cursorPositionOnScreen = 2;
-					#ifdef NDS
-					redrawText = true;
-					#endif
 				}
 				#ifdef NDS
+				redrawText = true;
 				Gui::DrawScreen();
 				#endif
 				studioBg = getBgNum();

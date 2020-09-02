@@ -166,7 +166,7 @@ ITCM_CODE void FontGraphic::print(int x, int y, bool top, std::u16string_view te
 			x = ((256 - calcWidth(text)) / 2) + x;
 			break;
 		} case Alignment::right: {
-			x = x - calcWidth(text);
+			x -= calcWidth(text);
 			break;
 		}
 	}
