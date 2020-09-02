@@ -65,7 +65,7 @@ namespace GFX {
 	#ifdef _3DS
 	void loadCharSpriteMem(int num);
 	#else
-	void loadCharSpriteMem(int zoomIn, bool* flipH);
+	void loadCharSpriteMem(const int zoomIn, const bool* flipH);
 	#endif
 	void loadBgSprite(void);
 	void unloadBgSprite(void);
@@ -74,7 +74,7 @@ namespace GFX {
 	#ifdef _3DS
 	void animateBgSprite(void);
 	#else
-	void animateBgSprite(int zoomIn, bool* flipH);
+	void animateBgSprite(const int zoomIn, const bool* flipH);
 	#endif
 	void showCharSprite(int num, bool flipH, int zoomIn, int fadeAlpha, bool lightingEffects = false);
 	void DrawSprite(int img, int x, int y, float ScaleX = 1, float ScaleY = 1);

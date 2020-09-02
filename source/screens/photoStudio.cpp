@@ -674,6 +674,10 @@ void PhotoStudio::loadChrImage(void) {
 
 void PhotoStudio::Draw(void) const {
 	#ifdef NDS	// Bottom screen only
+	extern void updateTitleScreen(const int metalXposBase);
+	updateTitleScreen(metalXpos);
+	GFX::animateBgSprite(zoomIn, &characterFlipH[0]);
+
 	extern void Play_Music();
 	Play_Music();
 
@@ -1009,12 +1013,6 @@ void PhotoStudio::preview() const {
 
 
 void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
-	#ifdef NDS
-	extern void updateTitleScreen(const int metalXposBase);
-	updateTitleScreen(metalXpos);
-	GFX::animateBgSprite(zoomIn, &characterFlipH[0]);
-	#endif
-
 	#ifdef NDS
 	if (subScreenMode==0 && !characterPicked[3])
 	#else

@@ -207,7 +207,8 @@ void updateTitleScreen(const int metalXposBase) {
 	dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bgGetGfxPtr(bg2Main), 0x18000);
 	dmaCopyHalfWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 	if (!titleBottomLoaded) {
-		tonccpy(bgGetGfxPtr(bg3Sub), photo_bgBitmap, photo_bgBitmapLen);
+		//tonccpy(bgGetGfxPtr(bg3Sub), photo_bgBitmap, photo_bgBitmapLen);
+		decompress(photo_bgBitmap, bgGetGfxPtr(bg3Sub), LZ77Vram);
 		for (int i = 0; i < 256*192; i+=2) {
 			bgGetGfxPtr(bg3Sub)[i/2] += 0x1010;	// Shift pallete 16 colors further
 		}
@@ -935,7 +936,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	return true;
 }
 
-ITCM_CODE void GFX::loadCharSpriteMem(int zoomIn, bool* flipH) {
+ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 	u16* bgLoc = 0;
 	u16* bgLoc2 = 0;
 	if (bgAnimationFrame == 0) {
@@ -1238,7 +1239,7 @@ void GFX::showBgSprite(int zoomIn) {
 	//if (!bgSpriteLoaded) return;
 }
 
-void GFX::animateBgSprite(int zoomIn, bool* flipH) {
+void GFX::animateBgSprite(const int zoomIn, const bool* flipH) {
 	if (!animateBg) return;
 
 	// Animate background
