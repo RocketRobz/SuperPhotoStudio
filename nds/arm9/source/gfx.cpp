@@ -208,7 +208,10 @@ void updateTitleScreen(const int metalXposBase) {
 	dmaCopyHalfWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 	if (!titleBottomLoaded) {
 		tonccpy(bgGetGfxPtr(bg3Sub), photo_bgBitmap, photo_bgBitmapLen);
-		tonccpy(BG_PALETTE_SUB + 0x10, photo_bgPal, photo_bgPalLen);
+		for (int i = 0; i < 256*192; i+=2) {
+			bgGetGfxPtr(bg3Sub)[i/2] += 0x1010;	// Shift pallete 16 colors further
+		}
+		tonccpy(BG_PALETTE_SUB + 0x10, photo_bgPal, 240*sizeof(u16));
 		titleBottomLoaded = true;
 	}
 }

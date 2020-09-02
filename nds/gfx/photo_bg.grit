@@ -7,12 +7,6 @@
 # Set the bit depth to 8 (256 colors)
 -gB8
 
-# Start the palette at 16
--ps16
-
-# 176 colors
--pn176
-
 #The Transperant colour of 0xFF00FF
 #-gT FF00FF
 
