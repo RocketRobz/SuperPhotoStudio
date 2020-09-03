@@ -18,6 +18,7 @@
 #include "metroidCharNames.h"
 #include "sc5CharNames.h"
 #include "vvvvvvCharNames.h"
+#include "kirbyCharNames.h"
 
 #include "logobgnames.h"
 #include "import_ss1bgnames.h"
@@ -65,6 +66,7 @@ static u8 charPageOrder[] = {
 	9,	// Banjo-Kazooie series
 	8,	// Conker series
 	7,	// Jet Force Gemini
+	15,	// Kirby series
 	12,	// Metroid Series
 	10,	// Pac-Man series
 	6,	// Sonic the Hedgehog series
@@ -145,6 +147,7 @@ void PhotoStudio::getMaxChars() {
 				break;
 			case 11:
 			case 14:
+			case 15:
 				import_totalCharacters = 0;
 				break;
 			case 6:
@@ -209,6 +212,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return sc5CharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 14:
 			return vvvvvvCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 15:
+			return kirbyCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -358,6 +363,17 @@ const char* PhotoStudio::import_characterFileName(void) const {
 			case 3:
 				return vvvvvvCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
 		}
+		case 15:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return kirbyCharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return kirbyCharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return kirbyCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return kirbyCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
 	}
 	return "null";
 }
@@ -500,6 +516,8 @@ const char* PhotoStudio::charGameTitle(void) const {
 			return "Space Channel 5";
 		case 14:
 			return "VVVVVV";
+		case 15:
+			return "Kirby series";
 	}
 	return "???";
 }
@@ -536,6 +554,8 @@ bool PhotoStudio::charGender(int i) const {
 			return sc5CharacterGenders[i];
 		case 14:
 			return vvvvvvCharacterGenders[i];
+		case 15:
+			return kirbyCharacterGenders[i];
 	}
 	return true;
 }
@@ -592,6 +612,8 @@ const char* PhotoStudio::charName(int i) const {
 			return sc5CharacterNames[i];
 		case 14:
 			return vvvvvvCharacterNames[i];
+		case 15:
+			return kirbyCharacterNames[i];
 	}
 	return "???";
 }
