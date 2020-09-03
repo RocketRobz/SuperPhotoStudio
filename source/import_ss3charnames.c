@@ -11,6 +11,7 @@ const char* import_ss3CharacterNames[] = {
 	"Zoey",
 	"Kirsty",
 	"Rainbow",
+	"Reiko",
 	"Magda",
 	"Adelaide",
 	"Molly",
@@ -18,7 +19,6 @@ const char* import_ss3CharacterNames[] = {
 	"Sapphire",
 	"Amber",
 	"Mickey",
-	"Ricky",		// File does not exist, so he's not shown
 };
 
 bool import_ss3CharacterGenders[] = {
@@ -38,7 +38,7 @@ bool import_ss3CharacterGenders[] = {
 	false,			// Female
 	false,			// Female
 	false,			// Female
-	true,			// Male
+	false,			// Female
 	true,			// Male
 };
 
@@ -53,6 +53,7 @@ const char* ss3CharacterFileNamesSpring[] = {
 	"ss4_Zoey0",
 	"ss4_Kirsty0",
 	"ss4_Rainbow0",
+	"ss4_ReikoCasual",
 	"ss4_Magda0",
 	"ss4_Adelaide0",
 	"ss4_Molly0",
@@ -72,6 +73,7 @@ const char* ss3CharacterFileNamesSummer[] = {
 	"ss4_Zoey1",
 	"ss4_Kirsty1",
 	"ss4_Rainbow1",
+	"ss4_ReikoCasual",
 	"ss4_Magda1",
 	"ss4_Adelaide1",
 	"ss4_Molly1",
@@ -91,6 +93,7 @@ const char* ss3CharacterFileNamesFall[] = {
 	"ss4_Zoey2",
 	"ss4_Kirsty2",
 	"ss4_Rainbow2",
+	"ss4_ReikoCasual",
 	"ss4_Magda0",
 	"ss4_Adelaide2",
 	"ss4_Molly2",
@@ -110,6 +113,7 @@ const char* ss3CharacterFileNamesWinter[] = {
 	"ss4_Zoey3",
 	"ss4_Kirsty3",
 	"ss4_Rainbow3",
+	"ss4_ReikoCasual",
 	"ss4_Magda3",
 	"ss4_Adelaide3",
 	"ss4_Molly2",
