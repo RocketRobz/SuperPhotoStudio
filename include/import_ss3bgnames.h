@@ -4,7 +4,7 @@ const char* import_ss3BgNames[] {
 	"Blue",
 	"Tropica Beach",
 	"Primrose Park",
-	"Cafe",
+	"Cafetiere Close",
 	"Maple Crescent",
 	"Bougainville",
 	"Lover's Bell",
