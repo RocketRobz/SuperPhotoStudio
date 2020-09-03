@@ -175,9 +175,14 @@ const char* PhotoStudio::seasonName(void) const {
 			return "Fall";
 		case 3:
 			return "Winter";
+		case 4:
+		switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
+			case 3:
+				return ss4SpecialNames[importCharacterList_cursorPosition[currentCharNum]];
+		}
 	}
 	
-	return "null";
+	return "";
 }
 
 const char* PhotoStudio::import_characterName(void) const {
@@ -241,6 +246,8 @@ const char* PhotoStudio::import_characterFileName(void) const {
 				return ss4CharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
 			case 3:
 				return ss4CharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+			case 4:
+				return ss4CharacterFileNamesSpecial[importCharacterList_cursorPosition[currentCharNum]];
 		}
 		case 4:
 		switch (seasonNo[currentCharNum]) {
@@ -1090,6 +1097,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (importCharacterList_cursorPositionOnScreen[currentCharNum] < 0) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
 				}
+				if (seasonNo[currentCharNum] == 4 && strcmp(seasonName(), "") == 0) {
+					seasonNo[currentCharNum] = 0;
+				}
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();
@@ -1114,6 +1124,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 				if (importCharacterList_cursorPositionOnScreen[currentCharNum] > 2) {
 					importCharacterList_cursorPositionOnScreen[currentCharNum] = 2;
+				}
+				if (seasonNo[currentCharNum] == 4 && strcmp(seasonName(), "") == 0) {
+					seasonNo[currentCharNum] = 0;
 				}
 				#ifdef NDS
 				redrawText = true;
@@ -1228,6 +1241,22 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				#endif
 				loadChrImage();
 				renderTop = true;
+			}
+
+			if (hDown & KEY_Y) {
+				int seasonNoBak = seasonNo[currentCharNum];
+				seasonNo[currentCharNum] = 4;	// Special outfit
+				if (strcmp(seasonName(), "") != 0) {
+					sndHighlight();
+					#ifdef NDS
+					redrawText = true;
+					Gui::DrawScreen();
+					#endif
+					loadChrImage();
+					renderTop = true;
+				} else {
+					seasonNo[currentCharNum] = seasonNoBak;
+				}
 			}
 		//}
 

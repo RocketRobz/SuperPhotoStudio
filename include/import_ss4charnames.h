@@ -9,5 +9,8 @@ extern const char* ss4CharacterFileNamesSpring[];
 extern const char* ss4CharacterFileNamesSummer[];
 extern const char* ss4CharacterFileNamesFall[];
 extern const char* ss4CharacterFileNamesWinter[];
+extern const char* ss4CharacterFileNamesSpecial[];
+
+extern const char* ss4SpecialNames[];
 
 #endif
