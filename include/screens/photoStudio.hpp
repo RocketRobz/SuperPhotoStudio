@@ -24,10 +24,12 @@ private:
 	const char* import_characterName(void) const;
 	const char* import_characterFileName(void) const;
 	const char* import_SS2CharacterNames(int i) const;
+	const char* NESCharacterNames(int i) const;
 	const char* ss1Title(void) const;
 	const char* ss2Title(void) const;
 	const char* ss3Title(void) const;
 	const char* ss4Title(void) const;
+	const char* nesTitle(void) const;
 	const char* bgGameTitle(void) const;
 	const char* charGameTitle(void) const;
 	bool charGender(int i) const;

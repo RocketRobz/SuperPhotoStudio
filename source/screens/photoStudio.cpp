@@ -19,6 +19,7 @@
 #include "sc5CharNames.h"
 #include "vvvvvvCharNames.h"
 #include "kirbyCharNames.h"
+#include "nesCharNames.h"
 
 #include "logobgnames.h"
 #include "import_ss1bgnames.h"
@@ -68,6 +69,7 @@ static u8 charPageOrder[] = {
 	7,	// Jet Force Gemini
 	15,	// Kirby series
 	12,	// Metroid Series
+	16,	// Nintendo Entertainment System
 	10,	// Pac-Man series
 	6,	// Sonic the Hedgehog series
 	13,	// Space Channel 5
@@ -145,11 +147,12 @@ void PhotoStudio::getMaxChars() {
 				import_totalCharacters = 3;
 				break;
 			case 5:
-				import_totalCharacters = 5;
+				import_totalCharacters = 6;
 				break;
 			case 11:
 			case 14:
 			case 15:
+			case 16:
 				import_totalCharacters = 0;
 				break;
 			case 6:
@@ -221,6 +224,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return vvvvvvCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 15:
 			return kirbyCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 16:
+			return nesCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -383,6 +388,17 @@ const char* PhotoStudio::import_characterFileName(void) const {
 			case 3:
 				return kirbyCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
 		}
+		case 16:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return nesCharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return nesCharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return nesCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return nesCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
 	}
 	return "null";
 }
@@ -398,6 +414,21 @@ const char* PhotoStudio::import_SS2CharacterNames(int i) const {
 	}
 	#else
 	return import_ss2CharacterNames[i];
+	#endif
+}
+
+const char* PhotoStudio::NESCharacterNames(int i) const {
+	#ifdef _3DS
+	switch (sysRegion) {
+		default:
+			return nesCharacterNames[i];
+		case CFG_REGION_JPN:
+		case CFG_REGION_CHN:
+		case CFG_REGION_KOR:
+			return famiCharacterNames[i];
+	}
+	#else
+	return nesCharacterNames[i];
 	#endif
 }
 
@@ -473,6 +504,21 @@ const char* PhotoStudio::ss4Title(void) const {
 	#endif
 }
 
+const char* PhotoStudio::nesTitle(void) const {
+	#ifdef _3DS
+	switch (sysRegion) {
+		default:
+			return "Nintendo Entertainment System";
+		case CFG_REGION_JPN:
+		case CFG_REGION_CHN:
+		case CFG_REGION_KOR:
+			return "Family Computer";
+	}
+	#else
+	return "NES/Famicom";
+	#endif
+}
+
 const char* PhotoStudio::bgGameTitle(void) const {
 	switch (bgPageOrder[photo_highlightedGame]) {
 		case 0:
@@ -527,6 +573,8 @@ const char* PhotoStudio::charGameTitle(void) const {
 			return "VVVVVV";
 		case 15:
 			return "Kirby series";
+		case 16:
+			return nesTitle();
 	}
 	return "???";
 }
@@ -565,6 +613,8 @@ bool PhotoStudio::charGender(int i) const {
 			return vvvvvvCharacterGenders[i];
 		case 15:
 			return kirbyCharacterGenders[i];
+		case 16:
+			return nesCharacterGenders[i];
 	}
 	return true;
 }
@@ -623,6 +673,8 @@ const char* PhotoStudio::charName(int i) const {
 			return vvvvvvCharacterNames[i];
 		case 15:
 			return kirbyCharacterNames[i];
+		case 16:
+			return NESCharacterNames(i);
 	}
 	return "???";
 }

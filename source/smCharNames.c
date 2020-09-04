@@ -7,6 +7,7 @@ const char* smCharacterNames[] = {
 	"Waluigi",
 	"Peach",
 	"Daisy",
+	"Yoshi",
 };
 
 bool smCharacterGenders[] = {
@@ -16,6 +17,7 @@ bool smCharacterGenders[] = {
 	true,			// Male
 	false,			// Female
 	false,			// Female
+	true,			// Male
 };
 
 const char* smCharacterFileNamesSpring[] = {
@@ -25,6 +27,7 @@ const char* smCharacterFileNamesSpring[] = {
 	"sm_Waluigi",
 	"sm_Peach",
 	"sm_Daisy",
+	"sm_Yoshi",
 };
 const char* smCharacterFileNamesSummer[] = {
 	"sm_Mario",
@@ -33,6 +36,7 @@ const char* smCharacterFileNamesSummer[] = {
 	"sm_Waluigi",
 	"sm_Peach",
 	"sm_Daisy",
+	"sm_Yoshi",
 };
 const char* smCharacterFileNamesFall[] = {
 	"sm_Mario",
@@ -41,6 +45,7 @@ const char* smCharacterFileNamesFall[] = {
 	"sm_Waluigi",
 	"sm_Peach",
 	"sm_Daisy",
+	"sm_Yoshi",
 };
 const char* smCharacterFileNamesWinter[] = {
 	"sm_Mario",
@@ -49,4 +54,5 @@ const char* smCharacterFileNamesWinter[] = {
 	"sm_Waluigi",
 	"sm_Peach",
 	"sm_Daisy",
+	"sm_Yoshi",
 };
