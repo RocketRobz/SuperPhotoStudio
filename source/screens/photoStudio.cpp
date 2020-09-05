@@ -20,6 +20,7 @@
 #include "vvvvvvCharNames.h"
 #include "kirbyCharNames.h"
 #include "nesCharNames.h"
+#include "nightsCharNames.h"
 
 #include "logobgnames.h"
 #include "import_ss1bgnames.h"
@@ -68,7 +69,8 @@ static u8 charPageOrder[] = {
 	8,	// Conker series
 	7,	// Jet Force Gemini
 	15,	// Kirby series
-	12,	// Metroid Series
+	12,	// Metroid series
+	17,	// NiGHTS series
 	16,	// Nintendo Entertainment System
 	10,	// Pac-Man series
 	6,	// Sonic the Hedgehog series
@@ -226,6 +228,8 @@ const char* PhotoStudio::import_characterName(void) const {
 			return kirbyCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 		case 16:
 			return nesCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
+		case 17:
+			return nightsCharacterNames[importCharacterList_cursorPosition[currentCharNum]];
 	}
 	return "null";
 }
@@ -398,6 +402,17 @@ const char* PhotoStudio::import_characterFileName(void) const {
 				return nesCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
 			case 3:
 				return nesCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
+		}
+		case 17:
+		switch (seasonNo[currentCharNum]) {
+			case 0:
+				return nightsCharacterFileNamesSpring[importCharacterList_cursorPosition[currentCharNum]];
+			case 1:
+				return nightsCharacterFileNamesSummer[importCharacterList_cursorPosition[currentCharNum]];
+			case 2:
+				return nightsCharacterFileNamesFall[importCharacterList_cursorPosition[currentCharNum]];
+			case 3:
+				return nightsCharacterFileNamesWinter[importCharacterList_cursorPosition[currentCharNum]];
 		}
 	}
 	return "null";
@@ -575,6 +590,8 @@ const char* PhotoStudio::charGameTitle(void) const {
 			return "Kirby series";
 		case 16:
 			return nesTitle();
+		case 17:
+			return "NiGHTS series";
 	}
 	return "???";
 }
@@ -615,6 +632,8 @@ bool PhotoStudio::charGender(int i) const {
 			return kirbyCharacterGenders[i];
 		case 16:
 			return nesCharacterGenders[i];
+		case 17:
+			return nightsCharacterGenders[i];
 	}
 	return true;
 }
@@ -675,6 +694,8 @@ const char* PhotoStudio::charName(int i) const {
 			return kirbyCharacterNames[i];
 		case 16:
 			return NESCharacterNames(i);
+		case 17:
+			return nightsCharacterNames[i];
 	}
 	return "???";
 }
