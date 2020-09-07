@@ -26,7 +26,7 @@ and more!
 * D-Pad Left/Right: Select character number (highlight character option in menu first)
 * X/B: Zoom in/out (DSi version)
 * Circle Pad Up/Down: Zoom in/out (3DS version)
-* Y: Take photo (saved in sd:/(yourconsole)/SuperPhotoStudio/photos/)
+* Y: Take photo (saved in `sd:/(yourconsole)/SuperPhotoStudio/photos/`)
 
 # Characters and Locations by
 * Namco
