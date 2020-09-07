@@ -1,21 +1,32 @@
 <p align="center">
  <img src="https://github.com/RocketRobz/SuperPhotoStudio/blob/master/resources/title.png"><br>
+	<a href="https://gbatemp.net/threads/dsi-3ds-super-photo-studio-take-pictures-of-your-favorite-all-star-characters.573276/" style="padding-left: 5px;">
+		<img src="https://img.shields.io/badge/GBATemp-thread-blue.svg" height="20">
+	</a>
 </p>
 What happens when you take the concept of Super Smash Bros, and turn it from a fighting game, into a photo shoot application?     
-The result, Super Photo Studio! Take pictures of your favorite all-star characters, including Robz himself, in any location possible!
+The result, Super Photo Studio! Take pictures of your favorite all-star characters, in any location possible!
+
+Super Photo Studio has it all: An all-star cast, famous outdoor and indoor locations, stylish girls, the coolest of TWL himself, and fan-favorites like Waluigi!
 
 # Features
 
 * High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
 * Pre-rendered characters and backgrounds, from     
--Super Mario     
--Sonic the Hedgehog     
--Pac-Man     
--Banjo-Kazooie        
--Style Savvy     
+  * Super Mario     
+  * Sonic the Hedgehog     
+  * Pac-Man     
+  * Banjo-Kazooie        
+  * Style Savvy     
 and more!
-* Take pictures of your favorite characters, and even Robz himself, in any location possible!
 * The first homebrew appearance of Robz' fashionable twin, Rabz!     
+
+# Controls
+* A: Select highlighted option
+* D-Pad Left/Right: Select character number (highlight character option in menu first)
+* X/B: Zoom in/out (DSi version)
+* Circle Pad Up/Down: Zoom in/out (3DS version)
+* Y: Take photo (saved in sd:/(yourconsole)/SuperPhotoStudio/photos/)
 
 # Characters and Locations by
 * Namco
