@@ -18,7 +18,8 @@ Super Photo Studio has it all: An all-star cast, famous outdoor and indoor locat
   * Pac-Man     
   * Banjo-Kazooie        
   * Style Savvy     
-and more!
+  and more!
+* Around/Nearly 100 characters and 50 locations.
 * The first homebrew appearance of Robz' fashionable twin, Rabz!     
 
 # Controls
