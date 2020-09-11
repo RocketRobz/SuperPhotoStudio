@@ -9,6 +9,10 @@ The result, Super Photo Studio! Take pictures of your favorite all-star characte
 
 Super Photo Studio has it all: An all-star cast, famous outdoor and indoor locations, stylish girls, the coolest of TWL himself, and fan-favorites like Waluigi!
 
+# What is this?
+
+Super Photo Studio is basically an upgraded version of the Style Savvy series's photo studio feature, with added characters and locations outside of said series. You can also change the character's expressions and poses, though Super Photo Studio does not support changing those, as it would be time-consuming, as well as taking up more space.
+
 # Features
 
 * High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
