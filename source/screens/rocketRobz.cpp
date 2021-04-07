@@ -12,25 +12,48 @@ extern int delay;
 static int rr_fadeAlpha = 0;
 static int rr_fadeType = true;
 
+#ifdef _3DS
+static int robzXpos = 135+220;
+static int robzYpos = 19+220;
+static int rrTextFade = 255;
+#endif
+
 void RocketRobz::Draw(void) const {
 	fadecolor = 0;	// Always use black color for fading effects
 
 	#ifdef _3DS
 	Gui::ScreenDraw(Top);
 
-	if (cinemaWide) {
-		GFX::DrawSpriteLinear(sprites_logo_rocketrobz_idx, 60, 36, 0.35f, 0.7f);
+	// Top half gradient
+	C2D_DrawRectangle(
+		64, 42, 0, 280, 76,
+		C2D_Color32(82, 0, 121, 255), C2D_Color32(82, 0, 121, 255),
+		C2D_Color32(169, 0, 254, 255), C2D_Color32(169, 0, 254, 255));
+	// Bottom half gradient
+	C2D_DrawRectangle(
+		64, 118, 0, 280, 86,
+		C2D_Color32(169, 0, 254, 255), C2D_Color32(169, 0, 254, 255),
+		C2D_Color32(71, 0, 104, 255), C2D_Color32(71, 0, 104, 255));
+
+	GFX::DrawSpriteLinearBlend(sprites_rr_robz_idx, robzXpos-7, robzYpos, C2D_Color32(255, 0, 0, 127), 0.5, 1);
+	GFX::DrawSpriteLinearBlend(sprites_rr_robz_idx, robzXpos+7, robzYpos, C2D_Color32(0, 0, 255, 127), 0.5, 1);
+	Gui::Draw_Rect(400-50, 0, 50, 240, C2D_Color32(0, 0, 0, 255));
+	GFX::DrawSpriteLinear(sprites_rr_shapeBG_idx, 50, 0, 0.5, 1);
+	Gui::Draw_Rect(0, 238, 400, 2, C2D_Color32(0, 0, 0, 255));	// Hide line from other texture(s)
+	GFX::DrawSpriteLinear(sprites_rr_robz_idx, robzXpos, robzYpos, 0.5, 1);
+	if (robzXpos == 135 && robzYpos == 19) {
+		GFX::DrawSpriteLinear(sprites_logo_rocketrobz_idx, 54, 74, 0.5, 1);
+		if (rrTextFade > 0) GFX::DrawSpriteLinearBlend(sprites_logo_rocketrobz_idx, 54, 74, C2D_Color32(255, 255, 255, rrTextFade), 0.5, 1);
+		rrTextFade -= 16;
+		if (rrTextFade < 0) rrTextFade = 0;
 	} else {
-		GFX::DrawSpriteLinear(sprites_logo_rocketrobz_idx, 0, 0, 0.5, 1);
+		robzXpos -= 4;
+		robzYpos -= 4;
+		if (robzXpos < 135) robzXpos = 135;
+		if (robzYpos < 19) robzYpos = 19;
 	}
-	Gui::Draw_Rect(0, 238, 400, 2, BLACK);	// Hide line from other texture(s)
 
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect
-
-	if (cinemaWide) {
-		Gui::Draw_Rect(0, 0, 400, 36, BLACK);
-		Gui::Draw_Rect(0, 204, 400, 36, BLACK);
-	}
 
 	if (shiftBySubPixel) return;
 	Gui::ScreenDraw(Bottom);

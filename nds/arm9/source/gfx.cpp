@@ -1268,5 +1268,8 @@ void GFX::DrawSpriteLinear(int img, int x, int y, float ScaleX, float ScaleY) {
 void GFX::DrawSpriteBlend(int img, float x, float y, u32 color, float ScaleX, float ScaleY) {
 }
 
+void GFX::DrawSpriteLinearBlend(int img, float x, float y, u32 color, float ScaleX, float ScaleY) {
+}
+
 void GFX::drawCursor(int cX, int cY) {
 }
