@@ -27,6 +27,7 @@
 #include "gui.hpp"
 #include "screenCommon.hpp"
 #include "fontHandler.h"
+#include "myDSiMode.h"
 #include "tonccpy.h"
 
 #include "arrow_back.h"
@@ -66,7 +67,7 @@ void SetBrightness(u8 screen, s8 bright) {
 	}
 	if (bright > 31)
 		bright = 31;
-	*(u16 *)(0x0400006C + (0x1000 * screen)) = bright + mode;
+	*(vu16 *)(0x0400006C + (0x1000 * screen)) = bright + mode;
 }
 
 // Clear Text.
@@ -77,7 +78,7 @@ void Gui::DrawSprite(int imgindex, int x, int y) {
 }
 
 void Gui__ChangeBrightness() {
-	if (ditherlaceOnVBlank) {
+	if (dsiFeatures() && ditherlaceOnVBlank) {
 		secondFrame ? bgShow(bg3Main) : bgHide(bg3Main);
 		secondFrame = !secondFrame;
 	}
@@ -88,8 +89,8 @@ void Gui__ChangeBrightness() {
 
 // Initialize GUI.
 void Gui::init(void) {
-	*(u16*)0x0400006C |= BIT(14);
-	*(u16*)0x0400006C &= BIT(15);
+	*(vu16*)0x0400006C |= BIT(14);
+	*(vu16*)0x0400006C &= BIT(15);
 	SetBrightness(0, 31);
 	SetBrightness(1, 31);
 

@@ -9,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "myDSiMode.h"
 #include "nitrofs.h"
 #include "sound.h"
 #include "photoStudio.hpp"
@@ -16,6 +17,7 @@
 #include "rocketRobz.hpp"
 #include "screen.hpp"
 
+bool mepFound = false;
 bool fatInited = false;
 bool isInit = true;
 bool exiting = false;
@@ -80,9 +82,6 @@ void doPause() {
 }
 
 int main(int argc, char **argv) {
-	extern void dsiOnly(void);
-	dsiOnly();
-
 	defaultExceptionHandler();
 
 	fatInited = fatInitDefault();
@@ -99,6 +98,15 @@ int main(int argc, char **argv) {
 		iprintf("NitroFS init failed!");
 		stop();
 	}
+
+	if (!dsiFeatures()) {
+		sysSetCartOwner (BUS_OWNER_ARM9);	// Allow arm9 to access GBA ROM (or in this case, the DS Memory Expansion Pak)
+		*(vu32*)(0x08240000) = 1;
+		mepFound = (*(vu32*)(0x08240000) == 1);
+	}
+	// Check for DS Debug RAM or DSi RAM
+	*(vu32*)(0x02403FFC) = 1;
+	*(vu32*)(0x02003FFC) = 0;
 
 	snd();
 
@@ -136,7 +144,7 @@ int main(int argc, char **argv) {
 
 		touchRead(&touch);
 
-		if (!ditherlaceOnVBlank) {
+		if (dsiFeatures() && !ditherlaceOnVBlank) {
 			secondFrame ? bgShow(bg3Main) : bgHide(bg3Main);
 			secondFrame = !secondFrame;
 		}

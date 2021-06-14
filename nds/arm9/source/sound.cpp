@@ -6,6 +6,8 @@
 #include "tonccpy.h"
 #include <algorithm>
 
+extern bool mepFound;
+
 
 extern volatile s16 fade_counter;
 extern volatile bool fade_out;
@@ -29,7 +31,7 @@ extern char debug_buf[256];
 
 extern volatile u32 sample_delay_count;
 
-char* SFX_DATA = (char*)0x02FD0000;
+char* SFX_DATA = (char*)NULL;
 mm_word SOUNDBANK[MSL_BANKSIZE] = {0};
 
 SoundControl::SoundControl()
@@ -45,7 +47,8 @@ SoundControl::SoundControl()
 
 	soundbank_file = fopen("nitro:/soundbank.bin", "rb");
 
-	fread(SFX_DATA, 1, 0x20000, soundbank_file);
+	SFX_DATA = new char[0x13000];
+	fread(SFX_DATA, 1, 0x13000, soundbank_file);
 
 	fclose(soundbank_file);
 
@@ -90,6 +93,10 @@ SoundControl::SoundControl()
 		128,	// panning
 	};
 
+
+	if (*(vu32*)(0x02403FFC) != 1 && !mepFound) return;
+
+	init_streaming_buf();
 
 	stream_start_source = fopen("nitro:/music/start.raw", "rb");
 	stream_source = fopen("nitro:/music/loop.raw", "rb");
@@ -149,6 +156,8 @@ mm_sfxhand SoundControl::playBack() { return mmEffectEx(&snd_back); }
 mm_sfxhand SoundControl::playHighlight() { return mmEffectEx(&snd_highlight); }
 
 void SoundControl::beginStream() {
+	if (!stream_source) return;
+
 	// open the stream
 	stream_is_playing = true;
 	mmStreamOpen(&stream);
@@ -156,6 +165,8 @@ void SoundControl::beginStream() {
 }
 
 void SoundControl::stopStream() {
+	if (!stream_source) return;
+
 	stream_is_playing = false;
 	mmStreamClose();
 }

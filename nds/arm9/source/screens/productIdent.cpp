@@ -1,5 +1,7 @@
+#include <nds/dma.h>
 #include "productIdent.hpp"
 #include "lodepng.h"
+#include "myDSiMode.h"
 
 extern char verText[32];
 
@@ -25,7 +27,7 @@ void ProductIdent::Draw(void) const {
 
 void ProductIdent::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	if (!graphicLoaded) {
-		u16* bgLoc = (u16*)0x02F00000;
+		u16* bgLoc = new u16[256*192];
 		extern int bg2Main;
 		extern int bg3Main;
 
@@ -36,7 +38,12 @@ void ProductIdent::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			bgLoc[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 		}
 		dmaCopyHalfWordsAsynch(0, bgLoc, bgGetGfxPtr(bg2Main), 0x18000);
-		dmaCopyHalfWordsAsynch(1, bgLoc, bgGetGfxPtr(bg3Main), 0x18000);
+		if (dsiFeatures()) {
+			dmaCopyHalfWordsAsynch(1, bgLoc, bgGetGfxPtr(bg3Main), 0x18000);
+		} else {
+			while (dmaBusy(0));
+			free(bgLoc);
+		}
 		graphicLoaded = true;
 	}
 }

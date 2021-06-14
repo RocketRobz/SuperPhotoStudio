@@ -1,16 +1,6 @@
 #include "streamingaudio.h"
 #include "tonccpy.h"
 
-// Private members
-
-// The main stream buffer that is streamed to maxmod
-static volatile s16 streaming_buf_main[STREAMING_BUF_LENGTH] = {0}; 
-
-/* The swap buffer, which is filled with bytes from the file
- * before it is streamed to maxmod.
- */
-static volatile s16 streaming_buf_swap[STREAMING_BUF_LENGTH] = {0}; 
-
 /* Not a actual pointer, but the index to the current location of the 
  * buffers that are being streamed.
  */
@@ -22,8 +12,8 @@ volatile s32 streaming_buf_ptr = 0;
 volatile s32 filled_samples = 0;
 
 // Pointers to the stream buffers.
-volatile s16* play_stream_buf = streaming_buf_main;
-volatile s16* fill_stream_buf = streaming_buf_swap;
+volatile s16* play_stream_buf = NULL;
+volatile s16* fill_stream_buf = NULL;
 
 
 // Toggle this to true to trigger a fill as soon as possible.
@@ -37,6 +27,11 @@ volatile u32 sample_delay_count = 0;
 #ifdef SOUND_DEBUG
 char debug_buf[256] = {0};
 #endif
+
+void init_streaming_buf(void) {
+	play_stream_buf = malloc(STREAMING_BUF_LENGTH*sizeof(s16));
+	fill_stream_buf = malloc(STREAMING_BUF_LENGTH*sizeof(s16));
+}
 
 /*
  * The maxmod stream request handler. 

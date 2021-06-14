@@ -2,6 +2,7 @@
 #include "screenvars.h"
 #ifdef NDS
 #include "lodepng.h"
+#include "myDSiMode.h"
 #endif
 
 static int subMode = 0;
@@ -133,6 +134,7 @@ void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			}
 			bgGetGfxPtr(bg2Main)[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+		  if (dsiFeatures()) {
 			if (alternatePixel) {
 				if (image[(i*4)+3] & BIT(0)) {
 					image[(i*4)] += 0x4;
@@ -155,6 +157,7 @@ void RocketRobz::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			}
 			bgGetGfxPtr(bg3Main)[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+		  }
 			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}

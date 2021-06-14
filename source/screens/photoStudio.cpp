@@ -51,8 +51,10 @@ void gspWaitForVBlank(void) {
 
 static bool redrawText = true;
 extern bool ditherlaceOnVBlank;
-#endif
+int characterLimit = 1;
+#else
 int characterLimit = 4;
+#endif
 
 static u8 bgPageOrder[] = {
 	4,	// Logos

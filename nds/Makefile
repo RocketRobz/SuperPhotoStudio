@@ -24,7 +24,8 @@ makearm9:
 
 $(TARGET).nds:	makearm7 makearm9
 	ndstool	-c $(TARGET).nds -7 $(TARGET).arm7.elf -9 $(TARGET).arm9.elf -d $(NITRODATA) \
-			-g HPHA 00 "SUPERPHOTO" -z 80040000 -u 00030004 -a 00000138 -b icon.bmp "Super Photo Studio;RocketRobz"
+			-g HPHA 00 "SUPERPHOTO" -z 80040000 -u 00030004 -a 00000138 -b icon.bmp "Super Photo Studio;Rocket Robz"
+	python2 patch_ndsheader_dsiware.py $(TARGET).nds --twlTouch
 
 clean:
 	@echo clean ...

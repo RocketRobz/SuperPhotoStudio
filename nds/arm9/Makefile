@@ -27,7 +27,7 @@ MUSIC       :=  ../sound
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
-ARCH	:=	-marm -mthumb-interwork
+ARCH	:=	-mthumb -mthumb-interwork
 
 CFLAGS	:=	-g -Wall -O3 \
  			-march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
