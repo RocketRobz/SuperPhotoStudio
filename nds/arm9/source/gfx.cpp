@@ -90,8 +90,7 @@ void GFX::loadSheets() {
 		bgSpriteMemExt[0] = (u16*)0x09248000;
 		bgSpriteMemExt[1] = (u16*)0x09290000;
 		bgSpriteMemExt[2] = (u16*)0x092C8000;
-	}
-	if (!dsiFeatures() && *(vu32*)(0x02403FFC) != 1 && fatInited) {
+	} else if (!dsiFeatures() && *(vu32*)(0x02403FFC) != 1 && fatInited) {
 		usePageFile = true;
 		characterLimit++; // Add 3rd character with help from a page file
 	}
