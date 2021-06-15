@@ -1211,8 +1211,8 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			fread(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
 			pageCharLoaded = 1;
-			char2Paged = false;
 		}
+		char2Paged = false;
 		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
 		if (dsiFeatures()) dmaCopyHalfWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000); else while(dmaBusy(0));
 		for (int y = 0; y < 192; y++) {
