@@ -1,17 +1,17 @@
-<p align="center">
+﻿<p align="center">
  <img src="https://github.com/RocketRobz/SuperPhotoStudio/blob/master/resources/title.png"><br>
 	<a href="https://gbatemp.net/threads/dsi-3ds-super-photo-studio-take-pictures-of-your-favorite-all-star-characters.573276/" style="padding-left: 5px;">
 		<img src="https://img.shields.io/badge/GBATemp-thread-blue.svg" height="20">
 	</a>
 </p>
-What happens when you take the concept of Super Smash Bros, and turn it from a fighting game, into a photo shoot application?     
-The result, Super Photo Studio! Take pictures of your favorite all-star characters, in any location possible!
+What happens when you take the concept of *Super Smash Bros.*, and turn it from a fighting game, into a photo shoot application?     
+The result, *Super Photo Studio*! Take pictures of your favorite all-star characters, in any location possible!
 
-Super Photo Studio has it all: An all-star cast, famous outdoor and indoor locations, stylish girls, the coolest of TWL himself, and fan-favorites like Waluigi!
+*Super Photo Studio* has it all: An all-star cast, famous outdoor and indoor locations, stylish girls, the coolest of TWL himself, and fan-favorites like Waluigi!
 
 # What is this?
 
-Super Photo Studio is basically an upgraded version of the Style Savvy series's photo studio feature, with added characters and locations outside of said series. You can also change the character's expressions and poses, though Super Photo Studio does not support changing those, as it would be time-consuming, as well as taking up more space.
+*Super Photo Studio* is basically an upgraded version of the *Style Savvy* series's photo studio feature, with added characters and locations outside of said series. You can also change the character's expressions and poses, though *Super Photo Studio* does not support changing those, as it would be time-consuming, as well as taking up more space.
 
 # Features
 
@@ -29,7 +29,7 @@ Super Photo Studio is basically an upgraded version of the Style Savvy series's 
 # Controls
 * A: Select highlighted option
 * D-Pad Left/Right: Select character number (highlight character option in menu first)
-* X/B: Zoom in/out (DSi version)
+* X/B: Zoom in/out (DS(i) version)
 * Circle Pad Up/Down: Zoom in/out (3DS version)
 * Y: Take photo (saved in `sd:/(yourconsole)/SuperPhotoStudio/photos/`)
 
@@ -38,7 +38,7 @@ Super Photo Studio is basically an upgraded version of the Style Savvy series's 
 * Nicalis
 * Nintendo
 * Rare
-* RocketRobz*
+* Rocket Robz*
 * SEGA
 * StackZ*
 * Syn Sophia
@@ -46,7 +46,8 @@ Super Photo Studio is basically an upgraded version of the Style Savvy series's 
 (*Homebrew dev)
 
 # Available for
-* Nintendo DSi
+* Nintendo DS
+* Nintendo DS⁽ⁱ⁾
 * Nintendo 3DS/2DS
 
 # Credits
