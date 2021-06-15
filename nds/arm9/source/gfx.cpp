@@ -1111,6 +1111,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			fread(&charSpriteMem[1], 1, (0x18000*3), pageFile);
 			fread(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
+			lastCharLoaded = 1;
 		}
 		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
 		if (dsiFeatures()) dmaCopyHalfWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000); else while(dmaBusy(0));
@@ -1139,11 +1140,14 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 		u16* charLoc = (u16*)charSpriteMem3;
 		if (usePageFile) {
 			charLoc = (u16*)charSpriteMem[1];
+		  if (lastCharLoaded != 2) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, (0x18000*3)+(0xC000*3), SEEK_SET);
 			fread(&charSpriteMem[1], 1, (0x18000*3), pageFile);
 			fread(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
+			lastCharLoaded = 2;
+		  }
 		}
 		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
 		if (dsiFeatures()) dmaCopyHalfWords(1, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000); else while(dmaBusy(0));
