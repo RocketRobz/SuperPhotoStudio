@@ -39,7 +39,7 @@ static bool chracterSpriteFound[5] = {false};
 static bool bgSpriteLoaded = false;
 static bool usePageFile = false;
 static bool char2Paged = false;
-static int lastCharLoaded = 0;
+static int pageCharLoaded = 1;
 
 static bool titleBottomLoaded = false;
 static bool animateTitle = true;
@@ -928,6 +928,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 			fwrite(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
 			char2Paged = true;
+			pageCharLoaded = num;
 		}
 	} else {
 		if (num == 1 && chracterSpriteFound[2] && usePageFile) {
@@ -987,11 +988,11 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 			fwrite(&charSpriteMem[1], 1, (0x18000*3), pageFile);
 			fwrite(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
+			pageCharLoaded = num;
 		}
 	}
 
 	chracterSpriteFound[num] = true;
-	lastCharLoaded = num;
 
 	return true;
 }
@@ -1106,12 +1107,12 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 		  }
 		}
 		// Character 2
-		if (usePageFile && lastCharLoaded != 1) {
+		if (usePageFile && pageCharLoaded != 1) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fread(&charSpriteMem[1], 1, (0x18000*3), pageFile);
 			fread(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
-			lastCharLoaded = 1;
+			pageCharLoaded = 1;
 		}
 		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
 		if (dsiFeatures()) dmaCopyHalfWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000); else while(dmaBusy(0));
@@ -1140,13 +1141,13 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 		u16* charLoc = (u16*)charSpriteMem3;
 		if (usePageFile) {
 			charLoc = (u16*)charSpriteMem[1];
-		  if (lastCharLoaded != 2) {
+		  if (pageCharLoaded != 2) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, (0x18000*3)+(0xC000*3), SEEK_SET);
 			fread(&charSpriteMem[1], 1, (0x18000*3), pageFile);
 			fread(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
-			lastCharLoaded = 2;
+			pageCharLoaded = 2;
 		  }
 		}
 		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
@@ -1204,6 +1205,13 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 		  }
 		}
 		// Character 2
+		if (usePageFile && pageCharLoaded != 1) {	// In case if character 3 gets removed
+			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
+			fread(&charSpriteMem[1], 1, (0x18000*3), pageFile);
+			fread(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
+			fclose(pageFile);
+			pageCharLoaded = 1;
+		}
 		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
 		if (dsiFeatures()) dmaCopyHalfWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000); else while(dmaBusy(0));
 		for (int y = 0; y < 192; y++) {
