@@ -1,5 +1,5 @@
-#include <maxmod9.h>
 #include <nds.h>
+#include <maxmod9.h>
 
 #include <fat.h>
 #include <limits.h>
@@ -98,6 +98,8 @@ int main(int argc, char **argv) {
 		iprintf("NitroFS init failed!");
 		stop();
 	}
+
+	mkdir("/_nds", 0777);
 
 	if (!dsiFeatures()) {
 		sysSetCartOwner (BUS_OWNER_ARM9);	// Allow arm9 to access GBA ROM (or in this case, the DS Memory Expansion Pak)
