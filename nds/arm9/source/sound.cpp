@@ -7,6 +7,7 @@
 #include <algorithm>
 
 extern bool mepFound;
+extern bool dsDebugRam;
 
 
 extern volatile s16 fade_counter;
@@ -94,7 +95,7 @@ SoundControl::SoundControl()
 	};
 
 
-	if (*(vu32*)(0x02403FFC) != 1 && !mepFound) return;
+	if (!dsDebugRam && !mepFound) return;
 
 	init_streaming_buf();
 

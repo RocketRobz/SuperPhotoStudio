@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
 	// Check for DS Debug RAM or DSi RAM
 	*(vu32*)(0x02403FFC) = 1;
 	*(vu32*)(0x02003FFC) = 0;
-	dsDebugRam = (*(vu32*)(0x02403FFC) == 1);
+	dsDebugRam = (*(vu32*)(0x02003FFC) == 0 && *(vu32*)(0x02403FFC) == 1);
 
 	snd();
 
