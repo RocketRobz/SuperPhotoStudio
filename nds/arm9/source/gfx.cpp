@@ -1109,8 +1109,10 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 		// Character 2
 		if (usePageFile && pageCharLoaded != 1) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
-			fread(&charSpriteMem[1], 1, (0x18000*3), pageFile);
-			fread(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
+			fseek(pageFile, 0x18000*zoomIn, SEEK_SET);
+			fread(&charSpriteMem[1][(256*192)*zoomIn], 1, 0x18000, pageFile);
+			fseek(pageFile, (0x18000*3)+(0xC000*zoomIn), SEEK_SET);
+			fread(&charSpriteAlpha[1][(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
 			pageCharLoaded = 1;
 		}
@@ -1143,9 +1145,10 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			charLoc = (u16*)charSpriteMem[1];
 		  if (pageCharLoaded != 2) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
-			fseek(pageFile, (0x18000*3)+(0xC000*3), SEEK_SET);
-			fread(&charSpriteMem[1], 1, (0x18000*3), pageFile);
-			fread(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
+			fseek(pageFile, (0x18000*3)+(0xC000*3)+(0x18000*zoomIn), SEEK_SET);
+			fread(&charSpriteMem[1][(256*192)*zoomIn], 1, 0x18000, pageFile);
+			fseek(pageFile, (0x18000*3)+(0xC000*3)+(0x18000*3)+(0xC000*zoomIn), SEEK_SET);
+			fread(&charSpriteAlpha[1][(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
 			pageCharLoaded = 2;
 		  }
