@@ -80,6 +80,7 @@ void GFX::resetCharStatus(int num) {
 
 extern int characterLimit;
 extern bool mepFound;
+extern bool dsDebugRam;
 extern bool fatInited;
 
 void GFX::loadSheets() {
@@ -90,11 +91,11 @@ void GFX::loadSheets() {
 		bgSpriteMemExt[0] = (u16*)0x09248000;
 		bgSpriteMemExt[1] = (u16*)0x09290000;
 		bgSpriteMemExt[2] = (u16*)0x092C8000;
-	} else if (!dsiFeatures() && *(vu32*)(0x02403FFC) != 1 && fatInited) {
+	} else if (!dsiFeatures() && !dsDebugRam && fatInited) {
 		usePageFile = true;
 		characterLimit++; // Add 3rd character with help from a page file
 	}
-	if (*(vu32*)(0x02403FFC) == 1 || mepFound) {
+	if (dsDebugRam || mepFound) {
 		characterLimit = 4;	// Up the limit from 2 to 5 characters
 		if (dsiFeatures()) {
 			bmpImageBuffer2[0] = new u16[256*192];
@@ -631,7 +632,7 @@ void GFX::loadBgSprite(void) {
 	animateBg = false;
 
 	// Load animated parts
-	if (aniFrames > 0 && characterLimit == 4) {
+	if (aniFrames > 0 && dsDebugRam) {
 		switch (studioBg) {
 			case 12:
 				if (timeOutside == 0) {
