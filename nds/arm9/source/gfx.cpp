@@ -93,7 +93,7 @@ void GFX::loadSheets() {
 		bgSpriteMemExt[2] = (u16*)0x092C8000;
 	} else if (!dsiFeatures() && !dsDebugRam && fatInited) {
 		usePageFile = true;
-		characterLimit++; // Add 3rd character with help from a page file
+		characterLimit = 4;	// Up the limit from 2 to 5 characters with help from a page file
 	}
 	if (dsDebugRam || mepFound) {
 		characterLimit = 4;	// Up the limit from 2 to 5 characters
@@ -770,7 +770,11 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	bool alternatePixel = false;
 	if (num == 4) {
 		for(unsigned i=0;i<image.size()/4;i++) {
-			if (mepFound) charSpriteAlpha5_16[i] = image[(i*4)+3]; else charSpriteAlpha5[i] = image[(i*4)+3];
+			if (usePageFile) {
+				charSpriteAlpha[1][i] = image[(i*4)+3];
+			} else {
+				if (mepFound) charSpriteAlpha5_16[i] = image[(i*4)+3]; else charSpriteAlpha5[i] = image[(i*4)+3];
+			}
 			image[(i*4)+3] = 0;
 			if (alternatePixel) {
 				if (image[(i*4)] >= 0x4) {
@@ -786,7 +790,11 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 					image[(i*4)+3] |= BIT(2);
 				}
 			}
-			charSpriteMem5[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			if (usePageFile) {
+				charSpriteMem[1][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			} else {
+				charSpriteMem5[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			}
 		  if (dsiFeatures()) {
 			if (alternatePixel) {
 				if (image[(i*4)+3] & BIT(0)) {
@@ -814,9 +822,21 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}
+		if (usePageFile) {
+			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
+			fseek(pageFile, ((0x18000*3)+(0xC000*3))*3, SEEK_SET);
+			fwrite(&charSpriteMem[1], 1, (0x18000*3), pageFile);
+			fwrite(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
+			fclose(pageFile);
+			pageCharLoaded = num;
+		}
 	} else if (num == 3) {
 		for(unsigned i=0;i<image.size()/4;i++) {
-			if (mepFound) charSpriteAlpha4_16[i] = image[(i*4)+3]; else charSpriteAlpha4[i] = image[(i*4)+3];
+			if (usePageFile) {
+				charSpriteAlpha[1][i] = image[(i*4)+3];
+			} else {
+				if (mepFound) charSpriteAlpha4_16[i] = image[(i*4)+3]; else charSpriteAlpha4[i] = image[(i*4)+3];
+			}
 			image[(i*4)+3] = 0;
 			if (alternatePixel) {
 				if (image[(i*4)] >= 0x4) {
@@ -832,7 +852,11 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 					image[(i*4)+3] |= BIT(2);
 				}
 			}
-			charSpriteMem4[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			if (usePageFile) {
+				charSpriteMem[1][i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			} else {
+				charSpriteMem4[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
+			}
 		  if (dsiFeatures()) {
 			if (alternatePixel) {
 				if (image[(i*4)+3] & BIT(0)) {
@@ -860,12 +884,22 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}
-	} else if (num == 2) {
-		if (usePageFile && !char2Paged) {
-			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "w");
+		if (usePageFile) {
+			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
+			fseek(pageFile, ((0x18000*3)+(0xC000*3))*2, SEEK_SET);
 			fwrite(&charSpriteMem[1], 1, (0x18000*3), pageFile);
 			fwrite(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
+			pageCharLoaded = num;
+		}
+	} else if (num == 2) {
+		if (usePageFile && !char2Paged) {
+			bool pageFileFound = (access("fat:/_nds/pagefile.sys", F_OK) == 0);
+			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", pageFileFound ? "r+" : "w");
+			fwrite(&charSpriteMem[1], 1, (0x18000*3), pageFile);
+			fwrite(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
+			fclose(pageFile);
+			char2Paged = true;
 		}
 		for(unsigned i=0;i<image.size()/4;i++) {
 			if (usePageFile) {
@@ -921,14 +955,11 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 			alternatePixel = !alternatePixel;
 		}
 		if (usePageFile) {
-			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", char2Paged ? "r+" : "a");
-			if (char2Paged) {
-				fseek(pageFile, (0x18000*3)+(0xC000*3), SEEK_SET);
-			}
+			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
+			fseek(pageFile, (0x18000*3)+(0xC000*3), SEEK_SET);
 			fwrite(&charSpriteMem[1], 1, (0x18000*3), pageFile);
 			fwrite(&charSpriteAlpha[1], 1, (0xC000*3), pageFile);
 			fclose(pageFile);
-			char2Paged = true;
 			pageCharLoaded = num;
 		}
 	} else {
@@ -1268,6 +1299,19 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 	if (chracterSpriteFound[3]) {
 		// Continued from "if (chracterSpriteFound[2])"
 		// Character 4
+		u16* charLoc = (u16*)charSpriteMem4;
+		if (usePageFile) {
+			charLoc = (u16*)charSpriteMem[1];
+		  if (pageCharLoaded != 3) {
+			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
+			fseek(pageFile, (((0x18000*3)+(0xC000*3))*2)+(0x18000*zoomIn), SEEK_SET);
+			fread(&charSpriteMem[1][(256*192)*zoomIn], 1, 0x18000, pageFile);
+			fseek(pageFile, (((0x18000*3)+(0xC000*3))*2)+(0x18000*3)+(0xC000*zoomIn), SEEK_SET);
+			fread(&charSpriteAlpha[1][(256*192)*zoomIn], 1, 0xC000, pageFile);
+			fclose(pageFile);
+			pageCharLoaded = 3;
+		  }
+		}
 		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[0], bmpImageBuffer[1], 0x18000);
 		if (dsiFeatures()) dmaCopyHalfWords(1, bmpImageBuffer2[0], bmpImageBuffer2[1], 0x18000); else while(dmaBusy(0));
 		int y2 = 72;
@@ -1275,12 +1319,16 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 		  x2 = flipH[3] ? 255 : 0;
 		  x2 -= (zoomIn==1 ? 64 : 26);
 		  for (int x = 0; x < 256; x++) {
-			alpha = mepFound ? charSpriteAlpha4_16[((y*256)+x)+((256*192)*zoomIn)] : charSpriteAlpha4[((y*256)+x)+((256*192)*zoomIn)];
+			if (usePageFile) {
+				alpha = charSpriteAlpha[1][((y*256)+x)+((256*192)*zoomIn)];
+			} else {
+				alpha = mepFound ? charSpriteAlpha4_16[((y*256)+x)+((256*192)*zoomIn)] : charSpriteAlpha4[((y*256)+x)+((256*192)*zoomIn)];
+			}
 			if (x2 >= 0 && x2 < 256 && alpha != 0) {
-				color = charSpriteMem4[((y*256)+x)+((256*192)*zoomIn)];
+				color = charLoc[((y*256)+x)+((256*192)*zoomIn)];
 				color2 = charSpriteMem4_2[((y*256)+x)+((256*192)*zoomIn)];
 				if (blendAlpha > 0) {
-					color = alphablend(fg, charSpriteMem4[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+					color = alphablend(fg, charLoc[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
 					color2 = alphablend(fg, charSpriteMem4_2[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
 				}
 				if (alpha == 255) {
@@ -1299,6 +1347,19 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 	}
 	if (chracterSpriteFound[4]) {
 		// Character 5
+		u16* charLoc = (u16*)charSpriteMem5;
+		if (usePageFile) {
+			charLoc = (u16*)charSpriteMem[1];
+		  if (pageCharLoaded != 4) {
+			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
+			fseek(pageFile, (((0x18000*3)+(0xC000*3))*3)+(0x18000*zoomIn), SEEK_SET);
+			fread(&charSpriteMem[1][(256*192)*zoomIn], 1, 0x18000, pageFile);
+			fseek(pageFile, (((0x18000*3)+(0xC000*3))*3)+(0x18000*3)+(0xC000*zoomIn), SEEK_SET);
+			fread(&charSpriteAlpha[1][(256*192)*zoomIn], 1, 0xC000, pageFile);
+			fclose(pageFile);
+			pageCharLoaded = 4;
+		  }
+		}
 		dmaCopyHalfWordsAsynch(0, bmpImageBuffer[1], bmpImageBuffer[0], 0x18000);
 		if (dsiFeatures()) dmaCopyHalfWords(1, bmpImageBuffer2[1], bmpImageBuffer2[0], 0x18000); else while(dmaBusy(0));
 		int y2 = 72;
@@ -1306,12 +1367,16 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 		  x2 = flipH[4] ? 255 : 0;
 		  x2 += (zoomIn==1 ? 64 : 26);
 		  for (int x = 0; x < 256; x++) {
-			alpha = mepFound ? charSpriteAlpha5_16[((y*256)+x)+((256*192)*zoomIn)] : charSpriteAlpha5[((y*256)+x)+((256*192)*zoomIn)];
+			if (usePageFile) {
+				alpha = charSpriteAlpha[1][((y*256)+x)+((256*192)*zoomIn)];
+			} else {
+				alpha = mepFound ? charSpriteAlpha5_16[((y*256)+x)+((256*192)*zoomIn)] : charSpriteAlpha5[((y*256)+x)+((256*192)*zoomIn)];
+			}
 			if (x2 >= 0 && x2 < 256 && alpha != 0) {
-				color = charSpriteMem5[((y*256)+x)+((256*192)*zoomIn)];
+				color = charLoc[((y*256)+x)+((256*192)*zoomIn)];
 				color2 = charSpriteMem5_2[((y*256)+x)+((256*192)*zoomIn)];
 				if (blendAlpha > 0) {
-					color = alphablend(fg, charSpriteMem5[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
+					color = alphablend(fg, charLoc[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
 					color2 = alphablend(fg, charSpriteMem5_2[((y*256)+x)+((256*192)*zoomIn)], blendAlpha);
 				}
 				if (alpha == 255) {
