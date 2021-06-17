@@ -1311,6 +1311,16 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					exportedCharListGotten = true;
 					displayNothing = false;
 				}
+				if (numberOfExportedCharacters == 0) {
+					if (hDown & KEY_DLEFT) {
+						char_highlightedGame[currentCharNum]--;
+						if (char_highlightedGame[currentCharNum] < 0) char_highlightedGame[currentCharNum] = (int)sizeof(charPageOrder)-1;
+					}
+					if (hDown & KEY_DRIGHT) {
+						char_highlightedGame[currentCharNum]++;
+						if (char_highlightedGame[currentCharNum] > (int)sizeof(charPageOrder)-1) char_highlightedGame[currentCharNum] = 0;
+					}
+				}
 			}
 			getMaxChars();
 			#ifdef NDS
