@@ -21,6 +21,7 @@
 ------------------------------------------------------------------*/
 
 #include "file_browse.h"
+#include "inifile.h"
 #include <vector>
 #include <algorithm>
 #include <unistd.h>
@@ -121,9 +122,19 @@ void getExportedCharacterContents (void) {
 	#endif
 	numberOfExportedCharacters = exportedCharacterContents.size();
 
+	// Get genders from .ini files
+	char chrPath[256];
 	for (int i = 0; i < numberOfExportedCharacters; i++) {
 		DirEntry* entry = &exportedCharacterContents.at(i);
-		entry->gender = false;
+
+		#ifdef NDS
+		sprintf(chrPath, "/_nds/SuperPhotoStudio/characters/%s.ini", entry->name.c_str());
+		#else
+		sprintf(chrPath, "sdmc:/3ds/SuperPhotoStudio/characters/%s.ini", entry->name.c_str());
+		#endif
+		CIniFile charInfo(chrPath);
+
+		entry->gender = charInfo.GetString("Character", "Gender", "Male")=="Male";
 	}
 }
 
