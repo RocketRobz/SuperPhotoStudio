@@ -758,9 +758,9 @@ void PhotoStudio::loadChrImage(void) {
 	if (charPageOrder[char_highlightedGame[currentCharNum]] == 0xFF) {
 		if (numberOfExportedCharacters > 0) {
 			#ifdef NDS
-			sprintf(chrFilePath, "/_nds/SuperPhotoStudio/characters/%s.png", getExportedCharacterName(char_highlightedGame[currentCharNum]));
+			sprintf(chrFilePath, "/_nds/SuperPhotoStudio/characters/%s.png", getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));
 			#else
-			sprintf(chrFilePath, "sdmc:/3ds/SuperPhotoStudio/characters/%s.t3x", getExportedCharacterName(char_highlightedGame[currentCharNum]));
+			sprintf(chrFilePath, "sdmc:/3ds/SuperPhotoStudio/characters/%s.t3x", getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));
 			#endif
 		} else {
 			#ifdef NDS
