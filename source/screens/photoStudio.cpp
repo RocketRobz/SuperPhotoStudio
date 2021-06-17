@@ -756,19 +756,11 @@ void PhotoStudio::loadChrImage(void) {
 	gspWaitForVBlank();
 	#endif
 	if (charPageOrder[char_highlightedGame[currentCharNum]] == 0xFF) {
-		if (numberOfExportedCharacters > 0) {
-			#ifdef NDS
-			sprintf(chrFilePath, "/_nds/SuperPhotoStudio/characters/%s.png", getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));
-			#else
-			sprintf(chrFilePath, "sdmc:/3ds/SuperPhotoStudio/characters/%s.t3x", getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));
-			#endif
-		} else {
-			#ifdef NDS
-			sprintf(chrFilePath, "nitro:/graphics/char/%s.png", "ss4_Robz0");
-			#else
-			sprintf(chrFilePath, "romfs:/gfx/%s.t3x", "ss4_Robz0");
-			#endif
-		}
+		#ifdef NDS
+		sprintf(chrFilePath, "/_nds/SuperPhotoStudio/characters/%s.png", getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));
+		#else
+		sprintf(chrFilePath, "sdmc:/3ds/SuperPhotoStudio/characters/%s.t3x", getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));
+		#endif
 		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath);
 	} else if (charPageOrder[char_highlightedGame[currentCharNum]] >= 2) {
 		/*if (numberOfExportedCharacters > 0) {
