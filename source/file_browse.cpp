@@ -116,7 +116,7 @@ void getExportedCharacterContents (void) {
 	vector<string> extensionList;
 	#ifdef NDS
 	extensionList.emplace_back(".png");
-	getDirectoryContents (exportedCharacterContents, extensionList, "sd:/_nds/SuperPhotoStudio/characters");
+	getDirectoryContents (exportedCharacterContents, extensionList, "/_nds/SuperPhotoStudio/characters");
 	#else
 	extensionList.emplace_back(".t3x");
 	getDirectoryContents (exportedCharacterContents, extensionList, "sdmc:/3ds/SuperPhotoStudio/characters");
