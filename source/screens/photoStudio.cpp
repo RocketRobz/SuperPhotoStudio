@@ -172,6 +172,9 @@ void PhotoStudio::getMaxChars() {
 			case 9:
 				import_totalCharacters = 4;
 				break;
+			case 0xFF:
+				import_totalCharacters = numberOfExportedCharacters-1;
+				break;
 		}
 	}
 }
@@ -596,6 +599,8 @@ const char* PhotoStudio::charGameTitle(void) const {
 			return nesTitle();
 		case 17:
 			return "NiGHTS series";
+		case 0xFF:
+			return "Custom";
 	}
 	return "???";
 }
