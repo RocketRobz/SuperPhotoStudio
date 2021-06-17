@@ -83,7 +83,9 @@ static u8 charPageOrder[] = {
 	3,	// Style Savvy: Styling Star
 	5,	// Super Mario series
 	11,	// Swapnote/Swapdoodle
-	14};	// VVVVVV
+	14,	// VVVVVV
+	0xFF,	// Custom
+};
 
 static int metalXpos = 0;
 #ifdef NDS
@@ -636,6 +638,8 @@ bool PhotoStudio::charGender(int i) const {
 			return nesCharacterGenders[i];
 		case 17:
 			return nightsCharacterGenders[i];
+		case 0xFF:
+			return getExportedCharacterGender(i);
 	}
 	return true;
 }
@@ -698,6 +702,8 @@ const char* PhotoStudio::charName(int i) const {
 			return NESCharacterNames(i);
 		case 17:
 			return nightsCharacterNames[i];
+		case 0xFF:
+			return getExportedCharacterName(i);
 	}
 	return "???";
 }
@@ -744,7 +750,22 @@ void PhotoStudio::loadChrImage(void) {
 	#else
 	gspWaitForVBlank();
 	#endif
-	if (charPageOrder[char_highlightedGame[currentCharNum]] >= 2) {
+	if (charPageOrder[char_highlightedGame[currentCharNum]] == 0xFF) {
+		if (numberOfExportedCharacters > 0) {
+			#ifdef NDS
+			sprintf(chrFilePath, "sd:/_nds/SuperPhotoStudio/characters/%s.png", getExportedCharacterName(char_highlightedGame[currentCharNum]));
+			#else
+			sprintf(chrFilePath, "sdmc:/3ds/SuperPhotoStudio/characters/%s.t3x", getExportedCharacterName(char_highlightedGame[currentCharNum]));
+			#endif
+		} else {
+			#ifdef NDS
+			sprintf(chrFilePath, "nitro:/graphics/char/%s.png", "ss4_Robz0");
+			#else
+			sprintf(chrFilePath, "romfs:/gfx/%s.t3x", "ss4_Robz0");
+			#endif
+		}
+		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath);
+	} else if (charPageOrder[char_highlightedGame[currentCharNum]] >= 2) {
 		/*if (numberOfExportedCharacters > 0) {
 			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", 4, getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));	// All Seasons
 		} else {
@@ -1276,7 +1297,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			importCharacterList_cursorPosition[currentCharNum] = 0;
 			importCharacterList_cursorPositionOnScreen[currentCharNum] = 0;
 			import_characterShownFirst[currentCharNum] = 0;
-			/*if (charPageOrder[char_highlightedGame[currentCharNum]] == 4) {
+			if (charPageOrder[char_highlightedGame[currentCharNum]] == 0xFF) {
 				previewCharacter = false;
 				if (!exportedCharListGotten) {
 					displayNothing = true;
@@ -1285,7 +1306,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					exportedCharListGotten = true;
 					displayNothing = false;
 				}
-			}*/
+			}
 			getMaxChars();
 			#ifdef NDS
 			redrawText = true;

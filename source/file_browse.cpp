@@ -71,7 +71,7 @@ bool dirEntryPredicate (const DirEntry& lhs, const DirEntry& rhs) {
 	return strcasecmp(lhs.name.c_str(), rhs.name.c_str()) < 0;
 }
 
-void getDirectoryContents (vector<DirEntry>& dirContents, const vector<string> extensionList, bool showDir, const char* dirPath) {
+void getDirectoryContents (vector<DirEntry>& dirContents, const vector<string> extensionList, const char* dirPath) {
 	struct stat st;
 
 	dirContents.clear();
@@ -92,7 +92,7 @@ void getDirectoryContents (vector<DirEntry>& dirContents, const vector<string> e
 			dirEntry.name = pent->d_name;
 			dirEntry.isDirectory = (st.st_mode & S_IFDIR) ? true : false;
 
-			if (dirEntry.name.compare(".") != 0 && ((dirEntry.isDirectory && showDir) || nameEndsWith(dirEntry.name, extensionList))) {
+			if (dirEntry.name.compare(".") != 0 && nameEndsWith(dirEntry.name, extensionList)) {
 				if (!dirEntry.isDirectory) {
 					for (int i = dirEntry.name.size(); i > 0; i--) {
 						if (dirEntry.name[i] == '.') {
@@ -112,31 +112,20 @@ void getDirectoryContents (vector<DirEntry>& dirContents, const vector<string> e
 	sort(dirContents.begin(), dirContents.end(), dirEntryPredicate);
 }
 
-/*void getDirectoryContents (vector<DirEntry>& dirContents) {
-	vector<string> extensionList;
-	getDirectoryContents (dirContents, extensionList);
-}*/
-
 void getExportedCharacterContents (void) {
 	vector<string> extensionList;
-	extensionList.emplace_back(".chr");
-	getDirectoryContents (exportedCharacterContents, extensionList, false, "sdmc:/3ds/SavvyManager/SS4/characters");
+	#ifdef NDS
+	extensionList.emplace_back(".png");
+	getDirectoryContents (exportedCharacterContents, extensionList, "sd:/_nds/SuperPhotoStudio/characters");
+	#else
+	extensionList.emplace_back(".t3x");
+	getDirectoryContents (exportedCharacterContents, extensionList, "sdmc:/3ds/SuperPhotoStudio/characters");
+	#endif
 	numberOfExportedCharacters = exportedCharacterContents.size();
 
-	// Get genders from .chr files
-	char chrPath[256];
 	for (int i = 0; i < numberOfExportedCharacters; i++) {
 		DirEntry* entry = &exportedCharacterContents.at(i);
-
-		sprintf(chrPath, "sdmc:/3ds/SavvyManager/SS4/characters/%s.chr", entry->name.c_str());
-
-		u8 result = 0;
-
-		FILE* chrFile = fopen(chrPath, "rb");
-		fread(&result, 1, 1, chrFile);
-		fclose(chrFile);
-
-		entry->gender = (result == 2);
+		entry->gender = false;
 	}
 }
 
