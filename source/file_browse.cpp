@@ -41,7 +41,6 @@ using namespace std;
 
 struct DirEntry {
 	string name;
-	bool isDirectory;
 	bool gender;
 } ;
 
@@ -90,15 +89,12 @@ void getDirectoryContents (vector<DirEntry>& dirContents, const vector<string> e
 
 			stat(pent->d_name, &st);
 			dirEntry.name = pent->d_name;
-			dirEntry.isDirectory = (st.st_mode & S_IFDIR) ? true : false;
 
-			if (dirEntry.name.compare(".") != 0 && nameEndsWith(dirEntry.name, extensionList)) {
-				if (!dirEntry.isDirectory) {
-					for (int i = dirEntry.name.size(); i > 0; i--) {
-						if (dirEntry.name[i] == '.') {
-							dirEntry.name[i] = '\0';	// Hide file extension from display
-							break;
-						}
+			if (dirEntry.name.compare(".") != 0 && !(st.st_mode & S_IFDIR) && nameEndsWith(dirEntry.name, extensionList)) {
+				for (int i = dirEntry.name.size(); i > 0; i--) {
+					if (dirEntry.name[i] == '.') {
+						dirEntry.name[i] = '\0';	// Hide file extension from display
+						break;
 					}
 				}
 				dirContents.push_back (dirEntry);
