@@ -42,7 +42,7 @@ void ProductIdent::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			dmaCopyHalfWordsAsynch(1, bgLoc, bgGetGfxPtr(bg3Main), 0x18000);
 		} else {
 			while (dmaBusy(0));
-			free(bgLoc);
+			delete(bgLoc);
 		}
 		graphicLoaded = true;
 	}

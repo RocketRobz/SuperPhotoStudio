@@ -29,9 +29,7 @@ class SoundControl {
         // Sets the number of samples of silence to
         // stream before continuing.
         void setStreamDelay(u32 stream_delay);
-        
-        u32 getStartupSoundLength() { return startup_sample_length; }
-      
+
     private:
         mm_sound_effect snd_select;
         mm_sound_effect snd_back;
@@ -43,7 +41,6 @@ class SoundControl {
         mm_sound_effect mus_startup;
         FILE* stream_start_source;
         FILE* stream_source;
-        u32 startup_sample_length;
 };
 
 typedef singleton<SoundControl> soundCtl_s;

@@ -36,7 +36,7 @@ char* SFX_DATA = (char*)NULL;
 mm_word SOUNDBANK[MSL_BANKSIZE] = {0};
 
 SoundControl::SoundControl()
-	: stream_is_playing(false), stream_source(NULL), startup_sample_length(0)
+	: stream_is_playing(false), stream_start_source(NULL), stream_source(NULL)
  {
 
 	sys.mod_count = MSL_NSONGS;
@@ -48,17 +48,10 @@ SoundControl::SoundControl()
 
 	soundbank_file = fopen("nitro:/soundbank.bin", "rb");
 
-	SFX_DATA = new char[0x13000];
-	fread(SFX_DATA, 1, 0x13000, soundbank_file);
+	SFX_DATA = new char[0x9800];
+	fread(SFX_DATA, 1, 0x9800, soundbank_file);
 
 	fclose(soundbank_file);
-
-	// Since SFX_STARTUP is the first sample, it begins at 0x10 after the
-	// *maxmod* header. Subtract the size of the sample header,
-	// and divide by two to get length in samples.
-	// https://github.com/devkitPro/mmutil/blob/master/source/msl.c#L80
-	
-	startup_sample_length = (((*(u32*)(SFX_DATA + 0x10)) - 20) >> 1);
 
 	// sprintf(debug_buf, "Read sample length %li for startup", startup_sample_length);
     // nocashMessage(debug_buf);
