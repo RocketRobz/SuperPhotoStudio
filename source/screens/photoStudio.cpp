@@ -833,9 +833,11 @@ void PhotoStudio::Draw(void) const {
 			}
 			printSmall(false, 56, 152, chrCounter);
 
-			printLarge(false, -60, 166, "L", Alignment::center);
-			printSmall(false, -26, 168, seasonName(), Alignment::center);
-			printLarge(false, 10, 166, "R", Alignment::center);
+			if (charPageOrder[char_highlightedGame[currentCharNum]] != 0xFF) {
+				printLarge(false, -60, 166, "L", Alignment::center);
+				printSmall(false, -26, 168, seasonName(), Alignment::center);
+				printLarge(false, 10, 166, "R", Alignment::center);
+			}
 
 			printSmall(false, 158, 168, "SELECT: Flip H");
 		}
@@ -1027,12 +1029,12 @@ void PhotoStudio::Draw(void) const {
 		}
 		Gui::DrawString(64, 184, 0.55, WHITE, chrCounter);
 
-		//if (charPageOrder[char_highlightedGame[currentCharNum]] != 4) {
+		if (charPageOrder[char_highlightedGame[currentCharNum]] != 0xFF) {
 			// Selected season
 			Gui::DrawString(120-36, 208, 0.65, WHITE, "L");
 			Gui::DrawStringCentered(-36, 210, 0.50, WHITE, seasonName());
 			Gui::DrawString(192-36, 208, 0.65, WHITE, "R");
-		//}
+		}
 
 		Gui::DrawString(184, 208, 0.65, WHITE, "SELECT: Flip H");
 
@@ -1323,7 +1325,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			loadChrImage();
 		}
 
-		//if (charPageOrder[char_highlightedGame[currentCharNum]] != 4) {
+		if (charPageOrder[char_highlightedGame[currentCharNum]] != 0xFF) {
 			if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
 				sndHighlight();
 				seasonNo[currentCharNum]--;
@@ -1363,7 +1365,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					seasonNo[currentCharNum] = seasonNoBak;
 				}
 			}
-		//}
+		}
 
 		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
 			sndBack();
