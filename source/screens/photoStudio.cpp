@@ -33,6 +33,19 @@
 #include <unistd.h>
 
 #ifdef NDS
+#define sysRegion *(u8*)0x02FFFD70
+
+/// Configuration region values.
+typedef enum
+{
+	CFG_REGION_JPN = 0, ///< Japan
+	CFG_REGION_USA = 1, ///< USA
+	CFG_REGION_EUR = 2, ///< Europe
+	CFG_REGION_AUS = 3, ///< Australia
+	CFG_REGION_CHN = 4, ///< China
+	CFG_REGION_KOR = 5, ///< Korea
+} CFG_Region;
+
 #include "fontHandler.h"
 
 #define KEY_CPAD_UP KEY_X
@@ -426,7 +439,6 @@ const char* PhotoStudio::import_characterFileName(void) const {
 }
 
 const char* PhotoStudio::import_SS2CharacterNames(int i) const {
-	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return import_ss2CharacterNames[i];
@@ -434,13 +446,9 @@ const char* PhotoStudio::import_SS2CharacterNames(int i) const {
 		case CFG_REGION_AUS:
 			return import_nsbCharacterNames[i];
 	}
-	#else
-	return import_ss2CharacterNames[i];
-	#endif
 }
 
 const char* PhotoStudio::NESCharacterNames(int i) const {
-	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return nesCharacterNames[i];
@@ -449,13 +457,9 @@ const char* PhotoStudio::NESCharacterNames(int i) const {
 		case CFG_REGION_KOR:
 			return famiCharacterNames[i];
 	}
-	#else
-	return nesCharacterNames[i];
-	#endif
 }
 
 const char* PhotoStudio::ss1Title(void) const {
-	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Style Savvy";
@@ -467,13 +471,9 @@ const char* PhotoStudio::ss1Title(void) const {
 		case CFG_REGION_KOR:
 			return "Namanui Collection: Girls Style";
 	}
-	#else
-	return "Style Savvy";
-	#endif
 }
 
 const char* PhotoStudio::ss2Title(void) const {
-	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Style Savvy: Trendsetters";
@@ -485,13 +485,9 @@ const char* PhotoStudio::ss2Title(void) const {
 		case CFG_REGION_KOR:
 			return "Girls Style: Paesyeon Lideo Seon-eon!";
 	}
-	#else
-	return "Style Savvy: Trendsetters";
-	#endif
 }
 
 const char* PhotoStudio::ss3Title(void) const {
-	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Style Savvy: Fashion Forward";
@@ -503,13 +499,9 @@ const char* PhotoStudio::ss3Title(void) const {
 		case CFG_REGION_KOR:
 			return "Girls Style: Kirakira * Code";
 	}
-	#else
-	return "Style Savvy: Fashion Forward";
-	#endif
 }
 
 const char* PhotoStudio::ss4Title(void) const {
-	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Style Savvy: Styling Star";
@@ -521,13 +513,9 @@ const char* PhotoStudio::ss4Title(void) const {
 		case CFG_REGION_KOR:
 			return "Girls Style: Star Stylist";
 	}
-	#else
-	return "Style Savvy: Styling Star";
-	#endif
 }
 
 const char* PhotoStudio::nesTitle(void) const {
-	#ifdef _3DS
 	switch (sysRegion) {
 		default:
 			return "Nintendo Entertainment System";
@@ -536,9 +524,6 @@ const char* PhotoStudio::nesTitle(void) const {
 		case CFG_REGION_KOR:
 			return "Family Computer";
 	}
-	#else
-	return "NES/Famicom";
-	#endif
 }
 
 const char* PhotoStudio::bgGameTitle(void) const {
