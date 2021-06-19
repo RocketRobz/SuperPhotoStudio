@@ -33,7 +33,7 @@ void ProductIdent::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 		std::vector<unsigned char> image;
 		unsigned width, height;
-		lodepng::decode(image, width, height, "nitro:/graphics/logos/productIdent.png");
+		lodepng::decode(image, width, height, dsiFeatures() ? "nitro:/graphics/logos/productIdentI.png" : "nitro:/graphics/logos/productIdent.png");
 		for(unsigned i=0;i<image.size()/4;i++) {
 			bgLoc[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 		}
