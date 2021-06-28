@@ -30,9 +30,17 @@
 #include "pdarkBgNames.h"
 #include "smBgNames.h"
 
+#include "pkmnStadiumBgmNames.h"
+
 #include <unistd.h>
 
+static bool musicLoaded = false;
+extern void loadMusic(int num);
+
 #ifdef NDS
+extern bool mepFound;
+extern bool dsDebugRam;
+
 #define sysRegion *(u8*)0x02FFFD70
 
 /// Configuration region values.
@@ -76,7 +84,8 @@ static u8 bgPageOrder[] = {
 	1,	// Style Savvy: Trendsetters
 	2,	// Style Savvy: Fashion Forward
 	3,	// Style Savvy: Styling Star
-	6};	// Super Mario series
+	6,	// Super Mario series
+};
 
 static u8 charPageOrder[] = {
 	4,	// Super Photo Studio (Original Characters)
@@ -100,6 +109,10 @@ static u8 charPageOrder[] = {
 	0xFF,	// Custom
 };
 
+static u8 bgmPageOrder[] = {
+	0,	// Pokemon Stadium
+};
+
 static int metalXpos = 0;
 #ifdef NDS
 extern bool displayChars;
@@ -121,7 +134,14 @@ void PhotoStudio::getList() {
 }
 
 void PhotoStudio::getMaxChars() {
-	if (subScreenMode == 1) {
+	if (subScreenMode == 3) {
+		// Music
+		switch (bgmPageOrder[bgm_highlightedGame]) {
+			case 0:
+				import_totalCharacters = 0;
+				break;
+		}
+	} else if (subScreenMode == 1) {
 		// Locations
 		switch (bgPageOrder[photo_highlightedGame]) {
 			case 0:
@@ -459,6 +479,16 @@ const char* PhotoStudio::NESCharacterNames(int i) const {
 	}
 }
 
+const char* PhotoStudio::pkmnStadiumTitle(void) const {
+	switch (sysRegion) {
+		default:
+			return "Pokemon Stadium";
+		case CFG_REGION_JPN:
+		case CFG_REGION_KOR:
+			return "Pocket Monsters Stadium";
+	}
+}
+
 const char* PhotoStudio::ss1Title(void) const {
 	switch (sysRegion) {
 		default:
@@ -634,6 +664,14 @@ bool PhotoStudio::charGender(int i) const {
 	return true;
 }
 
+const char* PhotoStudio::bgmGameTitle(void) const {
+	switch (bgmPageOrder[bgm_highlightedGame]) {
+		case 0:
+			return pkmnStadiumTitle();
+	}
+	return "???";
+}
+
 const char* PhotoStudio::bgName(int i) const {
 	switch (bgPageOrder[photo_highlightedGame]) {
 		case 0:
@@ -698,6 +736,14 @@ const char* PhotoStudio::charName(int i) const {
 	return "???";
 }
 
+const char* PhotoStudio::bgmName(int i) const {
+	switch (bgmPageOrder[bgm_highlightedGame]) {
+		case 0:
+			return pkmnStadiumBgmNames[i];
+	}
+	return "???";
+}
+
 int PhotoStudio::getBgNum(void) const {
 	switch (bgPageOrder[photo_highlightedGame]) {
 		case 0:
@@ -714,6 +760,14 @@ int PhotoStudio::getBgNum(void) const {
 			return pdarkBgNums[bgList_cursorPosition];
 		case 6:
 			return smBgNums[bgList_cursorPosition];
+	}
+	return 0;
+}
+
+int PhotoStudio::getBgmNum(void) const {
+	switch (bgmPageOrder[bgm_highlightedGame]) {
+		case 0:
+			return pkmnStadiumBgmNums[bgmList_cursorPosition];
 	}
 	return 0;
 }
@@ -782,6 +836,11 @@ void PhotoStudio::loadChrImage(void) {
 
 
 void PhotoStudio::Draw(void) const {
+	if (!musicLoaded) {
+		loadMusic(0);
+		musicLoaded = true;
+	}
+
 	#ifdef NDS	// Bottom screen only
 	extern void updateTitleScreen(const int metalXposBase);
 	updateTitleScreen(metalXpos);
@@ -792,7 +851,11 @@ void PhotoStudio::Draw(void) const {
 
 	if (redrawText) {
 		clearText(false);
-		sprintf((char*)chrCounter, "%d/%d", (subScreenMode==1 ? bgList_cursorPosition : importCharacterList_cursorPosition[currentCharNum])+1, import_totalCharacters+1);
+		int cursorPosition = (subScreenMode==1 ? bgList_cursorPosition : importCharacterList_cursorPosition[currentCharNum]);
+		if (subScreenMode == 3) {
+			cursorPosition = bgmList_cursorPosition;
+		}
+		sprintf((char*)chrCounter, "%d/%d", cursorPosition+1, import_totalCharacters+1);
 	}
 
 	if (showScrollingBg) {
@@ -806,7 +869,35 @@ void PhotoStudio::Draw(void) const {
 	}
 
 	cursorX = 200;
-	if (subScreenMode == 2) {
+	if (subScreenMode == 3) {
+		cursorY = 52+(40*bgmList_cursorPositionOnScreen);
+		if (redrawText) {
+			printSmall(false, 0, 6, bgmGameTitle(), Alignment::center);
+			printSmall(false, 6, 6, "<");
+			printSmall(false, 242, 6, ">");
+			printSmall(false, 56, 152, chrCounter);
+		}
+
+	  if (!displayNothing) {
+		int i2 = 40;
+		int i3 = 0;
+		// Reset item button Y positions
+		for (int i = 0; i < 3; i++) {
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[(2+i)+(x*3)].y = 192;
+			}
+		}
+		for (int i = bgmShownFirst; i < bgmShownFirst+3; i++) {
+			if (i >= import_totalCharacters+1) break;
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[(2+i3)+(x*3)].y = i2-16;
+			}
+			if (redrawText) printSmall(false, 26, i2, bgmName(i));
+			i2 += 40;
+			i3++;
+		}
+	  }
+	} else if (subScreenMode == 2) {
 		cursorY = 52+(40*importCharacterList_cursorPositionOnScreen[currentCharNum]);
 		if (redrawText) {
 			printSmall(false, 0, 6, charGameTitle(), Alignment::center);
@@ -884,7 +975,7 @@ void PhotoStudio::Draw(void) const {
 
 			extern bool fatInited;
 			if (fatInited) {
-				printSmall(false, 162, 168, "Y: Take photo");
+				printSmall(false, 162, 168, "Y: Take Photo");
 			}
 		}
 
@@ -898,27 +989,35 @@ void PhotoStudio::Draw(void) const {
 		for (int x = 0; x < 4; x++) {
 			oamSub.oamMemory[2+(x*3)].y = i2-16;
 		}
-		if (redrawText) printSmall(false, 26, i2, "Change location");
+		if (redrawText) printSmall(false, 26, i2, "Change Location");
 		i2 += 40;
 		for (int x = 0; x < 4; x++) {
 			oamSub.oamMemory[3+(x*3)].y = i2-16;
 		}
-		// Hide 3rd button
-		for (int x = 0; x < 4; x++) {
-			oamSub.oamMemory[4+(x*3)].y = 192;
-		}
 		if (redrawText) {
 		if (currentCharNum==4) {
-			printSmall(false, 26, i2, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
+			printSmall(false, 26, i2, characterPicked[4] ? "Change Character < 5 >" : "Add Character < 5 >");
 		} else if (currentCharNum==3) {
-			printSmall(false, 26, i2, characterPicked[3] ? "Change character < 4 >" : "Add character < 4 >");
+			printSmall(false, 26, i2, characterPicked[3] ? "Change Character < 4 >" : "Add Character < 4 >");
 		} else if (currentCharNum==2) {
-			printSmall(false, 26, i2, characterPicked[2] ? "Change character < 3 >" : "Add character < 3 >");
+			printSmall(false, 26, i2, characterPicked[2] ? "Change Character < 3 >" : "Add Character < 3 >");
 		} else if (currentCharNum==1) {
-			printSmall(false, 26, i2, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
+			printSmall(false, 26, i2, characterPicked[1] ? "Change Character < 2 >" : "Add Character < 2 >");
 		} else {
-			printSmall(false, 26, i2, characterPicked[0] ? "Change character < 1 >" : "Add character < 1 >");
+			printSmall(false, 26, i2, characterPicked[0] ? "Change Character < 1 >" : "Add Character < 1 >");
 		}
+		}
+		if (dsDebugRam || mepFound) {
+			i2 += 40;
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[4+(x*3)].y = i2-16;
+			}
+			if (redrawText) printSmall(false, 26, i2, "Change Music");
+		} else {
+			// Hide 3rd button
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[4+(x*3)].y = 192;
+			}
 		}
 	}
 
@@ -996,12 +1095,33 @@ void PhotoStudio::Draw(void) const {
 		return;
 	}
 	Gui::ScreenDraw(Bottom);
-	sprintf((char*)chrCounter, "%d/%d", (subScreenMode==1 ? bgList_cursorPosition : importCharacterList_cursorPosition[currentCharNum])+1, import_totalCharacters+1);
+	int cursorPosition = (subScreenMode==1 ? bgList_cursorPosition : importCharacterList_cursorPosition[currentCharNum]);
+	if (subScreenMode == 3) {
+		cursorPosition = bgmList_cursorPosition;
+	}
+	sprintf((char*)chrCounter, "%d/%d", cursorPosition+1, import_totalCharacters+1);
 	GFX::DrawSprite(sprites_photo_bg_idx, 0, 0);
 
 	cursorX = 248;
 	if (subScreenMode == 10) {
 		SettingsDraw();
+	} else if (subScreenMode == 3) {
+		cursorY = 64+(48*bgmList_cursorPositionOnScreen);
+
+		Gui::DrawStringCentered(0, 8, 0.50, WHITE, bgmGameTitle());
+		Gui::DrawString(8, 8, 0.50, WHITE, "<");
+		Gui::DrawString(304, 8, 0.50, WHITE, ">");
+		Gui::DrawString(64, 184, 0.55, WHITE, chrCounter);
+
+	  if (!displayNothing) {
+		int i2 = 48;
+		for (int i = bgmShownFirst; i < bgmShownFirst+3; i++) {
+			if (i >= import_totalCharacters+1) break;
+			GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+			Gui::DrawString(32, i2, 0.65, WHITE, bgmName(i));
+			i2 += 48;
+		}
+	  }
 	} else if (subScreenMode == 2) {
 		cursorY = 64+(48*importCharacterList_cursorPositionOnScreen[currentCharNum]);
 
@@ -1062,25 +1182,28 @@ void PhotoStudio::Draw(void) const {
 
 		Gui::DrawString(8, 8, 0.50, WHITE, "What do you want to do?");
 
-		Gui::DrawString(192, 206, 0.65, WHITE, ": Take photo");
+		Gui::DrawString(192, 206, 0.65, WHITE, ": Take Photo");
 
 		int i2 = 0;
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-		Gui::DrawString(32, i2, 0.65, WHITE, "Change location");
+		Gui::DrawString(32, i2, 0.65, WHITE, "Change Location");
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
 		if (currentCharNum==4) {
-			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[4] ? "Change character < 5 >" : "Add character < 5 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[4] ? "Change Character < 5 >" : "Add Character < 5 >");
 		} else if (currentCharNum==3) {
-			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[3] ? "Change character < 4 >" : "Add character < 4 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[3] ? "Change Character < 4 >" : "Add Character < 4 >");
 		} else if (currentCharNum==2) {
-			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[2] ? "Change character < 3 >" : "Add character < 3 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[2] ? "Change Character < 3 >" : "Add Character < 3 >");
 		} else if (currentCharNum==1) {
-			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[1] ? "Change character < 2 >" : "Add character < 2 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[1] ? "Change Character < 2 >" : "Add Character < 2 >");
 		} else {
-			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[0] ? "Change character < 1 >" : "Add character < 1 >");
+			Gui::DrawString(32, i2, 0.65, WHITE, characterPicked[0] ? "Change Character < 1 >" : "Add Character < 1 >");
 		}
+		i2 += 48;
+		GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+		Gui::DrawString(32, i2, 0.65, WHITE, "Change Music");
 	}
 
 	if (subScreenMode != 0) {
@@ -1164,6 +1287,97 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	} else if (subScreenMode == 10) {
 		SettingsLogic(hDown, hHeld, touch);
 	#endif
+	} else if (subScreenMode == 3) {
+		if (showCursor) {
+			if (hDown & KEY_DUP) {
+				sndHighlight();
+				bgmList_cursorPosition--;
+				bgmList_cursorPositionOnScreen--;
+				if (bgmList_cursorPosition < 0) {
+					bgmList_cursorPosition = 0;
+					bgmShownFirst = 0;
+				} else if (bgList_cursorPosition < bgmShownFirst) {
+					bgmShownFirst--;
+				}
+				if (bgmList_cursorPositionOnScreen < 0) {
+					bgmList_cursorPositionOnScreen = 0;
+				}
+				#ifdef NDS
+				redrawText = true;
+				Gui::DrawScreen();
+				#endif
+			}
+
+			if (hDown & KEY_DDOWN) {
+				sndHighlight();
+				bgmList_cursorPosition++;
+				bgmList_cursorPositionOnScreen++;
+				if (bgmList_cursorPosition > import_totalCharacters) {
+					bgmList_cursorPosition = import_totalCharacters;
+					bgmShownFirst = import_totalCharacters-2;
+					if (bgmShownFirst < 0) bgmShownFirst = 0;
+					if (bgmList_cursorPositionOnScreen > import_totalCharacters) {
+						bgmList_cursorPositionOnScreen = import_totalCharacters;
+					}
+				} else if (bgmList_cursorPosition > bgmShownFirst+2) {
+					bgmShownFirst++;
+				}
+				if (bgmList_cursorPositionOnScreen > 2) {
+					bgmList_cursorPositionOnScreen = 2;
+				}
+				#ifdef NDS
+				redrawText = true;
+				Gui::DrawScreen();
+				#endif
+			}
+		}
+
+		if (hDown & KEY_A) {
+			sndSelect();
+			subScreenMode = 0;
+			#ifdef NDS
+			redrawText = true;
+			Gui::DrawScreen();
+			#endif
+			extern void Stop_Music(void);
+			Stop_Music();
+			loadMusic(getBgmNum());
+		}
+
+		if (hDown & KEY_DLEFT) {
+			sndHighlight();
+			bgm_highlightedGame--;
+			if (bgm_highlightedGame < 0) bgm_highlightedGame = (int)sizeof(bgmPageOrder)-1;
+			getMaxChars();
+		}
+
+		if (hDown & KEY_DRIGHT) {
+			sndHighlight();
+			bgm_highlightedGame++;
+			if (bgm_highlightedGame > (int)sizeof(bgmPageOrder)-1) bgm_highlightedGame = 0;
+			getMaxChars();
+		}
+
+		if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
+			bgmList_cursorPosition = 0;
+			bgmList_cursorPositionOnScreen = 0;
+			bgmShownFirst = 0;
+			getMaxChars();
+			#ifdef NDS
+			redrawText = true;
+			Gui::DrawScreen();
+			#endif
+		}
+
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
+			sndBack();
+			subScreenMode = 0;
+			#ifdef NDS
+			redrawText = true;
+			Gui::DrawScreen();
+			#endif
+		}
+
 	} else if (subScreenMode == 2) {
 		if (showCursor) {
 			if (hDown & KEY_DUP) {
@@ -1494,12 +1708,22 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndHighlight();
 				characterChangeMenu_cursorPosition++;
 				characterChangeMenu_cursorPositionOnScreen++;
-				if (characterChangeMenu_cursorPosition > 1) {
-					characterChangeMenu_cursorPosition = 1;
+				#ifdef NDS
+				int limit = (dsDebugRam || mepFound) ? 2 : 1;
+				if (characterChangeMenu_cursorPosition > limit) {
+					characterChangeMenu_cursorPosition = limit;
 				}
-				if (characterChangeMenu_cursorPositionOnScreen > 1) {
-					characterChangeMenu_cursorPositionOnScreen = 1;
+				if (characterChangeMenu_cursorPositionOnScreen > limit) {
+					characterChangeMenu_cursorPositionOnScreen = limit;
 				}
+				#else
+				if (characterChangeMenu_cursorPosition > 2) {
+					characterChangeMenu_cursorPosition = 2;
+				}
+				if (characterChangeMenu_cursorPositionOnScreen > 2) {
+					characterChangeMenu_cursorPositionOnScreen = 2;
+				}
+				#endif
 			}
 
 			if (characterChangeMenu_cursorPosition == 1) {
@@ -1585,6 +1809,14 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 					renderTop = true;
 					loadChrImage();
 				}
+			} else if (characterChangeMenu_cursorPosition == 2) {
+				sndSelect();
+				subScreenMode = 3;
+				getMaxChars();
+				#ifdef NDS
+				redrawText = true;
+				Gui::DrawScreen();
+				#endif
 			}
 		}
 

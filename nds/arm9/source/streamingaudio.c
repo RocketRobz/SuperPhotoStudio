@@ -33,6 +33,19 @@ void init_streaming_buf(void) {
 	fill_stream_buf = malloc(STREAMING_BUF_LENGTH*sizeof(s16));
 }
 
+void resetStreamSettings() {
+	streaming_buf_ptr = 0;
+	filled_samples = 0;
+
+
+	fill_requested = false;
+
+	fade_counter = FADE_STEPS;
+	fade_out = false;
+
+	sample_delay_count = 0;
+}
+
 /*
  * The maxmod stream request handler. 
  * 

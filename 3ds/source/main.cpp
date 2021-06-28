@@ -86,6 +86,13 @@ void Play_Music(void) {
 	}
 }
 
+void Stop_Music(void) {
+	musicPlayStarted = false;
+	musicPlaying = false;
+	musicLoopPlaying = false;
+	musicLoopDelay = 0;
+}
+
 /*void musLogos(void) {
 	if (!dspfirmfound) return;
 	mus_logos->stop();
@@ -214,8 +221,6 @@ int main()
 	// Load the sound effects if DSP is available.
 	if (dspfirmfound) {
 		//mus_logos = new sound("romfs:/sounds/logos.wav", 0, false);
-		music = new sound("romfs:/sounds/music_start.wav", 0, false);
-		music_loop = new sound("romfs:/sounds/music_loop.wav", 1, true);
 		sfx_select = new sound("romfs:/sounds/select.wav", 2, false);
 		sfx_back = new sound("romfs:/sounds/back.wav", 3, false);
 		sfx_highlight = new sound("romfs:/sounds/highlight.wav", 4, false);

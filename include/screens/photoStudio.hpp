@@ -25,6 +25,7 @@ private:
 	const char* import_characterFileName(void) const;
 	const char* import_SS2CharacterNames(int i) const;
 	const char* NESCharacterNames(int i) const;
+	const char* pkmnStadiumTitle(void) const;
 	const char* ss1Title(void) const;
 	const char* ss2Title(void) const;
 	const char* ss3Title(void) const;
@@ -32,10 +33,13 @@ private:
 	const char* nesTitle(void) const;
 	const char* bgGameTitle(void) const;
 	const char* charGameTitle(void) const;
+	const char* bgmGameTitle(void) const;
 	bool charGender(int i) const;
 	const char* bgName(int i) const;
 	const char* charName(int i) const;
+	const char* bgmName(int i) const;
 	int getBgNum(void) const;
+	int getBgmNum(void) const;
 	void drawMsg(void) const;
 	void loadChrImage(void);
 
@@ -50,6 +54,7 @@ private:
 	mutable int cursorX, cursorY;
 	int photo_highlightedGame = 0;
 	int char_highlightedGame[5] = {0};
+	int bgm_highlightedGame = 0;
 	int seasonNo[5] = {0};
 	int currentCharNum = 0;
 	int charsShown = 0;
@@ -89,6 +94,10 @@ private:
 	int import_characterShownFirst[5] = {0};
 
 	int import_bgShownFirst = 0;
+
+	int bgmList_cursorPosition = 0;
+	int bgmList_cursorPositionOnScreen = 0;
+	int bgmShownFirst = 0;
 
 	int numberOfSettings = 1;
 	int settings_cursorPosition = 0;

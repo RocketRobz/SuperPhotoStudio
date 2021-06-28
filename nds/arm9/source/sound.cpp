@@ -91,63 +91,81 @@ SoundControl::SoundControl()
 	if (!dsDebugRam && !mepFound) return;
 
 	init_streaming_buf();
-
-	stream_start_source = fopen("nitro:/music/start.raw", "rb");
-	stream_source = fopen("nitro:/music/loop.raw", "rb");
-	
-
-	fseek(stream_source, 0, SEEK_SET);
-
-	stream.sampling_rate = 22050;	 		// 22050Hz
-	stream.buffer_length = 1600;	  		// should be adequate
-	stream.callback = on_stream_request;    
-	stream.format = MM_STREAM_16BIT_MONO;  // select format
-	stream.timer = MM_TIMER0;	    	   // use timer0
-	stream.manual = false;	      		   // auto filling
-	
-	fseek(stream_start_source, 0, SEEK_END);
-	size_t fileSize = ftell(stream_start_source);
-	fseek(stream_start_source, 0, SEEK_SET);
-
-	// Prep the first section of the stream
-	fread((void*)play_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_start_source);
-	if (fileSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
-		size_t fillerSize = 0;
-		while (fileSize+fillerSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
-			fillerSize++;
-		}
-		fread((void*)play_stream_buf+fileSize, 1, fillerSize, stream_source);
-
-		// Fill the next section premptively
-		fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
-
-		//loopingPoint = true;
-	} else {
-		// Fill the next section premptively
-		fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_start_source);
-		fileSize -= STREAMING_BUF_LENGTH*sizeof(s16);
-		if (fileSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
-			size_t fillerSize = 0;
-			while (fileSize+fillerSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
-				fillerSize++;
-			}
-			fread((void*)fill_stream_buf+fileSize, 1, fillerSize, stream_source);
-
-			//loopingPoint = true;
-		}
-	}
-
-	// Prep the first section of the stream
-	//fread((void*)play_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
-
-	// Fill the next section premptively
-	//fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
-
 }
 
 mm_sfxhand SoundControl::playSelect() { return mmEffectEx(&snd_select); }
 mm_sfxhand SoundControl::playBack() { return mmEffectEx(&snd_back); }
 mm_sfxhand SoundControl::playHighlight() { return mmEffectEx(&snd_highlight); }
+
+void SoundControl::loadStream(const char* path, const char* loopPath, u32 sampleRate, bool loop) {
+	if (!dsDebugRam && !mepFound) return;
+
+	if (stream_source) {
+		stream_is_playing = false;
+		mmStreamClose();
+		fclose(stream_source);
+	}
+
+	resetStreamSettings();
+
+	stream_start_source = fopen(path, "rb");
+	stream_source = fopen(loopPath, "rb");
+	if (!stream_source) return;
+	bool loopableMusic = stream_start_source ? true : false;
+
+
+	fseek(stream_source, 0, SEEK_SET);
+
+	stream.sampling_rate = sampleRate;	 		// 22050Hz
+	stream.buffer_length = 1600;	  		// should be adequate
+	stream.callback = on_stream_request;    
+	stream.format = MM_STREAM_16BIT_MONO;  // select format
+	stream.timer = MM_TIMER0;	    	   // use timer0
+	stream.manual = false;	      		   // auto filling
+	looping = loop;
+
+	if (loopableMusic) {
+		fseek(stream_start_source, 0, SEEK_END);
+		size_t fileSize = ftell(stream_start_source);
+		fseek(stream_start_source, 0, SEEK_SET);
+
+		// Prep the first section of the stream
+		fread((void*)play_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_start_source);
+		if (fileSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
+			size_t fillerSize = 0;
+			while (fileSize+fillerSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
+				fillerSize++;
+			}
+			fread((void*)play_stream_buf+fileSize, 1, fillerSize, stream_source);
+
+			// Fill the next section premptively
+			fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+
+			loopingPoint = true;
+		} else {
+			// Fill the next section premptively
+			fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_start_source);
+			fileSize -= STREAMING_BUF_LENGTH*sizeof(s16);
+			if (fileSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
+				size_t fillerSize = 0;
+				while (fileSize+fillerSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
+					fillerSize++;
+				}
+				fread((void*)fill_stream_buf+fileSize, 1, fillerSize, stream_source);
+
+				loopingPoint = true;
+			}
+		}
+	} else {
+		// Prep the first section of the stream
+		fread((void*)play_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+
+		// Fill the next section premptively
+		fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+
+		loopingPoint = true;
+	}
+}
 
 void SoundControl::beginStream() {
 	if (!stream_source) return;
@@ -172,10 +190,6 @@ void SoundControl::fadeOutStream() {
 void SoundControl::cancelFadeOutStream() {
 	fade_out = false;
 	fade_counter = FADE_STEPS;
-}
-
-void SoundControl::setStreamDelay(u32 delay) {
-	sample_delay_count = delay;
 }
 
 
@@ -210,15 +224,20 @@ volatile void SoundControl::updateStream() {
 		int instance_to_fill = std::min(SAMPLES_LEFT_TO_FILL, SAMPLES_TO_FILL);
 
 		// If we don't read enough samples, loop from the beginning of the file.
-		instance_filled = fread((s16*)fill_stream_buf + filled_samples, sizeof(s16), instance_to_fill, stream_source);		
+		instance_filled = fread((s16*)fill_stream_buf + filled_samples, sizeof(s16), instance_to_fill, loopingPoint ? stream_source : stream_start_source);		
 		if (instance_filled < instance_to_fill) {
-			fseek(stream_source, 0, SEEK_SET);
-			int i = fread((s16*)fill_stream_buf + filled_samples + instance_filled,
-				 sizeof(s16), (instance_to_fill - instance_filled), stream_source);
-			if (i==0) {
-				toncset((s16*)fill_stream_buf + filled_samples + instance_filled, 0, (instance_to_fill - instance_filled)*sizeof(s16));
+			if (looping) {
+				fseek(stream_source, 0, SEEK_SET);
+				int i = fread((s16*)fill_stream_buf + filled_samples + instance_filled,
+					 sizeof(s16), (instance_to_fill - instance_filled), stream_source);
+				if (i==0) {
+					toncset((s16*)fill_stream_buf + filled_samples + instance_filled, 0, (instance_to_fill - instance_filled)*sizeof(s16));
+				} else {
+					instance_filled += i;
+				}
+				loopingPoint = true;
 			} else {
-				instance_filled += i;
+				toncset((s16*)fill_stream_buf + filled_samples + instance_filled, 0, (instance_to_fill - instance_filled)*sizeof(s16));
 			}
 		}
 

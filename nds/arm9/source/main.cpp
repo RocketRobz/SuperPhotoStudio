@@ -41,6 +41,11 @@ void Play_Music(void) {
 	streamStarted = true;
 }
 
+void Stop_Music(void) {
+	snd().stopStream();
+	streamStarted = false;
+}
+
 void sndSelect(void) {
 	snd().playSelect();
 }

@@ -21,14 +21,11 @@ class SoundControl {
         // Refill the stream buffers
         volatile void updateStream();
 
+        void loadStream(const char* path, const char* loopPath, u32 sampleRate, bool loop);
         void beginStream();
         void stopStream();
         void fadeOutStream();
         void cancelFadeOutStream();
-
-        // Sets the number of samples of silence to
-        // stream before continuing.
-        void setStreamDelay(u32 stream_delay);
 
     private:
         mm_sound_effect snd_select;
@@ -37,6 +34,8 @@ class SoundControl {
         mm_stream stream;
         mm_ds_system sys;
         bool stream_is_playing;
+        bool loopingPoint;
+        bool looping;
         //mm_sound_effect snd_loading;
         mm_sound_effect mus_startup;
         FILE* stream_start_source;
