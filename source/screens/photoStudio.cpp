@@ -30,6 +30,8 @@
 #include "pdarkBgNames.h"
 #include "smBgNames.h"
 
+#include "marioGolfAdvanceTourBgmNames.h"
+#include "mmBattleAndChaseBgmNames.h"
 #include "pkmnStadiumBgmNames.h"
 
 #include <unistd.h>
@@ -74,6 +76,7 @@ static bool redrawText = true;
 extern bool ditherlaceOnVBlank;
 int characterLimit = 1;
 #else
+static bool musicPlayOnce = false;
 int characterLimit = 4;
 #endif
 
@@ -110,6 +113,8 @@ static u8 charPageOrder[] = {
 };
 
 static u8 bgmPageOrder[] = {
+	2,	// Mario Golf: Advance Tour
+	1,	// MegaMan: Battle and Chase
 	0,	// Pokemon Stadium
 };
 
@@ -138,6 +143,8 @@ void PhotoStudio::getMaxChars() {
 		// Music
 		switch (bgmPageOrder[bgm_highlightedGame]) {
 			case 0:
+			case 1:
+			case 2:
 				import_totalCharacters = 0;
 				break;
 		}
@@ -479,6 +486,15 @@ const char* PhotoStudio::NESCharacterNames(int i) const {
 	}
 }
 
+const char* PhotoStudio::mmBattleAndChaseTitle(void) const {
+	switch (sysRegion) {
+		default:
+			return "MegaMan: Battle and Chase";
+		case CFG_REGION_JPN:
+			return "Rockman: Battle and Chase";
+	}
+}
+
 const char* PhotoStudio::pkmnStadiumTitle(void) const {
 	switch (sysRegion) {
 		default:
@@ -668,6 +684,10 @@ const char* PhotoStudio::bgmGameTitle(void) const {
 	switch (bgmPageOrder[bgm_highlightedGame]) {
 		case 0:
 			return pkmnStadiumTitle();
+		case 1:
+			return mmBattleAndChaseTitle();
+		case 2:
+			return "Mario Golf: Advance Tour";
 	}
 	return "???";
 }
@@ -740,6 +760,10 @@ const char* PhotoStudio::bgmName(int i) const {
 	switch (bgmPageOrder[bgm_highlightedGame]) {
 		case 0:
 			return pkmnStadiumBgmNames[i];
+		case 1:
+			return mmBattleAndChaseBgmNames[i];
+		case 2:
+			return marioGolfAdvanceTourBgmNames[i];
 	}
 	return "???";
 }
@@ -768,6 +792,10 @@ int PhotoStudio::getBgmNum(void) const {
 	switch (bgmPageOrder[bgm_highlightedGame]) {
 		case 0:
 			return pkmnStadiumBgmNums[bgmList_cursorPosition];
+		case 1:
+			return mmBattleAndChaseBgmNums[bgmList_cursorPosition];
+		case 2:
+			return marioGolfAdvanceTourBgmNums[bgmList_cursorPosition];
 	}
 	return 0;
 }
@@ -1032,10 +1060,11 @@ void PhotoStudio::Draw(void) const {
 	#else
 	animateBg = bgCanAnimate;
 
-	if (!musicPlayStarted) {
+	if (!musicPlayStarted && !musicPlayOnce) {
 		extern void Play_Music();
 		Play_Music();
 		musicPlayStarted = true;
+		musicPlayOnce = true;
 	}
 
   if (renderTop) {
@@ -1342,6 +1371,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			extern void Stop_Music(void);
 			Stop_Music();
 			loadMusic(getBgmNum());
+			#ifndef NDS
+			musicPlayStarted = true;
+			#endif
 		}
 
 		if (hDown & KEY_DLEFT) {

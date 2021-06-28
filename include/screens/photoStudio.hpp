@@ -25,6 +25,7 @@ private:
 	const char* import_characterFileName(void) const;
 	const char* import_SS2CharacterNames(int i) const;
 	const char* NESCharacterNames(int i) const;
+	const char* mmBattleAndChaseTitle(void) const;
 	const char* pkmnStadiumTitle(void) const;
 	const char* ss1Title(void) const;
 	const char* ss2Title(void) const;

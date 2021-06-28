@@ -45,7 +45,7 @@ bool dspfirmfound = false;
 bool exiting = false;
 bool musicPlayStarted = false;
 static bool musicPlaying = false;
-static bool musicLoopPlaying = false;
+bool musicLoopPlaying = false;
 static int musicLoopDelay = 0;
 bool clearTop = true;	// Disable in order to render a second character
 bool renderTop = true;	// Disable to prevent second character from flickering
@@ -75,7 +75,7 @@ void saveSettings(void) {
 void Play_Music(void) {
 	if (musicPlaying && !musicLoopPlaying) {
 		musicLoopDelay++;
-		if (musicLoopDelay>60 && !ndspChnIsPlaying(0)) {
+		if (musicLoopDelay>5 && !ndspChnIsPlaying(0)) {
 			music_loop->play();
 			musicLoopPlaying = true;
 		}
@@ -87,6 +87,10 @@ void Play_Music(void) {
 }
 
 void Stop_Music(void) {
+	if (dspfirmfound) {
+		music->~sound();
+		music_loop->~sound();
+	}
 	musicPlayStarted = false;
 	musicPlaying = false;
 	musicLoopPlaying = false;
@@ -148,10 +152,6 @@ void renderTopScreenSubPixels(void) {
 	C3D_FrameEnd(0);
 	shiftBySubPixel = false;
 }
-
-bool ss2SaveFound = false;
-bool ss3SaveFound = false;
-bool ss4SaveFound = false;
 
 static bool runThreads = true;
 

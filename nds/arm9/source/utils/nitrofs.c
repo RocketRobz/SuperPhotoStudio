@@ -137,7 +137,7 @@ nitroFSInit(const char *ndsfile)
 	chdirpathid = NITROROOT;
 	ndsFileLastpos = 0;
 	ndsFile = NULL;
-	bool headerFirst = ((strncmp((const char *)0x02FFFC38, __NDSHeader->gameCode, 4) == 0)
+	/*bool headerFirst = ((strncmp((const char *)0x02FFFC38, __NDSHeader->gameCode, 4) == 0)
 				  && (*(u16*)0x02FFFC36 == __NDSHeader->headerCRC16));
 	if (!isDSiMode() || headerFirst)
 	{
@@ -162,7 +162,7 @@ nitroFSInit(const char *ndsfile)
 			AddDevice(&nitroFSdevoptab);
 			return (1);
 		}
-	}
+	}*/
 	if (isDSiMode() && ndsfile == NULL)
 	{
 		// Try SDNAND path

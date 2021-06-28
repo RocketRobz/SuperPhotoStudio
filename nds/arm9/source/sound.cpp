@@ -116,8 +116,8 @@ void SoundControl::loadStream(const char* path, const char* loopPath, u32 sample
 
 	fseek(stream_source, 0, SEEK_SET);
 
-	stream.sampling_rate = sampleRate;	 		// 22050Hz
-	stream.buffer_length = 1600;	  		// should be adequate
+	stream.sampling_rate = sampleRate;	 		// ?????Hz
+	stream.buffer_length = 0x1000;	  		// should be adequate
 	stream.callback = on_stream_request;    
 	stream.format = MM_STREAM_16BIT_MONO;  // select format
 	stream.timer = MM_TIMER0;	    	   // use timer0
