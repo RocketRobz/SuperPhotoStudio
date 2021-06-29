@@ -119,7 +119,7 @@ void SoundControl::loadStream(const char* path, const char* loopPath, u32 sample
 	stream.sampling_rate = sampleRate;	 		// ?????Hz
 	stream.buffer_length = 0x1000;	  		// should be adequate
 	stream.callback = on_stream_request;    
-	stream.format = MM_STREAM_16BIT_MONO;  // select format
+	stream.format = MM_STREAM_8BIT_STEREO;  // select format
 	stream.timer = MM_TIMER0;	    	   // use timer0
 	stream.manual = false;	      		   // auto filling
 	looping = loop;
