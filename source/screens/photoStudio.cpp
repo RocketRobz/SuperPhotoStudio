@@ -1367,11 +1367,14 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			#ifdef NDS
 			redrawText = true;
 			Gui::DrawScreen();
+			ditherlaceOnVBlank = true;
 			#endif
 			extern void Stop_Music(void);
 			Stop_Music();
 			loadMusic(getBgmNum());
-			#ifndef NDS
+			#ifdef NDS
+			ditherlaceOnVBlank = false;
+			#else
 			musicPlayStarted = true;
 			#endif
 		}
