@@ -25,6 +25,15 @@ void loadMusic(int num) {
 			loopName = "nitro:/music/marioGolfAdvanceTour/marionClub_loop.raw";
 			sampleRate = 48000;
 			break;
+		case 3:	// Tetris Party - Title Screen
+			startName = "nitro:/music/tetrisParty/titleScreen_start.raw";
+			loopName = "nitro:/music/tetrisParty/titleScreen_loop.raw";
+			sampleRate = 48000;
+			break;
+		case 4:	// Tetris Party - Main Menu
+			loopName = "nitro:/music/tetrisParty/mainMenu.raw";
+			sampleRate = 48000;
+			break;
 	}
 	snd().loadStream(startName, loopName, sampleRate, true);
 }
