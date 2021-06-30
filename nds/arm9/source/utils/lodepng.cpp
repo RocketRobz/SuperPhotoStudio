@@ -30,6 +30,7 @@ Rename this file to lodepng.cpp to use it for C++, or to lodepng.c to use it for
 
 #include <nds.h> // ITCM_CODE
 #include "lodepng.h"
+#include "sound.h"
 
 #ifdef LODEPNG_COMPILE_DISK
 #include <limits.h> /* LONG_MAX */
@@ -4756,6 +4757,7 @@ static void decodeGeneric(unsigned char** out, unsigned* w, unsigned* h,
   /*loop through the chunks, ignoring unknown chunks and stopping at IEND chunk.
   IDAT data is put at the start of the in buffer*/
   while(!IEND && !state->error) {
+	snd().updateStream();
     unsigned chunkLength;
     const unsigned char* data; /*the data in the chunk*/
 

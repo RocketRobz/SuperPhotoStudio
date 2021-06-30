@@ -603,6 +603,7 @@ void GFX::loadBgSprite(void) {
 	lodepng::decode(image, width, height, bgPath);
 	bool alternatePixel = false;
 	for(unsigned i=0;i<image.size()/4;i++) {
+		snd().updateStream();
 		image[(i*4)+3] = 0;
 		if (alternatePixel) {
 			if (image[(i*4)] >= 0x4) {
@@ -792,6 +793,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	bool alternatePixel = false;
 	if (num == 4) {
 		for(unsigned i=0;i<image.size()/4;i++) {
+			snd().updateStream();
 			if (usePageFile) {
 				charSpriteAlpha[1][i] = image[(i*4)+3];
 			} else {
@@ -854,6 +856,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		}
 	} else if (num == 3) {
 		for(unsigned i=0;i<image.size()/4;i++) {
+			snd().updateStream();
 			if (usePageFile) {
 				charSpriteAlpha[1][i] = image[(i*4)+3];
 			} else {
@@ -924,6 +927,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 			char2Paged = true;
 		}
 		for(unsigned i=0;i<image.size()/4;i++) {
+			snd().updateStream();
 			if (usePageFile) {
 				charSpriteAlpha[1][i] = image[(i*4)+3];
 			} else {
@@ -993,6 +997,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 			fclose(pageFile);
 		}
 		for(unsigned i=0;i<image.size()/4;i++) {
+			snd().updateStream();
 			charSpriteAlpha[num][i] = image[(i*4)+3];
 			image[(i*4)+3] = 0;
 			if (alternatePixel) {
