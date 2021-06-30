@@ -17,22 +17,22 @@ u16* bmpImageBuffer2[2] = {NULL};
 static u16* bgSpriteMem = NULL;
 static u16 charSpriteMem[2][(256*192)*3];
 static u8 charSpriteAlpha[2][(256*192)*3];
-static u16* charSpriteMem3 = (u16*)0x02480000;
-static u16* charSpriteMem4 = (u16*)0x024C8000;
-static u16* charSpriteMem5 = (u16*)0x02510000;
-static u8* charSpriteAlpha3 = (u8*)0x02558000;
-static u8* charSpriteAlpha4 = (u8*)0x0257C000;
-static u8* charSpriteAlpha5 = (u8*)0x025A0000;
+static u16* charSpriteMem3 = NULL;
+static u16* charSpriteMem4 = NULL;
+static u16* charSpriteMem5 = NULL;
+static u8* charSpriteAlpha3 = NULL;
+static u8* charSpriteAlpha4 = NULL;
+static u8* charSpriteAlpha5 = NULL;
 static u16* charSpriteAlpha3_16 = (u16*)0x09100000;
 static u16* charSpriteAlpha4_16 = (u16*)0x09148000;
 static u16* charSpriteAlpha5_16 = (u16*)0x09190000;
-static u16* bgSpriteMemExt[3] = {(u16*)0x025C8000, (u16*)0x02610000, (u16*)0x02658000};
-static u16* charSpriteMem_2[2] = {(u16*)0x026F0000, (u16*)0x02738000};
-static u16* charSpriteMem3_2 = (u16*)0x02780000;
-static u16* charSpriteMem4_2 = (u16*)0x027C8000;
-static u16* charSpriteMem5_2 = (u16*)0x02810000;
-static u16* bgSpriteMem2 = (u16*)0x02980000;
-static u16* bgSpriteMemExt2[3] = {(u16*)0x029C8000, (u16*)0x02A10000, (u16*)0x02A58000};
+static u16* bgSpriteMemExt[3] = {NULL};
+static u16* charSpriteMem_2[2] = {NULL};
+static u16* charSpriteMem3_2 = NULL;
+static u16* charSpriteMem4_2 = NULL;
+static u16* charSpriteMem5_2 = NULL;
+static u16* bgSpriteMem2 = NULL;
+static u16* bgSpriteMemExt2[3] = {NULL};
 
 static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
@@ -100,6 +100,28 @@ void GFX::loadSheets() {
 		if (dsiFeatures()) {
 			bmpImageBuffer2[0] = new u16[256*192];
 			bmpImageBuffer2[1] = new u16[256*192];
+		}
+	}
+	if (dsDebugRam) {
+		charSpriteMem3 = new u16[(256*192)*3];
+		charSpriteMem4 = new u16[(256*192)*3];
+		charSpriteMem5 = new u16[(256*192)*3];
+		charSpriteAlpha3 = new u8[(256*192)*3];
+		charSpriteAlpha4 = new u8[(256*192)*3];
+		charSpriteAlpha5 = new u8[(256*192)*3];
+		bgSpriteMemExt[0] = new u16[(256*192)*3];
+		bgSpriteMemExt[1] = new u16[(256*192)*3];
+		bgSpriteMemExt[2] = new u16[(256*192)*3];
+		if (dsiFeatures()) {
+			charSpriteMem_2[0] = new u16[(256*192)*3];
+			charSpriteMem_2[1] = new u16[(256*192)*3];
+			charSpriteMem3_2 = new u16[(256*192)*3];
+			charSpriteMem4_2 = new u16[(256*192)*3];
+			charSpriteMem5_2 = new u16[(256*192)*3];
+			bgSpriteMem2 = new u16[(256*192)*3];
+			bgSpriteMemExt2[0] = new u16[(256*192)*3];
+			bgSpriteMemExt2[1] = new u16[(256*192)*3];
+			bgSpriteMemExt2[2] = new u16[(256*192)*3];
 		}
 	}
 	bgSpriteMem = mepFound ? (u16*)0x09200000 : new u16[(256*192)*3];
