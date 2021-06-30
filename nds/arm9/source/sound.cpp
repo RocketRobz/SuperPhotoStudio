@@ -6,9 +6,6 @@
 #include "tonccpy.h"
 #include <algorithm>
 
-extern bool mepFound;
-extern bool dsDebugRam;
-
 
 extern volatile s16 fade_counter;
 extern volatile bool fade_out;
@@ -88,8 +85,6 @@ SoundControl::SoundControl()
 	};
 
 
-	if (!dsDebugRam && !mepFound) return;
-
 	init_streaming_buf();
 }
 
@@ -98,8 +93,6 @@ mm_sfxhand SoundControl::playBack() { return mmEffectEx(&snd_back); }
 mm_sfxhand SoundControl::playHighlight() { return mmEffectEx(&snd_highlight); }
 
 void SoundControl::loadStream(const char* path, const char* loopPath, u32 sampleRate, bool loop) {
-	if (!dsDebugRam && !mepFound) return;
-
 	if (stream_source) {
 		stream_is_playing = false;
 		mmStreamClose();

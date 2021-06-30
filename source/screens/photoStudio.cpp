@@ -76,7 +76,7 @@ void gspWaitForVBlank(void) {
 
 static bool redrawText = true;
 extern bool ditherlaceOnVBlank;
-int characterLimit = 1;
+int characterLimit = 0;
 #else
 static bool musicPlayOnce = false;
 int characterLimit = 4;
@@ -1057,18 +1057,18 @@ void PhotoStudio::Draw(void) const {
 			printSmall(false, 26, i2, characterPicked[0] ? "Change Character < 1 >" : "Add Character < 1 >");
 		}
 		}
-		if (dsDebugRam || mepFound) {
+		//if (dsDebugRam || mepFound) {
 			i2 += 40;
 			for (int x = 0; x < 4; x++) {
 				oamSub.oamMemory[4+(x*3)].y = i2-16;
 			}
 			if (redrawText) printSmall(false, 26, i2, "Change Music");
-		} else {
+		/*} else {
 			// Hide 3rd button
 			for (int x = 0; x < 4; x++) {
 				oamSub.oamMemory[4+(x*3)].y = 192;
 			}
-		}
+		}*/
 	}
 
 	oamSub.oamMemory[0].y = (subScreenMode != 0) ? 156 : 192;
@@ -1765,7 +1765,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndHighlight();
 				characterChangeMenu_cursorPosition++;
 				characterChangeMenu_cursorPositionOnScreen++;
-				#ifdef NDS
+				/*#ifdef NDS
 				int limit = (dsDebugRam || mepFound) ? 2 : 1;
 				if (characterChangeMenu_cursorPosition > limit) {
 					characterChangeMenu_cursorPosition = limit;
@@ -1773,14 +1773,14 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (characterChangeMenu_cursorPositionOnScreen > limit) {
 					characterChangeMenu_cursorPositionOnScreen = limit;
 				}
-				#else
+				#else*/
 				if (characterChangeMenu_cursorPosition > 2) {
 					characterChangeMenu_cursorPosition = 2;
 				}
 				if (characterChangeMenu_cursorPositionOnScreen > 2) {
 					characterChangeMenu_cursorPositionOnScreen = 2;
 				}
-				#endif
+				//#endif
 			}
 
 			if (characterChangeMenu_cursorPosition == 1) {
