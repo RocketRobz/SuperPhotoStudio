@@ -1103,6 +1103,13 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 			if ((i % 256) == 255) alternatePixel = !alternatePixel;
 			alternatePixel = !alternatePixel;
 		}
+		if (usePageFile && chracterSpriteFound[1]) {
+			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
+			fwrite(&charSpriteMem, 1, (0x18000*3), pageFile);
+			fwrite(&charSpriteAlpha, 1, (0xC000*3), pageFile);
+			fclose(pageFile);
+			pageCharLoaded = num;
+		}
 	}
 
 	chracterSpriteFound[num] = true;
