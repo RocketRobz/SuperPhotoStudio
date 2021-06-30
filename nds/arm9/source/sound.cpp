@@ -112,6 +112,7 @@ void SoundControl::loadStream(const char* path, const char* loopPath, u32 sample
 	stream_source = fopen(loopPath, "rb");
 	if (!stream_source) return;
 	bool loopableMusic = stream_start_source ? true : false;
+	loopingPoint = false;
 
 
 	fseek(stream_source, 0, SEEK_SET);

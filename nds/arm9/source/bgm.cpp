@@ -34,6 +34,35 @@ void loadMusic(int num) {
 			loopName = "nitro:/music/tetrisParty/mainMenu.raw";
 			sampleRate = 48000;
 			break;
+		case 5:	// Sonic Mania - Main Menu: "Comfort Zone"
+			startName = "nitro:/music/sonicMania/mainMenu_start.raw";
+			loopName = "nitro:/music/sonicMania/mainMenu_loop.raw";
+			sampleRate = 44100;
+			break;
+		case 6:	// Sonic Mania - Angel Island Zone
+			loopName = "nitro:/music/sonicMania/angelIslandZone.raw";
+			sampleRate = 44100;
+			break;
+		case 7:	// Sonic Mania - Green Hill Zone: Act 1
+			startName = "nitro:/music/sonicMania/greenHillZoneAct1_start.raw";
+			loopName = "nitro:/music/sonicMania/greenHillZoneAct1_loop.raw";
+			sampleRate = 44100;
+			break;
+		case 8:	// Sonic Mania - Green Hill Zone: Act 2
+			startName = "nitro:/music/sonicMania/greenHillZoneAct2_start.raw";
+			loopName = "nitro:/music/sonicMania/greenHillZoneAct2_loop.raw";
+			sampleRate = 44100;
+			break;
+		case 9:	// Sonic Mania - Studiopolis Zone: Act 1
+			startName = "nitro:/music/sonicMania/studiopolisZoneAct1_start.raw";
+			loopName = "nitro:/music/sonicMania/studiopolisZoneAct1_loop.raw";
+			sampleRate = 44100;
+			break;
+		case 10:	// Sonic Mania - Special Stage: "Dimension Heist"
+			startName = "nitro:/music/sonicMania/specialStage_start.raw";
+			loopName = "nitro:/music/sonicMania/specialStage_loop.raw";
+			sampleRate = 44100;
+			break;
 	}
 	snd().loadStream(startName, loopName, sampleRate, true);
 }
