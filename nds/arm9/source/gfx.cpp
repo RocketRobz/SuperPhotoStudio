@@ -854,8 +854,14 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		if (usePageFile) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
 			fseek(pageFile, ((0x18000*3)+(0xC000*3))*4, SEEK_SET);
-			fwrite(&charSpriteMem, 1, (0x18000*3), pageFile);
-			fwrite(&charSpriteAlpha, 1, (0xC000*3), pageFile);
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteMem[(256*192)*i], sizeof(u16), 256*192, pageFile);
+			}
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteAlpha[(256*192)*i], sizeof(u8), 256*192, pageFile);
+			}
 			fclose(pageFile);
 			pageCharLoaded = num;
 		}
@@ -917,8 +923,14 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		if (usePageFile) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
 			fseek(pageFile, ((0x18000*3)+(0xC000*3))*3, SEEK_SET);
-			fwrite(&charSpriteMem, 1, (0x18000*3), pageFile);
-			fwrite(&charSpriteAlpha, 1, (0xC000*3), pageFile);
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteMem[(256*192)*i], sizeof(u16), 256*192, pageFile);
+			}
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteAlpha[(256*192)*i], sizeof(u8), 256*192, pageFile);
+			}
 			fclose(pageFile);
 			pageCharLoaded = num;
 		}
@@ -980,8 +992,14 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		if (usePageFile) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
 			fseek(pageFile, ((0x18000*3)+(0xC000*3))*2, SEEK_SET);
-			fwrite(&charSpriteMem, 1, (0x18000*3), pageFile);
-			fwrite(&charSpriteAlpha, 1, (0xC000*3), pageFile);
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteMem[(256*192)*i], sizeof(u16), 256*192, pageFile);
+			}
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteAlpha[(256*192)*i], sizeof(u8), 256*192, pageFile);
+			}
 			fclose(pageFile);
 			pageCharLoaded = num;
 		}
@@ -989,8 +1007,14 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		if (usePageFile && !char1Paged) {
 			bool pageFileFound = (access("fat:/_nds/pagefile.sys", F_OK) == 0);
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", pageFileFound ? "r+" : "w");
-			fwrite(&charSpriteMem, 1, (0x18000*3), pageFile);
-			fwrite(&charSpriteAlpha, 1, (0xC000*3), pageFile);
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteMem[(256*192)*i], sizeof(u16), 256*192, pageFile);
+			}
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteAlpha[(256*192)*i], sizeof(u8), 256*192, pageFile);
+			}
 			fclose(pageFile);
 			char1Paged = true;
 		}
@@ -1051,8 +1075,14 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		if (usePageFile) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
 			fseek(pageFile, (0x18000*3)+(0xC000*3), SEEK_SET);
-			fwrite(&charSpriteMem, 1, (0x18000*3), pageFile);
-			fwrite(&charSpriteAlpha, 1, (0xC000*3), pageFile);
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteMem[(256*192)*i], sizeof(u16), 256*192, pageFile);
+			}
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteAlpha[(256*192)*i], sizeof(u8), 256*192, pageFile);
+			}
 			fclose(pageFile);
 			pageCharLoaded = num;
 		}
@@ -1105,8 +1135,14 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		}
 		if (usePageFile && chracterSpriteFound[1]) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "r+");
-			fwrite(&charSpriteMem, 1, (0x18000*3), pageFile);
-			fwrite(&charSpriteAlpha, 1, (0xC000*3), pageFile);
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteMem[(256*192)*i], sizeof(u16), 256*192, pageFile);
+			}
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fwrite(&charSpriteAlpha[(256*192)*i], sizeof(u8), 256*192, pageFile);
+			}
 			fclose(pageFile);
 			pageCharLoaded = num;
 		}
@@ -1208,6 +1244,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, 0x18000*zoomIn, SEEK_SET);
 			fread(&charSpriteMem[(256*192)*zoomIn], 1, 0x18000, pageFile);
+			snd().updateStream();
 			fseek(pageFile, (0x18000*3)+(0xC000*zoomIn), SEEK_SET);
 			fread(&charSpriteAlpha[(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
@@ -1243,6 +1280,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, (0x18000*3)+(0xC000*3)+(0x18000*zoomIn), SEEK_SET);
 			fread(&charSpriteMem[(256*192)*zoomIn], 1, 0x18000, pageFile);
+			snd().updateStream();
 			fseek(pageFile, (0x18000*3)+(0xC000*3)+(0x18000*3)+(0xC000*zoomIn), SEEK_SET);
 			fread(&charSpriteAlpha[(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
@@ -1285,6 +1323,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, (((0x18000*3)+(0xC000*3))*2)+(0x18000*zoomIn), SEEK_SET);
 			fread(&charSpriteMem[(256*192)*zoomIn], 1, 0x18000, pageFile);
+			snd().updateStream();
 			fseek(pageFile, (((0x18000*3)+(0xC000*3))*2)+(0x18000*3)+(0xC000*zoomIn), SEEK_SET);
 			fread(&charSpriteAlpha[(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
@@ -1327,6 +1366,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, 0x18000*zoomIn, SEEK_SET);
 			fread(&charSpriteMem[(256*192)*zoomIn], 1, 0x18000, pageFile);
+			snd().updateStream();
 			fseek(pageFile, (0x18000*3)+(0xC000*zoomIn), SEEK_SET);
 			fread(&charSpriteAlpha[(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
@@ -1362,6 +1402,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, (0x18000*3)+(0xC000*3)+(0x18000*zoomIn), SEEK_SET);
 			fread(&charSpriteMem[(256*192)*zoomIn], 1, 0x18000, pageFile);
+			snd().updateStream();
 			fseek(pageFile, (0x18000*3)+(0xC000*3)+(0x18000*3)+(0xC000*zoomIn), SEEK_SET);
 			fread(&charSpriteAlpha[(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
@@ -1401,8 +1442,14 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 	} else {
 		if (usePageFile && pageCharLoaded != 0) {	// In case if character 2 gets removed
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
-			fread(&charSpriteMem, 1, (0x18000*3), pageFile);
-			fread(&charSpriteAlpha, 1, (0xC000*3), pageFile);
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fread(&charSpriteMem[(256*192)*i], sizeof(u16), 256*192, pageFile);
+			}
+			for (int i = 0; i < 3; i++) {
+				snd().updateStream();
+				fread(&charSpriteAlpha[(256*192)*i], sizeof(u8), 256*192, pageFile);
+			}
 			fclose(pageFile);
 			pageCharLoaded = 0;
 		}
@@ -1440,6 +1487,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, (((0x18000*3)+(0xC000*3))*3)+(0x18000*zoomIn), SEEK_SET);
 			fread(&charSpriteMem[(256*192)*zoomIn], 1, 0x18000, pageFile);
+			snd().updateStream();
 			fseek(pageFile, (((0x18000*3)+(0xC000*3))*3)+(0x18000*3)+(0xC000*zoomIn), SEEK_SET);
 			fread(&charSpriteAlpha[(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
@@ -1488,6 +1536,7 @@ ITCM_CODE void GFX::loadCharSpriteMem(const int zoomIn, const bool* flipH) {
 			FILE* pageFile = fopen("fat:/_nds/pagefile.sys", "rb");
 			fseek(pageFile, (((0x18000*3)+(0xC000*3))*4)+(0x18000*zoomIn), SEEK_SET);
 			fread(&charSpriteMem[(256*192)*zoomIn], 1, 0x18000, pageFile);
+			snd().updateStream();
 			fseek(pageFile, (((0x18000*3)+(0xC000*3))*4)+(0x18000*3)+(0xC000*zoomIn), SEEK_SET);
 			fread(&charSpriteAlpha[(256*192)*zoomIn], 1, 0xC000, pageFile);
 			fclose(pageFile);
