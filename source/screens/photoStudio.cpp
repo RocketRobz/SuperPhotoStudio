@@ -30,10 +30,12 @@
 #include "pdarkBgNames.h"
 #include "smBgNames.h"
 
+#include "jimPowerBgmNames.h"
 #include "marioGolfAdvanceTourBgmNames.h"
 #include "mmBattleAndChaseBgmNames.h"
 #include "pkmnStadiumBgmNames.h"
 #include "sonicManiaBgmNames.h"
+#include "ss1BgmNames.h"
 #include "tetrisPartyBgmNames.h"
 
 #include <unistd.h>
@@ -115,10 +117,12 @@ static u8 charPageOrder[] = {
 };
 
 static u8 bgmPageOrder[] = {
+	6,	// Jim Power
 	2,	// Mario Golf: Advance Tour
 	1,	// MegaMan: Battle and Chase
 	0,	// Pokemon Stadium
 	4,	// Sonic Mania
+	5,	// Style Savvy
 	3,	// Tetris Party
 };
 
@@ -147,7 +151,11 @@ void PhotoStudio::getMaxChars() {
 		// Music
 		switch (bgmPageOrder[bgm_highlightedGame]) {
 			case 0:
+				import_totalCharacters = 0;
+				break;
 			case 1:
+				import_totalCharacters = 0;
+				break;
 			case 2:
 				import_totalCharacters = 0;
 				break;
@@ -156,6 +164,12 @@ void PhotoStudio::getMaxChars() {
 				break;
 			case 4:
 				import_totalCharacters = 5;
+				break;
+			case 5:
+				import_totalCharacters = 6;
+				break;
+			case 6:
+				import_totalCharacters = 0;
 				break;
 		}
 	} else if (subScreenMode == 1) {
@@ -702,6 +716,10 @@ const char* PhotoStudio::bgmGameTitle(void) const {
 			return "Tetris Party";
 		case 4:
 			return "Sonic Mania";
+		case 5:
+			return ss1Title();
+		case 6:
+			return "Jim Power";
 	}
 	return "???";
 }
@@ -782,6 +800,10 @@ const char* PhotoStudio::bgmName(int i) const {
 			return tetrisPartyBgmNames[i];
 		case 4:
 			return sonicManiaBgmNames[i];
+		case 5:
+			return ss1BgmNames[i];
+		case 6:
+			return jimPowerBgmNames[i];
 	}
 	return "???";
 }
@@ -818,6 +840,10 @@ int PhotoStudio::getBgmNum(void) const {
 			return tetrisPartyBgmNums[bgmList_cursorPosition];
 		case 4:
 			return sonicManiaBgmNums[bgmList_cursorPosition];
+		case 5:
+			return ss1BgmNums[bgmList_cursorPosition];
+		case 6:
+			return jimPowerBgmNums[bgmList_cursorPosition];
 	}
 	return 0;
 }

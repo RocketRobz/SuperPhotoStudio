@@ -7,6 +7,7 @@ void loadMusic(int num) {
 	const char* startName = "";
 	const char* loopName = "";
 	u32 sampleRate = 0;
+	bool stereo = true;
 
 	switch (num) {
 		case 0:	// Pokemon Stadium - Stadium Select
@@ -58,11 +59,52 @@ void loadMusic(int num) {
 			loopName = "nitro:/music/sonicMania/studiopolisZoneAct1_loop.raw";
 			sampleRate = 44100;
 			break;
-		case 10:	// Sonic Mania - Special Stage: "Dimension Heist"
+		case 10: // Sonic Mania - Special Stage: "Dimension Heist"
 			startName = "nitro:/music/sonicMania/specialStage_start.raw";
 			loopName = "nitro:/music/sonicMania/specialStage_loop.raw";
 			sampleRate = 44100;
 			break;
+		case 11: // Style Savvy - My Room
+			startName = "nitro:/music/styleSavvy/myRoom_start.raw";
+			loopName = "nitro:/music/styleSavvy/myRoom_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 12: // Style Savvy - Map (Spring)
+			startName = "nitro:/music/styleSavvy/mapSpring_start.raw";
+			loopName = "nitro:/music/styleSavvy/mapSpring_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 13: // Style Savvy - Map (Summer)
+			startName = "nitro:/music/styleSavvy/mapSummer_start.raw";
+			loopName = "nitro:/music/styleSavvy/mapSummer_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 14: // Style Savvy - Map (Fall)
+			startName = "nitro:/music/styleSavvy/mapFall_start.raw";
+			loopName = "nitro:/music/styleSavvy/mapFall_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 15: // Style Savvy - Map (Winter)
+			startName = "nitro:/music/styleSavvy/mapWinter_start.raw";
+			loopName = "nitro:/music/styleSavvy/mapWinter_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 16: // Style Savvy - Wireless Menu
+			startName = "nitro:/music/styleSavvy/wirelessMenu_start.raw";
+			loopName = "nitro:/music/styleSavvy/wirelessMenu_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 17: // Style Savvy - Wireless Map
+			startName = "nitro:/music/styleSavvy/wirelessMap_start.raw";
+			loopName = "nitro:/music/styleSavvy/wirelessMap_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 18: // Jim Power: The Lost Dimension in 3D (GEN/MD) - Stage 3: Mutant's Forest
+			startName = "nitro:/music/jimPower3D_gen/mutantsForest_start.raw";
+			loopName = "nitro:/music/jimPower3D_gen/mutantsForest_loop.raw";
+			sampleRate = 48000;
+			stereo = false;
+			break;
 	}
-	snd().loadStream(startName, loopName, sampleRate, true);
+	snd().loadStream(startName, loopName, sampleRate, stereo, true);
 }

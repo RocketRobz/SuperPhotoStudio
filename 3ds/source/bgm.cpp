@@ -53,9 +53,41 @@ void loadMusic(int num) {
 			startName = "romfs:/music/sonicMania/studiopolisZoneAct1_start.wav";
 			loopName = "romfs:/music/sonicMania/studiopolisZoneAct1_loop.wav";
 			break;
-		case 10:	// Sonic Mania - Special Stage: "Dimension Heist"
+		case 10: // Sonic Mania - Special Stage: "Dimension Heist"
 			startName = "romfs:/music/sonicMania/specialStage_start.wav";
 			loopName = "romfs:/music/sonicMania/specialStage_loop.wav";
+			break;
+		case 11: // Style Savvy - My Room
+			startName = "romfs:/music/styleSavvy/myRoom_start.wav";
+			loopName = "romfs:/music/styleSavvy/myRoom_loop.wav";
+			break;
+		case 12: // Style Savvy - Map (Spring)
+			startName = "romfs:/music/styleSavvy/mapSpring_start.wav";
+			loopName = "romfs:/music/styleSavvy/mapSpring_loop.wav";
+			break;
+		case 13: // Style Savvy - Map (Summer)
+			startName = "romfs:/music/styleSavvy/mapSummer_start.wav";
+			loopName = "romfs:/music/styleSavvy/mapSummer_loop.wav";
+			break;
+		case 14: // Style Savvy - Map (Fall)
+			startName = "romfs:/music/styleSavvy/mapFall_start.wav";
+			loopName = "romfs:/music/styleSavvy/mapFall_loop.wav";
+			break;
+		case 15: // Style Savvy - Map (Winter)
+			startName = "romfs:/music/styleSavvy/mapWinter_start.wav";
+			loopName = "romfs:/music/styleSavvy/mapWinter_loop.wav";
+			break;
+		case 16: // Style Savvy - Wireless Menu
+			startName = "romfs:/music/styleSavvy/wirelessMenu_start.wav";
+			loopName = "romfs:/music/styleSavvy/wirelessMenu_loop.wav";
+			break;
+		case 17: // Style Savvy - Wireless Map
+			startName = "romfs:/music/styleSavvy/wirelessMap_start.wav";
+			loopName = "romfs:/music/styleSavvy/wirelessMap_loop.wav";
+			break;
+		case 18: // Jim Power: The Lost Dimension in 3D (GEN/MD) - Stage 3: Mutant's Forest
+			startName = "romfs:/music/jimPower3D_gen/mutantsForest_start.wav";
+			loopName = "romfs:/music/jimPower3D_gen/mutantsForest_loop.wav";
 			break;
 	}
 

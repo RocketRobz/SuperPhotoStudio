@@ -30,6 +30,7 @@ extern char debug_buf[256];
 extern volatile u32 sample_delay_count;
 
 char* SFX_DATA = (char*)NULL;
+s8 monoBuffer[STREAMING_BUF_LENGTH] = {0};
 mm_word SOUNDBANK[MSL_BANKSIZE] = {0};
 
 SoundControl::SoundControl()
@@ -92,7 +93,7 @@ mm_sfxhand SoundControl::playSelect() { return mmEffectEx(&snd_select); }
 mm_sfxhand SoundControl::playBack() { return mmEffectEx(&snd_back); }
 mm_sfxhand SoundControl::playHighlight() { return mmEffectEx(&snd_highlight); }
 
-void SoundControl::loadStream(const char* path, const char* loopPath, u32 sampleRate, bool loop) {
+void SoundControl::loadStream(const char* path, const char* loopPath, u32 sampleRate, bool stereo, bool loop) {
 	if (stream_source) {
 		stream_is_playing = false;
 		mmStreamClose();
@@ -116,7 +117,10 @@ void SoundControl::loadStream(const char* path, const char* loopPath, u32 sample
 	stream.format = MM_STREAM_8BIT_STEREO;  // select format
 	stream.timer = MM_TIMER0;	    	   // use timer0
 	stream.manual = false;	      		   // auto filling
+	stream_is_stereo = stereo;
 	looping = loop;
+
+	int byteLen = stream_is_stereo ? sizeof(s16) : sizeof(s8);
 
 	if (loopableMusic) {
 		fseek(stream_start_source, 0, SEEK_END);
@@ -124,38 +128,108 @@ void SoundControl::loadStream(const char* path, const char* loopPath, u32 sample
 		fseek(stream_start_source, 0, SEEK_SET);
 
 		// Prep the first section of the stream
-		fread((void*)play_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_start_source);
-		if (fileSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
+		if (stream_is_stereo) {
+			fread((void*)play_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_start_source);
+		} else {
+			fread((void*)monoBuffer, sizeof(s8), STREAMING_BUF_LENGTH, stream_start_source);
+			s8 mono2stereo[2];
+			for (int i = 0; i < STREAMING_BUF_LENGTH; i++) {
+				mono2stereo[0] = monoBuffer[i];
+				mono2stereo[1] = monoBuffer[i];
+				tonccpy((s16*)play_stream_buf+i, &mono2stereo, sizeof(s16));
+			}
+		}
+		if (fileSize < (size_t)STREAMING_BUF_LENGTH*byteLen) {
 			size_t fillerSize = 0;
-			while (fileSize+fillerSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
+			while (fileSize+fillerSize < (size_t)STREAMING_BUF_LENGTH*byteLen) {
 				fillerSize++;
 			}
-			fread((void*)play_stream_buf+fileSize, 1, fillerSize, stream_source);
+			if (stream_is_stereo) {
+				fread((void*)play_stream_buf+fileSize, 1, fillerSize, stream_source);
+			} else {
+				fread((void*)monoBuffer+fileSize, sizeof(s8), fillerSize, stream_source);
+				s8 mono2stereo[2];
+				for (int i = (int)fileSize; i < STREAMING_BUF_LENGTH; i++) {
+					mono2stereo[0] = monoBuffer[i];
+					mono2stereo[1] = monoBuffer[i];
+					tonccpy((s16*)play_stream_buf+i, &mono2stereo, sizeof(s16));
+				}
+			}
 
 			// Fill the next section premptively
-			fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+			if (stream_is_stereo) {
+				fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+			} else {
+				fread((void*)monoBuffer, sizeof(s8), STREAMING_BUF_LENGTH, stream_source);
+				s8 mono2stereo[2];
+				for (int i = 0; i < STREAMING_BUF_LENGTH; i++) {
+					mono2stereo[0] = monoBuffer[i];
+					mono2stereo[1] = monoBuffer[i];
+					tonccpy((s16*)fill_stream_buf+i, &mono2stereo, sizeof(s16));
+				}
+			}
 
 			loopingPoint = true;
 		} else {
 			// Fill the next section premptively
-			fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_start_source);
-			fileSize -= STREAMING_BUF_LENGTH*sizeof(s16);
-			if (fileSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
+			if (stream_is_stereo) {
+				fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_start_source);
+			} else {
+				fread((void*)monoBuffer, sizeof(s8), STREAMING_BUF_LENGTH, stream_start_source);
+				s8 mono2stereo[2];
+				for (int i = 0; i < STREAMING_BUF_LENGTH; i++) {
+					mono2stereo[0] = monoBuffer[i];
+					mono2stereo[1] = monoBuffer[i];
+					tonccpy((s16*)fill_stream_buf+i, &mono2stereo, sizeof(s16));
+				}
+			}
+			fileSize -= STREAMING_BUF_LENGTH*byteLen;
+			if (fileSize < (size_t)STREAMING_BUF_LENGTH*byteLen) {
 				size_t fillerSize = 0;
-				while (fileSize+fillerSize < STREAMING_BUF_LENGTH*sizeof(s16)) {
+				while (fileSize+fillerSize < (size_t)STREAMING_BUF_LENGTH*byteLen) {
 					fillerSize++;
 				}
-				fread((void*)fill_stream_buf+fileSize, 1, fillerSize, stream_source);
+				if (stream_is_stereo) {
+					fread((void*)fill_stream_buf+fileSize, 1, fillerSize, stream_source);
+				} else {
+					fread((void*)monoBuffer+fileSize, sizeof(s8), fillerSize, stream_source);
+					s8 mono2stereo[2];
+					for (int i = (int)fileSize; i < STREAMING_BUF_LENGTH; i++) {
+						mono2stereo[0] = monoBuffer[i];
+						mono2stereo[1] = monoBuffer[i];
+						tonccpy((s16*)fill_stream_buf+i, &mono2stereo, sizeof(s16));
+					}
+				}
 
 				loopingPoint = true;
 			}
 		}
 	} else {
 		// Prep the first section of the stream
-		fread((void*)play_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+		if (stream_is_stereo) {
+			fread((void*)play_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+		} else {
+			fread((void*)monoBuffer, sizeof(s8), STREAMING_BUF_LENGTH, stream_source);
+			s8 mono2stereo[2];
+			for (int i = 0; i < STREAMING_BUF_LENGTH; i++) {
+				mono2stereo[0] = monoBuffer[i];
+				mono2stereo[1] = monoBuffer[i];
+				tonccpy((s16*)play_stream_buf+i, &mono2stereo, sizeof(s16));
+			}
+		}
 
 		// Fill the next section premptively
-		fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+		if (stream_is_stereo) {
+			fread((void*)fill_stream_buf, sizeof(s16), STREAMING_BUF_LENGTH, stream_source);
+		} else {
+			fread((void*)monoBuffer, sizeof(s8), STREAMING_BUF_LENGTH, stream_source);
+			s8 mono2stereo[2];
+			for (int i = 0; i < STREAMING_BUF_LENGTH; i++) {
+				mono2stereo[0] = monoBuffer[i];
+				mono2stereo[1] = monoBuffer[i];
+				tonccpy((s16*)fill_stream_buf+i, &mono2stereo, sizeof(s16));
+			}
+		}
 
 		loopingPoint = true;
 	}
@@ -218,12 +292,35 @@ volatile void SoundControl::updateStream() {
 		int instance_to_fill = std::min(SAMPLES_LEFT_TO_FILL, SAMPLES_TO_FILL);
 
 		// If we don't read enough samples, loop from the beginning of the file.
-		instance_filled = fread((s16*)fill_stream_buf + filled_samples, sizeof(s16), instance_to_fill, loopingPoint ? stream_source : stream_start_source);		
+		if (stream_is_stereo) {
+			instance_filled = fread((s16*)fill_stream_buf + filled_samples, sizeof(s16), instance_to_fill, loopingPoint ? stream_source : stream_start_source);
+		} else {
+			instance_filled = fread(&monoBuffer, sizeof(s8), instance_to_fill, loopingPoint ? stream_source : stream_start_source);
+			s8 mono2stereo[2];
+			for (int i = 0; i < instance_to_fill; i++) {
+				mono2stereo[0] = monoBuffer[i];
+				mono2stereo[1] = monoBuffer[i];
+				tonccpy((s16*)fill_stream_buf + (filled_samples + i), &mono2stereo, sizeof(s16));
+			}
+		}
 		if (instance_filled < instance_to_fill) {
 			if (looping) {
 				fseek(stream_source, 0, SEEK_SET);
-				int i = fread((s16*)fill_stream_buf + filled_samples + instance_filled,
-					 sizeof(s16), (instance_to_fill - instance_filled), stream_source);
+				int i = 0;
+				if (stream_is_stereo) {
+					i = fread((s16*)fill_stream_buf + filled_samples + instance_filled,
+						 sizeof(s16), (instance_to_fill - instance_filled), stream_source);
+				} else {
+					i = fread(&monoBuffer, sizeof(s8), (instance_to_fill - instance_filled), stream_source);
+					if (i > 0) {
+						s8 mono2stereo[2];
+						for (int i = 0; i < (instance_to_fill - instance_filled); i++) {
+							mono2stereo[0] = monoBuffer[i];
+							mono2stereo[1] = monoBuffer[i];
+							tonccpy((s16*)fill_stream_buf + (filled_samples + instance_filled + i), &mono2stereo, sizeof(s16));
+						}
+					}
+				}
 				if (i==0) {
 					toncset((s16*)fill_stream_buf + filled_samples + instance_filled, 0, (instance_to_fill - instance_filled)*sizeof(s16));
 				} else {
