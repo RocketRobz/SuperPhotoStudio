@@ -89,6 +89,10 @@ void loadMusic(int num) {
 			startName = "romfs:/music/jimPower3D_gen/mutantsForest_start.wav";
 			loopName = "romfs:/music/jimPower3D_gen/mutantsForest_loop.wav";
 			break;
+		case 19: // Savvy Manager - Menu
+			startName = "romfs:/music/savvyManager/menu_start.wav";
+			loopName = "romfs:/music/savvyManager/menu_loop.wav";
+			break;
 	}
 
 	if (access(startName, F_OK) == 0) {

@@ -34,6 +34,7 @@
 #include "marioGolfAdvanceTourBgmNames.h"
 #include "mmBattleAndChaseBgmNames.h"
 #include "pkmnStadiumBgmNames.h"
+#include "savvyMgrBgmNames.h"
 #include "sonicManiaBgmNames.h"
 #include "ss1BgmNames.h"
 #include "tetrisPartyBgmNames.h"
@@ -121,6 +122,7 @@ static u8 bgmPageOrder[] = {
 	2,	// Mario Golf: Advance Tour
 	1,	// MegaMan: Battle and Chase
 	0,	// Pokemon Stadium
+	7,	// Savvy Manager
 	4,	// Sonic Mania
 	5,	// Style Savvy
 	3,	// Tetris Party
@@ -169,6 +171,9 @@ void PhotoStudio::getMaxChars() {
 				import_totalCharacters = 6;
 				break;
 			case 6:
+				import_totalCharacters = 0;
+				break;
+			case 7:
 				import_totalCharacters = 0;
 				break;
 		}
@@ -720,6 +725,8 @@ const char* PhotoStudio::bgmGameTitle(void) const {
 			return ss1Title();
 		case 6:
 			return "Jim Power";
+		case 7:
+			return "Savvy Manager";
 	}
 	return "???";
 }
@@ -804,6 +811,8 @@ const char* PhotoStudio::bgmName(int i) const {
 			return ss1BgmNames[i];
 		case 6:
 			return jimPowerBgmNames[i];
+		case 7:
+			return savvyMgrBgmNames[i];
 	}
 	return "???";
 }
@@ -844,6 +853,8 @@ int PhotoStudio::getBgmNum(void) const {
 			return ss1BgmNums[bgmList_cursorPosition];
 		case 6:
 			return jimPowerBgmNums[bgmList_cursorPosition];
+		case 7:
+			return savvyMgrBgmNums[bgmList_cursorPosition];
 	}
 	return 0;
 }

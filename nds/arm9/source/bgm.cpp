@@ -105,6 +105,12 @@ void loadMusic(int num) {
 			sampleRate = 48000;
 			stereo = false;
 			break;
+		case 19: // Savvy Manager - Menu
+			startName = "nitro:/music/savvyManager/menu_start.raw";
+			loopName = "nitro:/music/savvyManager/menu_loop.raw";
+			sampleRate = 48000;
+			stereo = false;
+			break;
 	}
 	snd().loadStream(startName, loopName, sampleRate, stereo, true);
 }
