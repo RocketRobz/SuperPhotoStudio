@@ -95,8 +95,8 @@ void loadMusic(int num) {
 			sampleRate = 32000;
 			break;
 		case 17: // Style Savvy - Wireless Map
-			startName = "nitro:/music/styleSavvy/wirelessMap_start.raw";
-			loopName = "nitro:/music/styleSavvy/wirelessMap_loop.raw";
+			startName = "nitro:/music/styleSavvy/wifiMap_start.raw";
+			loopName = "nitro:/music/styleSavvy/wifiMap_loop.raw";
 			sampleRate = 32000;
 			break;
 		case 18: // Jim Power: The Lost Dimension in 3D (GEN/MD) - Stage 3: Mutant's Forest

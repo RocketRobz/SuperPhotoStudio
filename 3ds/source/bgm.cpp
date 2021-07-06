@@ -82,8 +82,8 @@ void loadMusic(int num) {
 			loopName = "romfs:/music/styleSavvy/wirelessMenu_loop.wav";
 			break;
 		case 17: // Style Savvy - Wireless Map
-			startName = "romfs:/music/styleSavvy/wirelessMap_start.wav";
-			loopName = "romfs:/music/styleSavvy/wirelessMap_loop.wav";
+			startName = "romfs:/music/styleSavvy/wifiMap_start.wav";
+			loopName = "romfs:/music/styleSavvy/wifiMap_loop.wav";
 			break;
 		case 18: // Jim Power: The Lost Dimension in 3D (GEN/MD) - Stage 3: Mutant's Forest
 			startName = "romfs:/music/jimPower3D_gen/mutantsForest_start.wav";
