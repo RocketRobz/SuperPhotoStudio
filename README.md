@@ -4,6 +4,7 @@
 		<img src="https://img.shields.io/badge/GBATemp-thread-blue.svg" height="20">
 	</a>
 </p>
+
 What happens when you take the concept of *Super Smash Bros.*, and turn it from a fighting game, into a photo shoot application?     
 The result, *Super Photo Studio*! Take pictures of your favorite all-star characters, in any location possible!
 
@@ -16,7 +17,7 @@ The result, *Super Photo Studio*! Take pictures of your favorite all-star charac
 # Features
 
 * High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
-* Pre-rendered characters and backgrounds, from     
+* Pre-rendered characters and backgrounds, as well as music, from     
   * Super Mario     
   * Sonic the Hedgehog     
   * Pac-Man     
@@ -33,7 +34,7 @@ The result, *Super Photo Studio*! Take pictures of your favorite all-star charac
 * Circle Pad Up/Down: Zoom in/out (3DS version)
 * Y: Take photo (saved in `sd:/(yourconsole)/SuperPhotoStudio/photos/`)
 
-# Characters and Locations by
+# Characters, Locations, and Music by
 * Namco
 * Nicalis
 * Nintendo
