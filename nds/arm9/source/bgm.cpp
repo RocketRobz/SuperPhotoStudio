@@ -192,6 +192,23 @@ void loadMusic(int num) {
 			loopName = "nitro:/music/styleSavvy2/personalCheck.raw";
 			sampleRate = 32728;
 			break;
+		case 38: // Style Savvy - Hair Salon
+			loopName = "nitro:/music/styleSavvy/hairSalon.raw";
+			sampleRate = 32000;
+			break;
+		case 39: // Style Savvy - Makeup Salon
+			startName = "nitro:/music/styleSavvy/makeSalon_start.raw";
+			loopName = "nitro:/music/styleSavvy/makeSalon_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 40: // Style Savvy - Unused?
+			loopName = "nitro:/music/styleSavvy/exhibition.raw";
+			sampleRate = 32000;
+			break;
+		case 41: // Style Savvy - Dominic's Mansion
+			loopName = "nitro:/music/styleSavvy/mansion.raw";
+			sampleRate = 32000;
+			break;
 	}
 	snd().loadStream(startName, loopName, sampleRate, stereo, true);
 }

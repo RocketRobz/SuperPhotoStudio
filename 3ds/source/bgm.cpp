@@ -154,7 +154,20 @@ void loadMusic(int num) {
 			loopName = "romfs:/music/styleSavvy2/girlsMall.wav";
 			break;
 		case 37: // Style Savvy: Trendsetters - Main Shop Data
-			loopName = "nitro:/music/styleSavvy2/personalCheck.wav";
+			loopName = "romfs:/music/styleSavvy2/personalCheck.wav";
+			break;
+		case 38: // Style Savvy - Hair Salon
+			loopName = "romfs:/music/styleSavvy/hairSalon.wav";
+			break;
+		case 39: // Style Savvy - Makeup Salon
+			startName = "romfs:/music/styleSavvy/makeSalon_start.wav";
+			loopName = "romfs:/music/styleSavvy/makeSalon_loop.wav";
+			break;
+		case 40: // Style Savvy - Unused?
+			loopName = "romfs:/music/styleSavvy/exhibition.wav";
+			break;
+		case 41: // Style Savvy - Dominic's Mansion
+			loopName = "romfs:/music/styleSavvy/mansion.wav";
 			break;
 	}
 

@@ -6,6 +6,10 @@ const char* ss1BgmNames[] = {
 	"Map (Winter)",
 	"Wireless Menu",
 	"Wireless Map",
+	"Dominic's Mansion",
+	"Hair Salon",
+	"Makeup Salon",
+	"Unused?",
 };
 
 int ss1BgmNums[] = {
@@ -16,4 +20,8 @@ int ss1BgmNums[] = {
 	15,
 	16,
 	17,
+	41,
+	38,
+	39,
+	40,
 };
