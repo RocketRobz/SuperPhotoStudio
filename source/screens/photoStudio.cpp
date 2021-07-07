@@ -820,6 +820,8 @@ const char* PhotoStudio::bgmName(int i) const {
 			return jimPowerBgmNames[i];
 		case 7:
 			return savvyMgrBgmNames[i];
+		case 8:
+			return ss2BgmNames[i];
 	}
 	return "???";
 }
