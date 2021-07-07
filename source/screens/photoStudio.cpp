@@ -1384,7 +1384,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (bgmList_cursorPosition < 0) {
 					bgmList_cursorPosition = 0;
 					bgmShownFirst = 0;
-				} else if (bgList_cursorPosition < bgmShownFirst) {
+				} else if (bgmList_cursorPosition < bgmShownFirst) {
 					bgmShownFirst--;
 				}
 				if (bgmList_cursorPositionOnScreen < 0) {
