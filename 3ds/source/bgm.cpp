@@ -93,6 +93,69 @@ void loadMusic(int num) {
 			startName = "romfs:/music/savvyManager/menu_start.wav";
 			loopName = "romfs:/music/savvyManager/menu_loop.wav";
 			break;
+		case 20: // Style Savvy: Trendsetters - Title Screen
+			startName = "romfs:/music/styleSavvy2/title_start.wav";
+			loopName = "romfs:/music/styleSavvy2/title_loop.wav";
+			break;
+		case 21: // Style Savvy: Trendsetters - Map (Max)
+			startName = "romfs:/music/styleSavvy2/map_start.wav";
+			loopName = "romfs:/music/styleSavvy2/map_loop.wav";
+			break;
+		case 22: // Style Savvy: Trendsetters - Emmylou's Theme
+			loopName = "romfs:/music/styleSavvy2/tetsuko.wav";
+			break;
+		case 23: // Style Savvy: Trendsetters - Brad's Theme
+			loopName = "romfs:/music/styleSavvy2/musashi.wav";
+			break;
+		case 24: // Style Savvy: Trendsetters - Buyer's Center
+			startName = "romfs:/music/styleSavvy2/exhibition_start.wav";
+			loopName = "romfs:/music/styleSavvy2/exhibition_loop.wav";
+			break;
+		case 25: // Style Savvy: Trendsetters - Hair Salon
+			startName = "romfs:/music/styleSavvy2/hairSalon_start.wav";
+			loopName = "romfs:/music/styleSavvy2/hairSalon_loop.wav";
+			break;
+		case 26: // Style Savvy: Trendsetters - Makeup Salon
+			startName = "romfs:/music/styleSavvy2/makeSalon_start.wav";
+			loopName = "romfs:/music/styleSavvy2/makeSalon_loop.wav";
+			break;
+		case 27: // Style Savvy: Trendsetters - Photo Studio
+			loopName = "romfs:/music/styleSavvy2/photoStudio.wav";
+			break;
+		case 28: // Style Savvy: Trendsetters - Fashion Contest Menu
+			loopName = "romfs:/music/styleSavvy2/contest.wav";
+			break;
+		case 29: // Style Savvy: Trendsetters - MC Mode's Theme
+			loopName = "romfs:/music/styleSavvy2/contestDJ.wav";
+			break;
+		case 30: // Style Savvy: Trendsetters - Cute Runway Theme
+			startName = "romfs:/music/styleSavvy2/runway00_start.wav";
+			loopName = "romfs:/music/styleSavvy2/runway00_loop.wav";
+			break;
+		case 31: // Style Savvy: Trendsetters - Pop Runway Theme
+			loopName = "romfs:/music/styleSavvy2/runway01.wav";
+			break;
+		case 32: // Style Savvy: Trendsetters - Runway Theme 02
+			startName = "romfs:/music/styleSavvy2/runway02_start.wav";
+			loopName = "romfs:/music/styleSavvy2/runway02_loop.wav";
+			break;
+		case 33: // Style Savvy: Trendsetters - Romantic Runway Theme
+			startName = "romfs:/music/styleSavvy2/runway03_start.wav";
+			loopName = "romfs:/music/styleSavvy2/runway03_loop.wav";
+			break;
+		case 34: // Style Savvy: Trendsetters - Boho-Chic Runway Theme
+			loopName = "romfs:/music/styleSavvy2/runway04.wav";
+			break;
+		case 35: // Style Savvy: Trendsetters - Rock Runway Theme
+			startName = "romfs:/music/styleSavvy2/runway05_start.wav";
+			loopName = "romfs:/music/styleSavvy2/runway05_loop.wav";
+			break;
+		case 36: // Style Savvy: Trendsetters - Wireless Shop
+			loopName = "romfs:/music/styleSavvy2/girlsMall.wav";
+			break;
+		case 37: // Style Savvy: Trendsetters - Main Shop Data
+			loopName = "nitro:/music/styleSavvy2/personalCheck.wav";
+			break;
 	}
 
 	if (access(startName, F_OK) == 0) {

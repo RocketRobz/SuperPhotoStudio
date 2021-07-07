@@ -37,6 +37,7 @@
 #include "savvyMgrBgmNames.h"
 #include "sonicManiaBgmNames.h"
 #include "ss1BgmNames.h"
+#include "ss2BgmNames.h"
 #include "tetrisPartyBgmNames.h"
 
 #include <unistd.h>
@@ -125,6 +126,7 @@ static u8 bgmPageOrder[] = {
 	7,	// Savvy Manager
 	4,	// Sonic Mania
 	5,	// Style Savvy
+	8,	// Style Savvy: Trendsetters
 	3,	// Tetris Party
 };
 
@@ -175,6 +177,9 @@ void PhotoStudio::getMaxChars() {
 				break;
 			case 7:
 				import_totalCharacters = 0;
+				break;
+			case 8:
+				import_totalCharacters = 17;
 				break;
 		}
 	} else if (subScreenMode == 1) {
@@ -727,6 +732,8 @@ const char* PhotoStudio::bgmGameTitle(void) const {
 			return "Jim Power";
 		case 7:
 			return "Savvy Manager";
+		case 8:
+			return ss2Title();
 	}
 	return "???";
 }
@@ -855,6 +862,8 @@ int PhotoStudio::getBgmNum(void) const {
 			return jimPowerBgmNums[bgmList_cursorPosition];
 		case 7:
 			return savvyMgrBgmNums[bgmList_cursorPosition];
+		case 8:
+			return ss2BgmNums[bgmList_cursorPosition];
 	}
 	return 0;
 }
@@ -924,7 +933,7 @@ void PhotoStudio::loadChrImage(void) {
 
 void PhotoStudio::Draw(void) const {
 	if (!musicLoaded) {
-		loadMusic(0);
+		loadMusic(27);
 		musicLoaded = true;
 	}
 

@@ -111,6 +111,87 @@ void loadMusic(int num) {
 			sampleRate = 48000;
 			stereo = false;
 			break;
+		case 20: // Style Savvy: Trendsetters - Title Screen
+			startName = "nitro:/music/styleSavvy2/title_start.raw";
+			loopName = "nitro:/music/styleSavvy2/title_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 21: // Style Savvy: Trendsetters - Map (Max)
+			startName = "nitro:/music/styleSavvy2/map_start.raw";
+			loopName = "nitro:/music/styleSavvy2/map_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 22: // Style Savvy: Trendsetters - Emmylou's Theme
+			loopName = "nitro:/music/styleSavvy2/tetsuko.raw";
+			sampleRate = 32728;
+			break;
+		case 23: // Style Savvy: Trendsetters - Brad's Theme
+			loopName = "nitro:/music/styleSavvy2/musashi.raw";
+			sampleRate = 32728;
+			break;
+		case 24: // Style Savvy: Trendsetters - Buyer's Center
+			startName = "nitro:/music/styleSavvy2/exhibition_start.raw";
+			loopName = "nitro:/music/styleSavvy2/exhibition_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 25: // Style Savvy: Trendsetters - Hair Salon
+			startName = "nitro:/music/styleSavvy2/hairSalon_start.raw";
+			loopName = "nitro:/music/styleSavvy2/hairSalon_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 26: // Style Savvy: Trendsetters - Makeup Salon
+			startName = "nitro:/music/styleSavvy2/makeSalon_start.raw";
+			loopName = "nitro:/music/styleSavvy2/makeSalon_loop.raw";
+			sampleRate = 44100;
+			break;
+		case 27: // Style Savvy: Trendsetters - Photo Studio
+			loopName = "nitro:/music/styleSavvy2/photoStudio.raw";
+			sampleRate = 32728;
+			break;
+		case 28: // Style Savvy: Trendsetters - Fashion Contest Menu
+			loopName = "nitro:/music/styleSavvy2/contest.raw";
+			sampleRate = 32728;
+			break;
+		case 29: // Style Savvy: Trendsetters - MC Mode's Theme
+			loopName = "nitro:/music/styleSavvy2/contestDJ.raw";
+			sampleRate = 32728;
+			break;
+		case 30: // Style Savvy: Trendsetters - Cute Runway Theme
+			startName = "nitro:/music/styleSavvy2/runway00_start.raw";
+			loopName = "nitro:/music/styleSavvy2/runway00_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 31: // Style Savvy: Trendsetters - Pop Runway Theme
+			loopName = "nitro:/music/styleSavvy2/runway01.raw";
+			sampleRate = 32728;
+			break;
+		case 32: // Style Savvy: Trendsetters - Runway Theme 02
+			startName = "nitro:/music/styleSavvy2/runway02_start.raw";
+			loopName = "nitro:/music/styleSavvy2/runway02_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 33: // Style Savvy: Trendsetters - Romantic Runway Theme
+			startName = "nitro:/music/styleSavvy2/runway03_start.raw";
+			loopName = "nitro:/music/styleSavvy2/runway03_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 34: // Style Savvy: Trendsetters - Boho-Chic Runway Theme
+			loopName = "nitro:/music/styleSavvy2/runway04.raw";
+			sampleRate = 32728;
+			break;
+		case 35: // Style Savvy: Trendsetters - Rock Runway Theme
+			startName = "nitro:/music/styleSavvy2/runway05_start.raw";
+			loopName = "nitro:/music/styleSavvy2/runway05_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 36: // Style Savvy: Trendsetters - Wireless Shop
+			loopName = "nitro:/music/styleSavvy2/girlsMall.raw";
+			sampleRate = 32728;
+			break;
+		case 37: // Style Savvy: Trendsetters - Main Shop Data
+			loopName = "nitro:/music/styleSavvy2/personalCheck.raw";
+			sampleRate = 32728;
+			break;
 	}
 	snd().loadStream(startName, loopName, sampleRate, stereo, true);
 }
