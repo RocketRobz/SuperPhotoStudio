@@ -38,7 +38,7 @@ void loadMusic(int num) {
 		case 5:	// Sonic Mania - Main Menu: "Comfort Zone"
 			startName = "nitro:/music/sonicMania/mainMenu_start.raw";
 			loopName = "nitro:/music/sonicMania/mainMenu_loop.raw";
-			sampleRate = 44100;
+			sampleRate = 22050;
 			break;
 		case 6:	// Sonic Mania - Angel Island Zone
 			loopName = "nitro:/music/sonicMania/angelIslandZone.raw";
@@ -214,6 +214,21 @@ void loadMusic(int num) {
 			loopName = "nitro:/music/superMarioBros/overworld_loop.raw";
 			sampleRate = 32000;
 			stereo = false;
+			break;
+		case 43: // Sonic Jam - Menu
+			startName = "nitro:/music/sonicJam/menu_start.raw";
+			loopName = "nitro:/music/sonicJam/menu_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 44: // Sonic Jam - Sonic World
+			startName = "nitro:/music/sonicJam/sworld_start.raw";
+			loopName = "nitro:/music/sonicJam/sworld_loop.raw";
+			sampleRate = 32000;
+			break;
+		case 45: // Sonic Jam - Gallery
+			startName = "nitro:/music/sonicJam/gallery_start.raw";
+			loopName = "nitro:/music/sonicJam/gallery_loop.raw";
+			sampleRate = 22050;
 			break;
 	}
 	snd().loadStream(startName, loopName, sampleRate, stereo, true);

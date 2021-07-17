@@ -55,6 +55,7 @@ The result, *Super Photo Studio*! Take pictures of your favorite all-star charac
 * devkitPro: libnds, libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * Universal Team: Universal Core
 * SuperSaiyajinStackZ: StackZ and Stackie avatars
+* The Brickster: Some included remastered music
 * Pk11: DSi version's font rendering code
 * chyyran: DSi version's alpha blending and sound streaming code
 * joel16: Screenshot code from [3DShell](https://github.com/joel16/3DShell)

@@ -173,6 +173,18 @@ void loadMusic(int num) {
 			startName = "romfs:/music/superMarioBros/overworld_start.wav";
 			loopName = "romfs:/music/superMarioBros/overworld_loop.wav";
 			break;
+		case 43: // Sonic Jam - Menu
+			startName = "romfs:/music/sonicJam/menu_start.wav";
+			loopName = "romfs:/music/sonicJam/menu_loop.wav";
+			break;
+		case 44: // Sonic Jam - Sonic World
+			startName = "romfs:/music/sonicJam/sworld_start.wav";
+			loopName = "romfs:/music/sonicJam/sworld_loop.wav";
+			break;
+		case 45: // Sonic Jam - Gallery
+			startName = "romfs:/music/sonicJam/gallery_start.wav";
+			loopName = "romfs:/music/sonicJam/gallery_loop.wav";
+			break;
 	}
 
 	if (access(startName, F_OK) == 0) {
