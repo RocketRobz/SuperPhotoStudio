@@ -1,0 +1,14 @@
+In the DS(i) version of Super Photo Studio, some work was done to keep the music file size down while retaining the high quality.
+
+Any reused or duplicated parts of the music are deleted, and the part that would be reused is put into a single file.
+The parts would then be played in a sequence, for example:
+
+Super Mario Bros.: Overworld Theme
+0, 1, 1, 2, 3, 2, 4, 2, 3, 2, 4, 5, 6, 5, 0, and so on...
+
+Depending on if:
+* The music is stereo or mono
+* The Hz is high or low
+* How many reused parts of the music there is
+You could save a huge amount of ROM space for more content, rather than using a single music stream file to take a lot of space.
+For example, the music above is normally around 4 MB, but after opimzation, it's 1.20 MB.

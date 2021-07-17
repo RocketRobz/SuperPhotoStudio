@@ -24,7 +24,7 @@ void loadMusic(int num) {
 		case 2:	// Mario Golf: Advance Tour - Marion Club
 			startName = "nitro:/music/marioGolfAdvanceTour/marionClub_start.raw";
 			loopName = "nitro:/music/marioGolfAdvanceTour/marionClub_loop.raw";
-			sampleRate = 48000;
+			sampleRate = 32000;
 			break;
 		case 3:	// Tetris Party - Title Screen
 			startName = "nitro:/music/tetrisParty/titleScreen_start.raw";
@@ -127,7 +127,7 @@ void loadMusic(int num) {
 			break;
 		case 23: // Style Savvy: Trendsetters - Brad's Theme
 			loopName = "nitro:/music/styleSavvy2/musashi.raw";
-			sampleRate = 32728;
+			sampleRate = 22050;
 			break;
 		case 24: // Style Savvy: Trendsetters - Buyer's Center
 			startName = "nitro:/music/styleSavvy2/exhibition_start.raw";
@@ -150,7 +150,7 @@ void loadMusic(int num) {
 			break;
 		case 28: // Style Savvy: Trendsetters - Fashion Contest Menu
 			loopName = "nitro:/music/styleSavvy2/contest.raw";
-			sampleRate = 32728;
+			sampleRate = 22050;
 			break;
 		case 29: // Style Savvy: Trendsetters - MC Mode's Theme
 			loopName = "nitro:/music/styleSavvy2/contestDJ.raw";
@@ -182,15 +182,15 @@ void loadMusic(int num) {
 		case 35: // Style Savvy: Trendsetters - Rock Runway Theme
 			startName = "nitro:/music/styleSavvy2/runway05_start.raw";
 			loopName = "nitro:/music/styleSavvy2/runway05_loop.raw";
-			sampleRate = 32728;
+			sampleRate = 22050;
 			break;
 		case 36: // Style Savvy: Trendsetters - Wireless Shop
 			loopName = "nitro:/music/styleSavvy2/girlsMall.raw";
-			sampleRate = 32728;
+			sampleRate = 22050;
 			break;
 		case 37: // Style Savvy: Trendsetters - Main Shop Data
 			loopName = "nitro:/music/styleSavvy2/personalCheck.raw";
-			sampleRate = 32728;
+			sampleRate = 22050;
 			break;
 		case 38: // Style Savvy - Hair Salon
 			loopName = "nitro:/music/styleSavvy/hairSalon.raw";
@@ -208,6 +208,12 @@ void loadMusic(int num) {
 		case 41: // Style Savvy - Dominic's Mansion
 			loopName = "nitro:/music/styleSavvy/mansion.raw";
 			sampleRate = 32000;
+			break;
+		case 42: // Super Mario Bros. - Overworld
+			startName = "nitro:/music/superMarioBros/overworld_start.raw";
+			loopName = "nitro:/music/superMarioBros/overworld_loop.raw";
+			sampleRate = 32000;
+			stereo = false;
 			break;
 	}
 	snd().loadStream(startName, loopName, sampleRate, stereo, true);

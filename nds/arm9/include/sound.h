@@ -37,8 +37,6 @@ class SoundControl {
         bool stream_is_stereo;
         bool loopingPoint;
         bool looping;
-        //mm_sound_effect snd_loading;
-        mm_sound_effect mus_startup;
         FILE* stream_start_source;
         FILE* stream_source;
 };

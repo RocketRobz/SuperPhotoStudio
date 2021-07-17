@@ -36,6 +36,7 @@
 #include "pkmnStadiumBgmNames.h"
 #include "savvyMgrBgmNames.h"
 #include "sonicManiaBgmNames.h"
+#include "superMarioBrosBgmNames.h"
 #include "ss1BgmNames.h"
 #include "ss2BgmNames.h"
 #include "tetrisPartyBgmNames.h"
@@ -127,6 +128,7 @@ static u8 bgmPageOrder[] = {
 	4,	// Sonic Mania
 	5,	// Style Savvy
 	8,	// Style Savvy: Trendsetters
+	9,	// Super Mario Bros.
 	3,	// Tetris Party
 };
 
@@ -180,6 +182,9 @@ void PhotoStudio::getMaxChars() {
 				break;
 			case 8:
 				import_totalCharacters = 17;
+				break;
+			case 9:
+				import_totalCharacters = 0;
 				break;
 		}
 	} else if (subScreenMode == 1) {
@@ -735,6 +740,8 @@ const char* PhotoStudio::bgmGameTitle(void) const {
 			return "Savvy Manager";
 		case 8:
 			return ss2Title();
+		case 9:
+			return "Super Mario Bros.";
 	}
 	return "???";
 }
@@ -823,6 +830,8 @@ const char* PhotoStudio::bgmName(int i) const {
 			return savvyMgrBgmNames[i];
 		case 8:
 			return ss2BgmNames[i];
+		case 9:
+			return superMarioBrosBgmNames[i];
 	}
 	return "???";
 }
@@ -867,6 +876,8 @@ int PhotoStudio::getBgmNum(void) const {
 			return savvyMgrBgmNums[bgmList_cursorPosition];
 		case 8:
 			return ss2BgmNums[bgmList_cursorPosition];
+		case 9:
+			return superMarioBrosBgmNums[bgmList_cursorPosition];
 	}
 	return 0;
 }

@@ -169,6 +169,10 @@ void loadMusic(int num) {
 		case 41: // Style Savvy - Dominic's Mansion
 			loopName = "romfs:/music/styleSavvy/mansion.wav";
 			break;
+		case 42: // Super Mario Bros. - Overworld
+			startName = "romfs:/music/superMarioBros/overworld_start.wav";
+			loopName = "romfs:/music/superMarioBros/overworld_loop.wav";
+			break;
 	}
 
 	if (access(startName, F_OK) == 0) {
