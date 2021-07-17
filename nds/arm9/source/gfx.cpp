@@ -12,6 +12,19 @@
 
 #define charSpriteSize 0x18000
 
+#define sysRegion *(u8*)0x02FFFD70
+
+/// Configuration region values.
+typedef enum
+{
+	CFG_REGION_JPN = 0, ///< Japan
+	CFG_REGION_USA = 1, ///< USA
+	CFG_REGION_EUR = 2, ///< Europe
+	CFG_REGION_AUS = 3, ///< Australia
+	CFG_REGION_CHN = 4, ///< China
+	CFG_REGION_KOR = 5, ///< Korea
+} CFG_Region;
+
 u16 bmpImageBuffer[2][256*192];
 u16* bmpImageBuffer2[2] = {NULL};
 static u16* bgSpriteMem = NULL;
@@ -134,17 +147,20 @@ void GFX::loadSheets() {
 	int metalXpos = 0;
 	int metalYpos = 0;
 
+	int yStart = sysRegion==CFG_REGION_JPN ? 130 : 72;
+	int yEnd = sysRegion==CFG_REGION_JPN ? 160 : 131;
+
 	std::vector<unsigned char> image;
 	unsigned width, height;
-	lodepng::decode(image, width, height, "nitro:/graphics/gui/titleMetal.png");
+	lodepng::decode(image, width, height, sysRegion==CFG_REGION_JPN ? "nitro:/graphics/gui/titleMetalJ.png" : "nitro:/graphics/gui/titleMetal.png");
 	for(unsigned i=0;i<image.size()/4;i++) {
 		charSpriteMem[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 	}
 	image.clear();
-	lodepng::decode(image, width, height, "nitro:/graphics/gui/title.png");
+	lodepng::decode(image, width, height, sysRegion==CFG_REGION_JPN ? "nitro:/graphics/gui/titleJ.png" : "nitro:/graphics/gui/titleMetal.png");
 	bool alternatePixel = false;
 	for(unsigned i=0;i<image.size()/4;i++) {
-		if (i >= 256*72 && i < 256*131) {
+		if ((int)i >= 256*yStart && (int)i < 256*yEnd) {
 			metalXpos++;
 			if (metalXpos == 256) {
 				metalXpos = 0;
@@ -172,7 +188,7 @@ void GFX::loadSheets() {
 			bmpImageBuffer[0][i] = bmpImageBuffer[1][i];
 		} else if (charSpriteAlpha[i] == 0) {
 			bmpImageBuffer[0][i] = charSpriteMem[(metalYpos*384)+metalXpos];
-		} else if (i >= 256*72 && i < 256*131) {
+		} else if ((int)i >= 256*yStart && (int)i < 256*yEnd) {
 			bmpImageBuffer[0][i] = alphablend(bmpImageBuffer[1][i], charSpriteMem[(metalYpos*384)+metalXpos], charSpriteAlpha[i]);
 		}
 	  if (dsiFeatures()) {
@@ -202,7 +218,7 @@ void GFX::loadSheets() {
 			bmpImageBuffer2[0][i] = bmpImageBuffer2[1][i];
 		} else if (charSpriteAlpha[i] == 0) {
 			bmpImageBuffer2[0][i] = charSpriteMem[(metalYpos*384)+metalXpos];
-		} else if (i >= 256*72 && i < 256*131) {
+		} else if ((int)i >= 256*yStart && (int)i < 256*yEnd) {
 			bmpImageBuffer2[0][i] = alphablend(bmpImageBuffer2[1][i], charSpriteMem[(metalYpos*384)+metalXpos], charSpriteAlpha[i]);
 		}
 	  }
@@ -226,7 +242,10 @@ void updateTitleScreen(const int metalXposBase) {
 	int metalXpos = metalXposBase;
 	int metalYpos = 0;
 
-	for (int i = 256*72; i < 256*131; i++) {
+	int yStart = sysRegion==CFG_REGION_JPN ? 130 : 72;
+	int yEnd = sysRegion==CFG_REGION_JPN ? 160 : 131;
+
+	for (int i = 256*yStart; i < 256*yEnd; i++) {
 		metalXpos++;
 		if (metalXpos == 256+metalXposBase) {
 			metalXpos = metalXposBase;
@@ -236,7 +255,7 @@ void updateTitleScreen(const int metalXposBase) {
 		  if (charSpriteAlpha[i] == 0) {
 			bmpImageBuffer[0][i] = charSpriteMem[(metalYpos*384)+metalXpos];
 			if (dsiFeatures()) bmpImageBuffer2[0][i] = charSpriteMem[(metalYpos*384)+metalXpos];
-		  } else if (i >= 256*72 && i < 256*131) {
+		  } else if (i >= 256*yStart && i < 256*yEnd) {
 			bmpImageBuffer[0][i] = alphablend(bmpImageBuffer[1][i], charSpriteMem[(metalYpos*384)+metalXpos], charSpriteAlpha[i]);
 			if (dsiFeatures()) bmpImageBuffer2[0][i] = alphablend(bmpImageBuffer2[1][i], charSpriteMem[(metalYpos*384)+metalXpos], charSpriteAlpha[i]);
 		  }

@@ -531,6 +531,15 @@ const char* PhotoStudio::NESCharacterNames(int i) const {
 	}
 }
 
+const char* PhotoStudio::superPhotoTitle(void) const {
+	switch (sysRegion) {
+		default:
+			return "Super Photo Studio";
+		case CFG_REGION_JPN:
+			return "Girls Mode: Photo Shoot X-over!";
+	}
+}
+
 const char* PhotoStudio::mmBattleAndChaseTitle(void) const {
 	switch (sysRegion) {
 		default:
@@ -648,7 +657,7 @@ const char* PhotoStudio::charGameTitle(void) const {
 		case 3:
 			return ss4Title();
 		case 4:
-			return "Super Photo Studio";
+			return superPhotoTitle();
 		case 5:
 			return "Super Mario series";
 		case 6:
