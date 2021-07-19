@@ -185,6 +185,42 @@ void loadMusic(int num) {
 			startName = "romfs:/music/sonicJam/gallery_start.wav";
 			loopName = "romfs:/music/sonicJam/gallery_loop.wav";
 			break;
+		case 46: // Style Savvy: Fashion Forward - Intro Song (Japanese)
+			startName = "nitro:/music/styleSavvy3/introJapanese_start.wav";
+			loopName = "nitro:/music/styleSavvy3/introJapanese_loop.wav";
+			break;
+		case 47: // Style Savvy: Fashion Forward - Intro Song (English)
+			startName = "nitro:/music/styleSavvy3/introEnglish_start.wav";
+			loopName = "nitro:/music/styleSavvy3/introEnglish_loop.wav";
+			break;
+		case 48: // Style Savvy: Fashion Forward - Title Screen
+			loopName = "romfs:/music/styleSavvy3/title.wav";
+			break;
+		case 49: // Style Savvy: Fashion Forward - My Apartment
+			loopName = "romfs:/music/styleSavvy3/apartment.wav";
+			break;
+		case 50: // Style Savvy: Fashion Forward - Beaumonde City (Morning)
+			loopName = "romfs:/music/styleSavvy3/beaumonde6AM.wav";
+			break;
+		case 51: // Style Savvy: Fashion Forward - Beaumonde City (Noon)
+			loopName = "romfs:/music/styleSavvy3/beaumonde1PM.wav";
+			break;
+		case 52: // Style Savvy: Fashion Forward - Beaumonde City (Sunset)
+			loopName = "romfs:/music/styleSavvy3/beaumonde7PM.wav";
+			break;
+		case 53: // Style Savvy: Fashion Forward - Beaumonde City (Night)
+			loopName = "romfs:/music/styleSavvy3/beaumonde9PM.wav";
+			break;
+		case 54: // Style Savvy: Fashion Forward - Beaumonde City (Midnight)
+			loopName = "romfs:/music/styleSavvy3/beaumonde12AM.wav";
+			break;
+		case 55: // Style Savvy: Fashion Forward - Phone
+			startName = "romfs:/music/styleSavvy3/phone_start.wav";
+			loopName = "romfs:/music/styleSavvy3/phone_loop.wav";
+			break;
+		case 56: // Style Savvy: Fashion Forward - Wardrobe
+			loopName = "romfs:/music/styleSavvy3/wardrobe.wav";
+			break;
 	}
 
 	if (access(startName, F_OK) == 0) {

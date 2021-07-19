@@ -230,6 +230,53 @@ void loadMusic(int num) {
 			loopName = "nitro:/music/sonicJam/gallery_loop.raw";
 			sampleRate = 22050;
 			break;
+		case 46: // Style Savvy: Fashion Forward - Intro Song (Japanese)
+			startName = "nitro:/music/styleSavvy3/introJapanese_start.raw";
+			loopName = "nitro:/music/styleSavvy3/introJapanese_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 47: // Style Savvy: Fashion Forward - Intro Song (English)
+			startName = "nitro:/music/styleSavvy3/introEnglish_start.raw";
+			loopName = "nitro:/music/styleSavvy3/introEnglish_loop.raw";
+			sampleRate = 32728;
+			break;
+		case 48: // Style Savvy: Fashion Forward - Title Screen
+			loopName = "nitro:/music/styleSavvy3/title.raw";
+			sampleRate = 32000;
+			break;
+		case 49: // Style Savvy: Fashion Forward - My Apartment
+			loopName = "nitro:/music/styleSavvy3/apartment.raw";
+			sampleRate = 32000;
+			break;
+		case 50: // Style Savvy: Fashion Forward - Beaumonde City (Morning)
+			loopName = "nitro:/music/styleSavvy3/beaumonde6AM.raw";
+			sampleRate = 32000;
+			break;
+		case 51: // Style Savvy: Fashion Forward - Beaumonde City (Noon)
+			loopName = "nitro:/music/styleSavvy3/beaumonde1PM.raw";
+			sampleRate = 32000;
+			break;
+		case 52: // Style Savvy: Fashion Forward - Beaumonde City (Sunset)
+			loopName = "nitro:/music/styleSavvy3/beaumonde7PM.raw";
+			sampleRate = 22050;
+			break;
+		case 53: // Style Savvy: Fashion Forward - Beaumonde City (Night)
+			loopName = "nitro:/music/styleSavvy3/beaumonde9PM.raw";
+			sampleRate = 32000;
+			break;
+		case 54: // Style Savvy: Fashion Forward - Beaumonde City (Midnight)
+			loopName = "nitro:/music/styleSavvy3/beaumonde12AM.raw";
+			sampleRate = 32000;
+			break;
+		case 55: // Style Savvy: Fashion Forward - Phone
+			startName = "nitro:/music/styleSavvy3/phone_start.raw";
+			loopName = "nitro:/music/styleSavvy3/phone_loop.raw";
+			sampleRate = 22050;
+			break;
+		case 56: // Style Savvy: Fashion Forward - Wardrobe
+			loopName = "nitro:/music/styleSavvy3/wardrobe.raw";
+			sampleRate = 32000;
+			break;
 	}
 	snd().loadStream(startName, loopName, sampleRate, stereo, true);
 }
