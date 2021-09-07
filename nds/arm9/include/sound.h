@@ -21,7 +21,7 @@ class SoundControl {
         // Refill the stream buffers
         volatile void updateStream();
 
-        void loadStream(const char* path, const char* loopPath, u32 sampleRate, bool stereo, bool loop);
+        void loadStream(const char* path, const char* pathCache, const char* loopPath, const char* loopPathCache, u32 sampleRate, bool stereo, bool loop);
         void beginStream();
         void stopStream();
         void fadeOutStream();
