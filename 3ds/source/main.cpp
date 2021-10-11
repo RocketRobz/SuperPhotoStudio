@@ -182,8 +182,8 @@ int main()
 	aptExit();
 
 	gfxInitDefault();
-	gfxSetWide(horiHd && consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
 	loadSettings();
+	gfxSetWide(horiHd && consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
 
 	Gui::init();
 	osSetSpeedupEnable(true);	// Enable speed-up for New 3DS users
