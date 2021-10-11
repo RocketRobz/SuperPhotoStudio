@@ -61,7 +61,7 @@ void loadSettings(void) {
 	setting = settingsini.GetInt("SuperPhotoStudio", "CINEMA_WIDE", false);
 	if (setting > 0) cinemaWide = true;
 	iFps = settingsini.GetInt("SuperPhotoStudio", "FRAME_RATE", iFps);
-	horiHd = settingsini.GetInt("SAVVY-MANAGER", "HORI_HD", horiHd);
+	horiHd = settingsini.GetInt("SuperPhotoStudio", "HORI_HD", horiHd);
 }
 
 void saveSettings(void) {
