@@ -41,6 +41,7 @@ sound *sfx_select = NULL;
 sound *sfx_back = NULL;
 sound *sfx_highlight = NULL;
 
+bool horiHd = true;
 bool dspfirmfound = false;
 bool exiting = false;
 bool musicPlayStarted = false;
@@ -60,6 +61,7 @@ void loadSettings(void) {
 	setting = settingsini.GetInt("SuperPhotoStudio", "CINEMA_WIDE", false);
 	if (setting > 0) cinemaWide = true;
 	iFps = settingsini.GetInt("SuperPhotoStudio", "FRAME_RATE", iFps);
+	horiHd = settingsini.GetInt("SAVVY-MANAGER", "HORI_HD", horiHd);
 }
 
 void saveSettings(void) {
@@ -180,7 +182,7 @@ int main()
 	aptExit();
 
 	gfxInitDefault();
-	gfxSetWide(consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
+	gfxSetWide(horiHd && consoleModel != 3);	// Enable 800x240 mode for non-O2DS consoles. Improves clarity in graphics.
 	loadSettings();
 
 	Gui::init();
