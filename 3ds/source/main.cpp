@@ -268,7 +268,7 @@ int main()
 		if (isInit) {
 			delay++;
 			if (rocketRobzScreen) {
-				if (delay > iFps*(gfxIsWide() ? 13 : 10)) {
+				if (delay > iFps*(gfxIsWide() ? 13 : 11)) {
 					Gui::setScreen(std::make_unique<PhotoStudio>(), true); // Set after delay to the photo studio.
 					isInit = false;
 				}
