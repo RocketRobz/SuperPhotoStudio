@@ -6,14 +6,14 @@
 #endif
 
 static int subMode = 0;
-#ifdef _3DS
+#ifdef __3DS__
 static int prevSubMode = -1;
 #endif
 extern int delay;
 static int rr_fadeAlpha = 0;
 static int rr_fadeType = true;
 
-#ifdef _3DS
+#ifdef __3DS__
 static int robzXpos = 135+220;
 static int robzYpos = 19+220;
 static int rrFlashFade = 255;
@@ -35,7 +35,7 @@ static bool floorLineMoveOdd[3] = {false, false, false};
 void RocketRobz::Draw(void) const {
 	fadecolor = 0;	// Always use black color for fading effects
 
-	#ifdef _3DS
+	#ifdef __3DS__
 	Gui::ScreenDraw(Top);
 
 	bool robzInPos = (robzXpos == 135 && robzYpos == 19);
@@ -232,7 +232,7 @@ void RocketRobz::Draw(void) const {
 		if (rr_fadeAlpha > 255) rr_fadeAlpha = 255;
 	}
 
-	#ifdef _3DS
+	#ifdef __3DS__
 	if (delay > iFps*10 && gfxIsWide()) {
 		if (prevSubMode != 0) {
 			rr_fadeType = false;

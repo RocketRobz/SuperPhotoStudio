@@ -914,7 +914,7 @@ int PhotoStudio::getBgmNum(void) const {
 }
 
 void PhotoStudio::drawMsg(void) const {
-	#ifdef _3DS
+	#ifdef __3DS__
 	GFX::DrawSprite(sprites_msg_idx, 0, 8, 1, 1);
 	GFX::DrawSprite(sprites_msg_idx, 160, 8, -1, 1);
 	GFX::DrawSprite(messageNo == 4 ? sprites_icon_question_idx : sprites_icon_msg_idx, 132, -2);
@@ -1425,7 +1425,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			sndSelect();
 			showMessage = false;
 		}
-	#ifdef _3DS
+	#ifdef __3DS__
 	} else if (subScreenMode == 10) {
 		SettingsLogic(hDown, hHeld, touch);
 	#endif
@@ -1973,7 +1973,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 			doScreenshot = true;
 		}
 	
-		#ifdef _3DS
+		#ifdef __3DS__
 		if (hDown & KEY_SELECT) {
 			sndSelect();
 			subScreenMode = 10;

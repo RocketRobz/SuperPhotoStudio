@@ -50,7 +50,7 @@ extern bool shiftBySubPixel;
 namespace GFX {
 	// Load & Unload default sheets.
 	void resetCharStatus(int num = -1);
-	#ifdef _3DS
+	#ifdef __3DS__
 	Result loadSheets();
 	Result unloadSheets();
 	#else
@@ -62,7 +62,7 @@ namespace GFX {
 
 	// Sprite Functions.
 	bool loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
-	#ifdef _3DS
+	#ifdef __3DS__
 	void loadCharSpriteMem(int num);
 	#else
 	void loadCharSpriteMem(const int zoomIn, const bool* flipH);
@@ -71,7 +71,7 @@ namespace GFX {
 	void unloadBgSprite(void);
 	void reloadBgSprite(void);
 	void showBgSprite(int zoomIn);
-	#ifdef _3DS
+	#ifdef __3DS__
 	void animateBgSprite(void);
 	#else
 	void animateBgSprite(const int zoomIn, const bool* flipH);

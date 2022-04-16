@@ -1,4 +1,4 @@
-#ifdef _3DS
+#ifdef __3DS__
 
 #include "photoStudio.hpp"
 #include "screenvars.h"

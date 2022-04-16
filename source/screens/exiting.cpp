@@ -2,7 +2,7 @@
 #include "screenvars.h"
 
 void Exiting::Draw(void) const {
-	#ifdef _3DS
+	#ifdef __3DS__
 	Gui::ScreenDraw(Top);
 	Gui::Draw_Rect(0, 0, 400, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, 255)); // Fade in/out effect
 	Gui::ScreenDraw(Bottom);
