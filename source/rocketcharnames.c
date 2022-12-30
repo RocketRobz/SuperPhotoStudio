@@ -22,7 +22,7 @@ const char* rocketCharacterFileNamesSpring[] = {
 };
 const char* rocketCharacterFileNamesSummer[] = {
 	"ss4_Robz1",
-	"rocket_RabzSummer",
+	"rocket_RabzSpring",
 	"rocket_StackZ",
 	"rocket_StackieSummer",
 };
