@@ -8,6 +8,7 @@
 # Characters, Locations, and Music by
 * Namco
 * Nicalis
+* NightScript*
 * Nintendo
 * Rare
 * Rocket Robz*
@@ -26,6 +27,8 @@
 * devkitPro: libnds, libctru, citro2d/3d, nds-hb-menu's file/folder browsing code
 * [Universal-Team](https://github.com/Universal-Team): Universal Core
 * [SuperSaiyajinStackZ](https://github.com/SuperSaiyajinStackZ): StackZ and Stackie avatars
+     * StackZ avatar made by Rocket Robz
+* [NightScript](https://github.com/NightScript370): NightScript avatar (made by Rocket Robz)
 * [Church of Kondo](https://www.youtube.com/@ChurchofKondoh): Some included remastered music
 * [Pk11](https://github.com/Epicpkmn11): DSi version's font rendering code
 * [chyyran](https://github.com/chyyran): DS(i) version's alpha blending and sound streaming code
