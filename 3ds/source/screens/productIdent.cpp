@@ -45,7 +45,7 @@ void ProductIdent::Draw(void) const {
 	if (gfxIsWide()) {
 		Gui::DrawString(40, 176-(shiftBySubPixel ? 0.5f : 0), 0.50, WHITE, "Hori-HD (800px MODE) ACTIVATED");
 	}
-	Gui::DrawString(40, 198-(shiftBySubPixel ? 0.5f : 0), 0.50, LIGHTRED, "2020-2021 Rocket Robz");
+	Gui::DrawString(40, 198-(shiftBySubPixel ? 0.5f : 0), 0.50, LIGHTRED, "2020-2023 Rocket Robz");
 	Gui::Draw_Rect(38, 214-(shiftBySubPixel ? 0.5f : 0), 400-42, 1, LIGHTRED);
 	Gui::DrawString(40, 214-(shiftBySubPixel ? 0.5f : 0), 0.45, LIGHTRED, "robz designs on the future <<<");
 
