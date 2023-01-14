@@ -13,7 +13,7 @@ The photo shoot party becomes bigger and more fun, in a *Photo Shoot X-over!*
 
 # What is this?
 
-*Girls Mode: Photo Shoot X-over!* is basically an upgraded version of the *Girls Mode* series's photo studio feature, with added characters and locations outside of said series. You can also change the character's expressions and poses, though *Photo Shoot X-over* does not support changing those, as it would be time-consuming, as well as taking up more space.
+*Girls Mode: Photo Shoot X-over!* is basically an upgraded version of the *Girls Mode* series's photo studio feature, with added characters and locations outside of said series. You can also change the character's expressions and poses, though *Photo Shoot X-over* does not support changing expressions.
 
 # Features
 

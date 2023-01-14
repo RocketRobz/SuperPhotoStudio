@@ -14,7 +14,7 @@ The result, *Super Photo Studio*! Take pictures of your favorite all-star charac
 
 # What is this?
 
-*Super Photo Studio* is basically an upgraded version of the *Style Savvy* series's photo studio feature, with added characters and locations outside of said series. You can also change the character's expressions and poses, though *Super Photo Studio* does not support changing those, as it would be time-consuming, as well as taking up more space.
+*Super Photo Studio* is basically an upgraded version of the *Style Savvy* series's photo studio feature, with added characters and locations outside of said series. You can also change the character's expressions and poses, though *Super Photo Studio* does not support changing expressions.
 
 # Features
 
