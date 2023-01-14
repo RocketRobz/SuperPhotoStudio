@@ -37,6 +37,7 @@ private:
 	const char* charGameTitle(void) const;
 	const char* bgmGameTitle(void) const;
 	bool charGender(int i) const;
+	int charPose(int i) const;
 	const char* bgName(int i) const;
 	const char* charName(int i) const;
 	const char* bgmName(int i) const;
@@ -63,13 +64,16 @@ private:
 
 	char chrFilePath[256];
 	char chrFilePath2[256];
+	char chrFilePathPose[256];
 	char chrCounter[24];
+	char chrPoseCounter[24];
 
 	bool displayNothing = false;
 	bool displayStudioBg = false;
 	bool showScrollingBg = true;
 	bool characterPicked[5] = {false};
 	bool characterFlipH[5] = {false};
+	int characterPose[5] = {0};
 
 	mutable int charFadeAlpha = 0;
 	bool previewCharacter = false;
@@ -100,6 +104,9 @@ private:
 	int bgmList_cursorPosition = 0;
 	int bgmList_cursorPositionOnScreen = 0;
 	int bgmShownFirst = 0;
+
+	int charSettings_cursorPosition = 0;
+	int charSettings_cursorPositionOnScreen = 0;
 
 	int numberOfSettings = 1;
 	int settings_cursorPosition = 0;

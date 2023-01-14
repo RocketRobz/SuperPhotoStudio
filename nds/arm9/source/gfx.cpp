@@ -792,7 +792,7 @@ void GFX::reloadBgSprite() {
 	if (dsiFeatures()) dmaCopyHalfWordsAsynch(1, bmpImageBuffer2[0], bgGetGfxPtr(bg3Main), 0x18000);
 }
 
-bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
+bool GFX::loadCharSprite(int num, const char* t3xPathPose, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
 	animateTitle = false;
 
 	if (chracterSpriteLoaded) {
@@ -801,7 +801,13 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	chracterSpriteFound[num] = false;
 	bool allSeasons = true;
 	bool fileFound = false;
-	fileFound = (access(t3xPathAllSeasons, F_OK) == 0);
+	bool poseable = false;
+	fileFound = (access(t3xPathPose, F_OK) == 0);
+	if (fileFound) {
+		poseable = true;
+	} else {
+		fileFound = (access(t3xPathAllSeasons, F_OK) == 0);
+	}
 	if (!fileFound) {
 		allSeasons = false;
 		fileFound = (access(t3xPathOneSeason, F_OK) == 0);
@@ -813,7 +819,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 
 	std::vector<unsigned char> image;
 	unsigned width, height;
-	lodepng::decode(image, width, height, allSeasons ? t3xPathAllSeasons : t3xPathOneSeason);
+	lodepng::decode(image, width, height, poseable ? t3xPathPose : (allSeasons ? t3xPathAllSeasons : t3xPathOneSeason));
 	bool alternatePixel = false;
 	if (num == 4) {
 		for(unsigned i=0;i<image.size()/4;i++) {

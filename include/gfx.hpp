@@ -61,7 +61,7 @@ namespace GFX {
 	void unloadGameSelSheets();
 
 	// Sprite Functions.
-	bool loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
+	bool loadCharSprite(int num, const char* t3xPathPose, const char* t3xPathAllSeasons, const char* t3xPathOneSeason);
 	#ifdef __3DS__
 	void loadCharSpriteMem(int num);
 	#else

@@ -737,6 +737,50 @@ bool PhotoStudio::charGender(int i) const {
 	return true;
 }
 
+int PhotoStudio::charPose(int i) const {
+	switch (charPageOrder[char_highlightedGame[currentCharNum]]) {
+		case 0:
+			return import_ss1CharacterPoses[i];
+		/* case 1:
+			return import_ss2CharacterGenders[i];
+		case 2:
+			return import_ss3CharacterGenders[i];
+		case 3:
+			return import_ss4CharacterGenders[i];
+		case 4:
+			return rocketCharacterGenders[i];
+		case 5:
+			return smCharacterGenders[i];
+		case 6:
+			return sthCharacterGenders[i];
+		case 7:
+			return jfgCharacterGenders[i];
+		case 8:
+			return conkerCharacterGenders[i];
+		case 9:
+			return banjokCharacterGenders[i];
+		case 10:
+			return pacCharacterGenders[i];
+		case 11:
+			return swapCharacterGenders[i];
+		case 12:
+			return metroidCharacterGenders[i];
+		case 13:
+			return sc5CharacterGenders[i];
+		case 14:
+			return vvvvvvCharacterGenders[i];
+		case 15:
+			return kirbyCharacterGenders[i];
+		case 16:
+			return nesCharacterGenders[i];
+		case 17:
+			return nightsCharacterGenders[i];
+		case 0xFF:
+			return getExportedCharacterGender(i); */
+	}
+	return 0;
+}
+
 const char* PhotoStudio::bgmGameTitle(void) const {
 	switch (bgmPageOrder[bgm_highlightedGame]) {
 		case 0:
@@ -930,8 +974,10 @@ void PhotoStudio::loadChrImage(void) {
 	previewCharacter = false;
 	#ifdef NDS
 	ditherlaceOnVBlank = true;
+	const char* nullPath = "nitro:/null.png";
 	#else
 	gspWaitForVBlank();
+	const char* nullPath = "romfs:/null.t3x";
 	#endif
 	if (charPageOrder[char_highlightedGame[currentCharNum]] == 0xFF) {
 		#ifdef NDS
@@ -939,7 +985,7 @@ void PhotoStudio::loadChrImage(void) {
 		#else
 		sprintf(chrFilePath, "sdmc:/3ds/SuperPhotoStudio/characters/%s.t3x", getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));
 		#endif
-		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath);
+		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, nullPath, chrFilePath, nullPath);
 	} else if (charPageOrder[char_highlightedGame[currentCharNum]] >= 2) {
 		/*if (numberOfExportedCharacters > 0) {
 			sprintf(chrFilePath, "sdmc:/3ds/SavvyManager/SS%i/characters/previews/%s.t3x", 4, getExportedCharacterName(importCharacterList_cursorPosition[currentCharNum]));	// All Seasons
@@ -951,16 +997,18 @@ void PhotoStudio::loadChrImage(void) {
 		#else
 		sprintf(chrFilePath, "romfs:/gfx/%s.t3x", import_characterFileName());
 		#endif
-		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath);
+		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, nullPath, chrFilePath, chrFilePath);
 	} else {
 		#ifdef NDS
+		sprintf(chrFilePathPose, "nitro:/graphics/char/ss%i_%s0/%i.png", 4, import_characterName(), characterPose[currentCharNum]+1);
 		sprintf(chrFilePath, "nitro:/graphics/char/ss%i_%s.png", 4, import_characterName());				// All Seasons
 		sprintf(chrFilePath2, "nitro:/graphics/char/ss%i_%s%i.png", 4, import_characterName(), seasonNo[currentCharNum]);	// One Season
 		#else
+		sprintf(chrFilePathPose, "romfs:/gfx/ss%i_%s0_pose%i.t3x", 4, import_characterName(), characterPose[currentCharNum]+1);
 		sprintf(chrFilePath, "romfs:/gfx/ss%i_%s.t3x", 4, import_characterName());				// All Seasons
 		sprintf(chrFilePath2, "romfs:/gfx/ss%i_%s%i.t3x", 4, import_characterName(), seasonNo[currentCharNum]);	// One Season
 		#endif
-		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePath, chrFilePath2);
+		previewCharacterFound[currentCharNum] = GFX::loadCharSprite(currentCharNum, chrFilePathPose, chrFilePath, chrFilePath2);
 	}
 	#ifdef NDS
 	ditherlaceOnVBlank = false;
@@ -1008,7 +1056,34 @@ void PhotoStudio::Draw(void) const {
 	}
 
 	cursorX = 200;
-	if (subScreenMode == 3) {
+	if (subScreenMode == 4) {
+		cursorY = 52+(40*charSettings_cursorPositionOnScreen);
+		if (redrawText) {
+			printSmall(false, 0, 6, "Character Settings", Alignment::center);
+		}
+
+	  if (!displayNothing) {
+		int i2 = 40;
+		int i3 = 0;
+		// Reset item button Y positions
+		for (int i = 0; i < 3; i++) {
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[(2+i)+(x*3)].y = 192;
+			}
+			oamSub.oamMemory[14+i].y = 192;
+			oamSub.oamMemory[17+i].y = 192;
+		}
+		//for (int i = 0; i < 2; i++) {
+			for (int x = 0; x < 4; x++) {
+				oamSub.oamMemory[(2+i3)+(x*3)].y = i2-16;
+			}
+			sprintf((char*)chrPoseCounter, "Pose < %d/%d >", characterPose[currentCharNum]+1, charPose(importCharacterList_cursorPosition[currentCharNum]));
+			if (redrawText) printSmall(false, 26, i2, chrPoseCounter);
+			//i2 += 40;
+			//i3++;
+		//}
+	  }
+	} else if (subScreenMode == 3) {
 		cursorY = 52+(40*bgmList_cursorPositionOnScreen);
 		if (redrawText) {
 			printSmall(false, 0, 6, bgmGameTitle(), Alignment::center);
@@ -1245,6 +1320,20 @@ void PhotoStudio::Draw(void) const {
 	cursorX = 248;
 	if (subScreenMode == 10) {
 		SettingsDraw();
+	} else if (subScreenMode == 4) {
+		cursorY = 64+(48*charSettings_cursorPositionOnScreen);
+
+		Gui::DrawStringCentered(0, 8, 0.50, WHITE, "Character Settings");
+
+	  if (!displayNothing) {
+		int i2 = 48;
+		//for (int i = 0; i < 2; i++) {
+			GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
+			sprintf((char*)chrPoseCounter, "Pose < %d/%d >", characterPose[currentCharNum]+1, charPose(importCharacterList_cursorPosition[currentCharNum]));
+			Gui::DrawString(32, i2, 0.65, WHITE, chrPoseCounter);
+			//i2 += 48;
+		//}
+	  }
 	} else if (subScreenMode == 3) {
 		cursorY = 64+(48*bgmList_cursorPositionOnScreen);
 
@@ -1427,6 +1516,113 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 	} else if (subScreenMode == 10) {
 		SettingsLogic(hDown, hHeld, touch);
 	#endif
+	} else if (subScreenMode == 4) {
+		if (hDown & KEY_A) {
+			sndSelect();
+			subScreenMode = 0;
+			#ifdef NDS
+			redrawText = true;
+			Gui::DrawScreen();
+			#endif
+		}
+
+		if (hDown & KEY_SELECT) {
+			sndSelect();
+			characterFlipH[currentCharNum] = !characterFlipH[currentCharNum];
+			#ifdef NDS
+			GFX::loadCharSpriteMem(zoomIn, &characterFlipH[0]);
+			#endif
+			renderTop = true;
+		}
+
+		if (charPose(importCharacterList_cursorPosition[currentCharNum]) > 0) {
+			if (hDown & KEY_DLEFT) {
+				sndHighlight();
+				characterPose[currentCharNum]--;
+				if (characterPose[currentCharNum] < 0) characterPose[currentCharNum] = charPose(importCharacterList_cursorPosition[currentCharNum])-1;
+				getMaxChars();
+				renderTop = true;
+			}
+
+			if (hDown & KEY_DRIGHT) {
+				sndHighlight();
+				characterPose[currentCharNum]++;
+				if (characterPose[currentCharNum] > charPose(importCharacterList_cursorPosition[currentCharNum])-1) characterPose[currentCharNum] = 0;
+				getMaxChars();
+				renderTop = true;
+			}
+
+			if ((hDown & KEY_DLEFT) || (hDown & KEY_DRIGHT)) {
+				if (charPageOrder[char_highlightedGame[currentCharNum]] == 0xFF) {
+					previewCharacter = false;
+					if (!exportedCharListGotten) {
+						displayNothing = true;
+						gspWaitForVBlank();
+						getExportedCharacterContents();
+						exportedCharListGotten = true;
+						displayNothing = false;
+					}
+				}
+				getMaxChars();
+				#ifdef NDS
+				redrawText = true;
+				Gui::DrawScreen();
+				#endif
+				renderTop = true;
+				loadChrImage();
+			}
+		}
+
+		if (charPageOrder[char_highlightedGame[currentCharNum]] != 0xFF) {
+			if ((hDown & KEY_L) || (hDown & KEY_ZL)) {
+				sndHighlight();
+				seasonNo[currentCharNum]--;
+				if (seasonNo[currentCharNum] < 0) seasonNo[currentCharNum] = 3;
+				#ifdef NDS
+				redrawText = true;
+				Gui::DrawScreen();
+				#endif
+				loadChrImage();
+				renderTop = true;
+			}
+
+			if ((hDown & KEY_R) || (hDown & KEY_ZR)) {
+				sndHighlight();
+				seasonNo[currentCharNum]++;
+				if (seasonNo[currentCharNum] > 3) seasonNo[currentCharNum] = 0;
+				#ifdef NDS
+				redrawText = true;
+				Gui::DrawScreen();
+				#endif
+				loadChrImage();
+				renderTop = true;
+			}
+
+			if (hDown & KEY_Y) {
+				int seasonNoBak = seasonNo[currentCharNum];
+				seasonNo[currentCharNum] = 4;	// Special outfit
+				if (strcmp(seasonName(), "") != 0) {
+					sndHighlight();
+					#ifdef NDS
+					redrawText = true;
+					Gui::DrawScreen();
+					#endif
+					loadChrImage();
+					renderTop = true;
+				} else {
+					seasonNo[currentCharNum] = seasonNoBak;
+				}
+			}
+		}
+
+		if ((hDown & KEY_B) || ((hDown & KEY_TOUCH) && touchingBackButton())) {
+			sndBack();
+			subScreenMode = 2;
+			#ifdef NDS
+			redrawText = true;
+			Gui::DrawScreen();
+			#endif
+		}
 	} else if (subScreenMode == 3) {
 		if (showCursor) {
 			if (hDown & KEY_DUP) {
@@ -1542,6 +1738,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (seasonNo[currentCharNum] == 4 && strcmp(seasonName(), "") == 0) {
 					seasonNo[currentCharNum] = 0;
 				}
+				characterPose[currentCharNum] = 0;
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();
@@ -1570,6 +1767,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				if (seasonNo[currentCharNum] == 4 && strcmp(seasonName(), "") == 0) {
 					seasonNo[currentCharNum] = 0;
 				}
+				characterPose[currentCharNum] = 0;
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();
@@ -1581,7 +1779,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 
 		if (hDown & KEY_A) {
 			sndSelect();
-			subScreenMode = 0;
+			subScreenMode = 4;
 			#ifdef NDS
 			redrawText = true;
 			Gui::DrawScreen();
@@ -1662,6 +1860,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				}
 			}
 			getMaxChars();
+			characterPose[currentCharNum] = 0;
 			#ifdef NDS
 			redrawText = true;
 			Gui::DrawScreen();
@@ -1675,6 +1874,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndHighlight();
 				seasonNo[currentCharNum]--;
 				if (seasonNo[currentCharNum] < 0) seasonNo[currentCharNum] = 3;
+				characterPose[currentCharNum] = 0;
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();
@@ -1687,6 +1887,7 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				sndHighlight();
 				seasonNo[currentCharNum]++;
 				if (seasonNo[currentCharNum] > 3) seasonNo[currentCharNum] = 0;
+				characterPose[currentCharNum] = 0;
 				#ifdef NDS
 				redrawText = true;
 				Gui::DrawScreen();

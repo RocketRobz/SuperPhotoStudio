@@ -21,3 +21,14 @@ bool import_ss1CharacterGenders[] = {
 	false,			// Female
 	false,			// Female
 };
+
+int import_ss1CharacterPoses[] = {
+	3,
+	1,
+	1,
+	1,
+	1,
+	1,
+	1,
+	1,
+};

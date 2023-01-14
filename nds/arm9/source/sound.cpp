@@ -96,6 +96,8 @@ mm_sfxhand SoundControl::playBack() { return mmEffectEx(&snd_back); }
 mm_sfxhand SoundControl::playHighlight() { return mmEffectEx(&snd_highlight); }
 
 void SoundControl::loadStream(const char* path, const char* pathCache, const char* loopPath, const char* loopPathCache, u32 sampleRate, bool stereo, bool loop) {
+	return; // Temporarily disabled
+
 	if (stream_source) {
 		stream_is_playing = false;
 		mmStreamClose();

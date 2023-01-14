@@ -483,7 +483,7 @@ void GFX::reloadBgSprite() {
 	loadBgSprite();
 }
 
-bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
+bool GFX::loadCharSprite(int num, const char* t3xPathPose, const char* t3xPathAllSeasons, const char* t3xPathOneSeason) {
 	if (chracterSpriteLoaded) {
 		C2D_SpriteSheetFree(chracterSprite);
 		chracterSpriteLoaded = false;
@@ -491,7 +491,13 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 	chracterSpriteFound[num] = false;
 	bool allSeasons = true;
 	bool fileFound = false;
-	fileFound = (access(t3xPathAllSeasons, F_OK) == 0);
+	bool poseable = false;
+	fileFound = (access(t3xPathPose, F_OK) == 0);
+	if (fileFound) {
+		poseable = true;
+	} else {
+		fileFound = (access(t3xPathAllSeasons, F_OK) == 0);
+	}
 	if (!fileFound) {
 		allSeasons = false;
 		fileFound = (access(t3xPathOneSeason, F_OK) == 0);
@@ -501,7 +507,7 @@ bool GFX::loadCharSprite(int num, const char* t3xPathAllSeasons, const char* t3x
 		return false;
 	}
 
-	FILE* charFile = fopen((allSeasons ? t3xPathAllSeasons : t3xPathOneSeason), "rb");
+	FILE* charFile = fopen(poseable ? t3xPathPose : (allSeasons ? t3xPathAllSeasons : t3xPathOneSeason), "rb");
 	fread((void*)charSpriteMem[num], 1, charSpriteSize, charFile);
 	fclose(charFile);
 
