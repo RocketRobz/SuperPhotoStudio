@@ -157,7 +157,7 @@ void GFX::loadSheets() {
 		charSpriteMem[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 	}
 	image.clear();
-	lodepng::decode(image, width, height, sysRegion==CFG_REGION_JPN ? "nitro:/graphics/gui/titleJ.png" : "nitro:/graphics/gui/titleMetal.png");
+	lodepng::decode(image, width, height, sysRegion==CFG_REGION_JPN ? "nitro:/graphics/gui/titleJ.png" : "nitro:/graphics/gui/title.png");
 	bool alternatePixel = false;
 	for(unsigned i=0;i<image.size()/4;i++) {
 		if ((int)i >= 256*yStart && (int)i < 256*yEnd) {
