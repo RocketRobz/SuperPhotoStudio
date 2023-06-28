@@ -1,12 +1,10 @@
 #include "sound.h"
-#include "adpcm-xq.h"
 
 #include "soundbank.h"
 #include "streamingaudio.h"
 #include "string.h"
 #include "tonccpy.h"
 #include <algorithm>
-#include <sys/stat.h>
 
 
 extern volatile s16 fade_counter;
@@ -95,9 +93,7 @@ mm_sfxhand SoundControl::playSelect() { return mmEffectEx(&snd_select); }
 mm_sfxhand SoundControl::playBack() { return mmEffectEx(&snd_back); }
 mm_sfxhand SoundControl::playHighlight() { return mmEffectEx(&snd_highlight); }
 
-void SoundControl::loadStream(const char* path, const char* pathCache, const char* loopPath, const char* loopPathCache, u32 sampleRate, bool stereo, bool loop) {
-	return; // Temporarily disabled
-
+void SoundControl::loadStream(const char* path, const char* loopPath, u32 sampleRate, bool stereo, bool loop) {
 	if (stream_source) {
 		stream_is_playing = false;
 		mmStreamClose();
@@ -106,29 +102,8 @@ void SoundControl::loadStream(const char* path, const char* pathCache, const cha
 
 	resetStreamSettings();
 
-	mkdir("/_nds/SuperPhotoStudio/musicCache", 0777);
-	char musicCachePath[256];
-	sprintf(musicCachePath, loopPathCache);
-	for (int i = strlen(loopPathCache); i > 0; i--) {
-		if (musicCachePath[i] == '/') {
-			musicCachePath[i] = 0;
-			mkdir(musicCachePath, 0777);
-			break;
-		}
-	}
-
-	if (strlen(pathCache) > 4 && access(pathCache, F_OK) != 0) {
-		irqDisable(IRQ_VBLANK);
-		adpcm_main(path, pathCache, true);
-	}
-	if (access(loopPathCache, F_OK) != 0) {
-		irqDisable(IRQ_VBLANK);
-		adpcm_main(loopPath, loopPathCache, true);
-		irqEnable(IRQ_VBLANK);
-	}
-
-	stream_start_source = fopen(pathCache, "rb");
-	stream_source = fopen(loopPathCache, "rb");
+	stream_start_source = fopen(path, "rb");
+	stream_source = fopen(loopPath, "rb");
 	if (!stream_source) return;
 	bool loopableMusic = stream_start_source ? true : false;
 	loopingPoint = false;
