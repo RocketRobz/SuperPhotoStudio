@@ -5,6 +5,16 @@ ifeq ($(strip $(DEVKITARM)),)
 $(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
 endif
 
+ifneq (,$(shell which python3))
+PYTHON	:= python3
+else ifneq (,$(shell which python2))
+PYTHON	:= python2
+else ifneq (,$(shell which python))
+PYTHON	:= python
+else
+$(error "Python not found in PATH, please install it.")
+endif
+
 export TARGET	:=	SuperPhotoStudio
 NITRODATA		:=	nitrofiles
 
@@ -25,7 +35,7 @@ makearm9:
 $(TARGET).nds:	makearm7 makearm9
 	ndstool	-c $(TARGET).nds -7 $(TARGET).arm7.elf -9 $(TARGET).arm9.elf -d $(NITRODATA) \
 			-g HPHA 00 "SUPERPHOTO" -z 80040000 -u 00030004 -a 00000138 -b icon.bmp "Super Photo Studio;Rocket Robz"
-	python2 patch_ndsheader_dsiware.py $(TARGET).nds --twlTouch
+	$(PYTHON) patch_ndsheader_dsiware.py $(TARGET).nds --twlTouch
 
 clean:
 	@echo clean ...
