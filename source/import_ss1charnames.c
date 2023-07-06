@@ -23,7 +23,7 @@ bool import_ss1CharacterGenders[] = {
 };
 
 int import_ss1CharacterPoses[] = {
-	3,
+	30,
 	1,
 	1,
 	1,
