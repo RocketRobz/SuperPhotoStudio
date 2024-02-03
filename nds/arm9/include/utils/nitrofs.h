@@ -33,11 +33,14 @@
 	2018-09-05 v0.9 - modernize devoptab (by RonnChyran)
 		* Updated for libsysbase change in devkitARM r46 and above.
 
-	2020-08-20 v0.10 - modernize GBA SLOT support (by RocketRobz)
+	2020-08-20 v0.10 - modernize GBA SLOT support (by Rocket Robz)
 		* Updated GBA SLOT detection to check for game code and header CRC. 
 
-	2020-08-24 v0.11 - SDNAND support (by RocketRobz)
+	2020-08-24 v0.11 - SDNAND support (by Rocket Robz)
 		* Added support for being mounted from SDNAND, if app is launched by hiyaCFW.
+
+	2024-02-02 v0.12 - Slot-1 support (by Rocket Robz)
+		* Added support for Slot-1 (from libfilesystem), along with detecting if launched from Slot-1
 */
 
 #ifndef NITROFS_H
@@ -52,7 +55,7 @@ extern "C"
 {
 #endif
 
-	int nitroFSInit(const char *ndsfile);
+	bool nitroFSInit(void);
 	DIR_ITER *nitroFSDirOpen(struct _reent *r, DIR_ITER *dirState, const char *path);
 	int nitroDirReset(struct _reent *r, DIR_ITER *dirState);
 	int nitroFSDirNext(struct _reent *r, DIR_ITER *dirState, char *filename, struct stat *st);

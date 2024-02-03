@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
 	defaultExceptionHandler();
 
 	fatInited = fatInitDefault();
-	bool nitroFSInited = nitroFSInit(argv[0]);
+	const bool nitroFSInited = nitroFSInit();
 
 	if (!fatInited && !nitroFSInited) {
 		consoleDemoInit();

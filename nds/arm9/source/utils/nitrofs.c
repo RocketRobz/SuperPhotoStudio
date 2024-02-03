@@ -48,28 +48,35 @@
 	2018-09-05 v0.9 - modernize devoptab (by RonnChyran)
 		* Updated for libsysbase change in devkitARM r46 and above. 
 
-	2020-08-20 v0.10 - modernize GBA SLOT support (by RocketRobz)
+	2020-08-20 v0.10 - modernize GBA SLOT support (by Rocket Robz)
 		* Updated GBA SLOT detection to check for game code and header CRC. 
 
-	2020-08-24 v0.11 - SDNAND support (by RocketRobz)
+	2020-08-24 v0.11 - SDNAND support (by Rocket Robz)
 		* Added support for being mounted from SDNAND, if app is launched by hiyaCFW.
+
+	2024-02-02 v0.12 - Slot-1 support (by Rocket Robz)
+		* Added support for Slot-1 (from libfilesystem), along with detecting if launched from Slot-1
 */
+
+#include <nds/memory.h>
+#include <nds/system.h>
+#include <nds/card.h>
 
 #include <string.h>
 #include <errno.h>
-#include <nds.h>
 #include "nitrofs.h"
 #include "tonccpy.h"
 
-#define __itcm __attribute__((section(".itcm")))
+// #define __itcm __attribute__((section(".itcm")))
 
 //Globals!
-u32 fntOffset;   //offset to start of filename table
-u32 fatOffset;   //offset to start of file alloc table
-bool hasLoader;  //single global nds filehandle (is null if not in dldi/fat mode)
-u16 chdirpathid; //default dir path id...
-FILE *ndsFile;
-off_t ndsFileLastpos; //Used to determine need to fseek or not
+static u32 fntOffset;   //offset to start of filename table
+static u32 fatOffset;   //offset to start of file alloc table
+static bool hasLoader;  //single global nds filehandle (is null if not in dldi/fat mode)
+static u16 chdirpathid; //default dir path id...
+static FILE *ndsFile;
+static off_t ndsFileLastpos; //Used to determine need to fseek or not
+static bool cardRead = false;
 
 devoptab_t nitroFSdevoptab = {
 	"nitro",					   //	const char *name;
@@ -94,114 +101,155 @@ devoptab_t nitroFSdevoptab = {
 
 };
 
-//K, i decided to inline these, improves speed slightly..
-//these 2 'sub' functions deal with actually reading from either gba rom or .nds file :)
-//what i rly rly rly wanna know is how an actual nds cart reads from itself, but it seems no one can tell me ~_~
-//so, instead we have this weird weird haxy try gbaslot then try dldi method. If i (or you!!) ever do figure out
-//how to read the proper way can replace these 4 functions and everything should work normally :)
+// Figure out if its gba or ds, setup stuff
+//---------------------------------------------------------------------------------
+bool nitroFSInit(void) {
+//---------------------------------------------------------------------------------
+	bool nitroInit = false;
+	chdirpathid = NITROROOT;
+	ndsFileLastpos = 0;
+	ndsFile = NULL;
 
-//reads from rom image either gba rom or dldi
-inline ssize_t nitroSubRead(off_t *npos, void *ptr, size_t len)
-{
-	if (ndsFile != NULL)
-	{ //read from ndsfile
+	// test for argv & open nds file
+	if ( __system_argv->argvMagic == ARGV_MAGIC && __system_argv->argc >= 1 ) {
+		if ( strncmp(__system_argv->argv[0],"fat",3) == 0 || strncmp(__system_argv->argv[0],"sd",2) == 0) {
+			ndsFile = fopen(__system_argv->argv[0], "rb");
+			if (ndsFile) {
+				nitroInit = true;
+			}
+		}
+	}
+
+	// Test for valid nitrofs on gba cart
+	/*bool headerFirst = ((strncmp((const char *)0x02FFFC38, __NDSHeader->gameCode, 4) == 0)
+				  && (*(u16*)0x02FFFC36 == __NDSHeader->headerCRC16));
+	if (!nitroInit && (!isDSiMode() || headerFirst)) {
+		sysSetCartOwner (BUS_OWNER_ARM9); //give us gba slot ownership
+		// We has gba rahm
+		//printf("yes i think this is GBA?!\n");
+		if (strncmp(((const char *)GBAROM) + LOADERSTROFFSET, LOADERSTR, strlen(LOADERSTR)) == 0) {
+			//Look for second magic string, if found its a sc.nds or nds.gba
+			//printf("sc/gba\n");
+			fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET + LOADEROFFSET)) + LOADEROFFSET;
+			fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET + LOADEROFFSET)) + LOADEROFFSET;
+			hasLoader = true;
+			AddDevice(&nitroFSdevoptab);
+			return true;
+		}
+		else if (headerFirst) {
+			//Ok, its not a .gba build, so must be emulator
+			//printf("gba, must be emu\n");
+			fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET));
+			fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET));
+			hasLoader = false;
+			AddDevice(&nitroFSdevoptab);
+			return true;
+		}
+	}*/
+
+	// Fallback to direct card reads
+	if (!nitroInit && (*(u16*)0x02FFFC40 == 1)) {
+		cardRead = true; nitroInit = true;
+	}
+
+	// Test for SDNAND
+	if (!nitroInit && isDSiMode()) {
+		char fileName[64];
+		sprintf(fileName, "sd:/title/%08x/%08x/content/000000%02x.app", *(unsigned int*)0x02FFE234, *(unsigned int*)0x02FFE230, *(u8*)0x02FFE01E);
+		ndsFile = fopen(fileName, "rb");
+		if (ndsFile) {
+			nitroInit = true;
+		}
+	}
+
+	if (nitroInit) {
+		fntOffset = __NDSHeader->filenameOffset;
+		fatOffset = __NDSHeader->fatOffset;
+		hasLoader = false;
+		setvbuf(ndsFile, NULL, _IONBF, 0); //we dont need double buffs u_u
+		AddDevice(&nitroFSdevoptab);
+	}
+	return nitroInit;
+}
+
+// cannot read across block boundaries (multiples of 0x200 bytes)
+//---------------------------------------------------------------------------------
+static void nitroSubReadBlock(u32 pos, u8 *ptr, u32 len) {
+//---------------------------------------------------------------------------------
+	if ( (len & 3) == 0 && (((u32)ptr) & 3) == 0 && (pos & 3) == 0) {
+		// if everything is word-aligned, read directly
+		cardParamCommand(0xB7, pos, CARD_DELAY1(0x1FFF) | CARD_DELAY2(0x3F) | CARD_CLK_SLOW | CARD_nRESET | CARD_SEC_CMD | CARD_SEC_DAT | CARD_ACTIVATE | CARD_BLK_SIZE(1), (u32*)ptr, len >> 2);
+ 	} else {
+		// otherwise, use a temporary buffer
+		static u32 temp[128];
+		cardParamCommand(0xB7, (pos & ~0x1ff), CARD_DELAY1(0x1FFF) | CARD_DELAY2(0x3F) | CARD_CLK_SLOW | CARD_nRESET | CARD_SEC_CMD | CARD_SEC_DAT | CARD_ACTIVATE | CARD_BLK_SIZE(1), temp, 0x200 >> 2);
+		tonccpy(ptr, ((u8*)temp) + (pos & 0x1FF), len);
+	}
+}
+
+//---------------------------------------------------------------------------------
+static ssize_t nitroSubReadCard(off_t *npos, void *ptr, size_t len) {
+//---------------------------------------------------------------------------------
+	u8 *ptr_u8 = (u8*)ptr;
+	size_t remaining = len;
+
+	if((*npos) & 0x1FF) {
+
+		u32 amt = 0x200 - (*npos & 0x1FF);
+
+		if(amt > remaining) amt = remaining;
+
+		nitroSubReadBlock(*npos, ptr_u8, amt);
+		remaining -= amt;
+		ptr_u8 += amt;
+		*npos += amt;
+	}
+
+	while(remaining >= 0x200)	{
+		nitroSubReadBlock(*npos, ptr_u8, 0x200);
+		remaining -= 0x200;
+		ptr_u8 += 0x200;
+		*npos += 0x200;
+	}
+
+	if(remaining > 0) {
+		nitroSubReadBlock(*npos, ptr_u8, remaining);
+		*npos += remaining;
+	}
+	return len;
+}
+
+// reads from rom image
+//---------------------------------------------------------------------------------
+static inline ssize_t nitroSubRead(off_t *npos, void *ptr, size_t len) {
+//---------------------------------------------------------------------------------
+	if (cardRead) {
+		off_t tmpPos = *npos;
+		len = nitroSubReadCard(&tmpPos, ptr, len);
+	} else if (ndsFile) {
+		//read from ndsfile
 		if (ndsFileLastpos != *npos)
 			fseek(ndsFile, *npos, SEEK_SET); //if we need to, move! (might want to verify this succeed)
 		len = fread(ptr, 1, len, ndsFile);
-	}
-	else
-	{											 //reading from gbarom
+	} else {											 //reading from gbarom
 		tonccpy(ptr, *npos + (void *)GBAROM, len); //len isnt checked here because other checks exist in the callers (hopefully)
 	}
 	if (len > 0)
 		*npos += len;
-	ndsFileLastpos = *npos; //save the current file nds pos
-	return (len);
+	ndsFileLastpos = *npos; //save the current file position
+	return len;
 }
 
-//seek around
-inline void nitroSubSeek(off_t *npos, int pos, int dir)
-{
+//---------------------------------------------------------------------------------
+static inline void nitroSubSeek(off_t *npos, int pos, int dir) {
+//---------------------------------------------------------------------------------
 	if ((dir == SEEK_SET) || (dir == SEEK_END)) //otherwise just set the pos :)
 		*npos = pos;
 	else if (dir == SEEK_CUR)
 		*npos += pos; //see ez!
 }
 
-//Figure out if its gba or ds, setup stuff
-int __itcm
-nitroFSInit(const char *ndsfile)
-{
-	off_t pos = 0;
-	char romstr[0x10];
-	chdirpathid = NITROROOT;
-	ndsFileLastpos = 0;
-	ndsFile = NULL;
-	/*bool headerFirst = ((strncmp((const char *)0x02FFFC38, __NDSHeader->gameCode, 4) == 0)
-				  && (*(u16*)0x02FFFC36 == __NDSHeader->headerCRC16));
-	if (!isDSiMode() || headerFirst)
-	{
-		sysSetCartOwner (BUS_OWNER_ARM9); //give us gba slot ownership
-		// We has gba rahm
-		//printf("yes i think this is GBA?!\n");
-		if (strncmp(((const char *)GBAROM) + LOADERSTROFFSET, LOADERSTR, strlen(LOADERSTR)) == 0)
-		{ //Look for second magic string, if found its a sc.nds or nds.gba
-			//printf("sc/gba\n");
-			fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET + LOADEROFFSET)) + LOADEROFFSET;
-			fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET + LOADEROFFSET)) + LOADEROFFSET;
-			hasLoader = true;
-			AddDevice(&nitroFSdevoptab);
-			return (1);
-		}
-		else if (headerFirst)
-		{ //Ok, its not a .gba build, so must be emulator
-			//printf("gba, must be emu\n");
-			fntOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FNTOFFSET));
-			fatOffset = ((u32) * (u32 *)(((const char *)GBAROM) + FATOFFSET));
-			hasLoader = false;
-			AddDevice(&nitroFSdevoptab);
-			return (1);
-		}
-	}*/
-	if (isDSiMode() && ndsfile == NULL)
-	{
-		// Try SDNAND path
-		char fileName[64];
-		sprintf(fileName, "sd:/title/%08x/%08x/content/000000%02x.app", *(unsigned int*)0x02FFE234, *(unsigned int*)0x02FFE230, *(u8*)0x02FFE01E);
-		ndsfile = fileName;
-	}
-	if (ndsfile != NULL)
-	{
-		if ((ndsFile = fopen(ndsfile, "rb")))
-		{
-			nitroSubRead(&pos, romstr, strlen(LOADERSTR));
-			if (strncmp(romstr, LOADERSTR, strlen(LOADERSTR)) == 0)
-			{
-				nitroSubSeek(&pos, LOADEROFFSET + FNTOFFSET, SEEK_SET);
-				nitroSubRead(&pos, &fntOffset, sizeof(fntOffset));
-				nitroSubSeek(&pos, LOADEROFFSET + FATOFFSET, SEEK_SET);
-				nitroSubRead(&pos, &fatOffset, sizeof(fatOffset));
-				fatOffset += LOADEROFFSET;
-				fntOffset += LOADEROFFSET;
-				hasLoader = true;
-			}
-			else
-			{
-				nitroSubSeek(&pos, FNTOFFSET, SEEK_SET);
-				nitroSubRead(&pos, &fntOffset, sizeof(fntOffset));
-				nitroSubSeek(&pos, FATOFFSET, SEEK_SET);
-				nitroSubRead(&pos, &fatOffset, sizeof(fatOffset));
-				hasLoader = false;
-			}
-			setvbuf(ndsFile, NULL, _IONBF, 0); //we dont need double buffs u_u
-			AddDevice(&nitroFSdevoptab);
-			return (1);
-		}
-	}
-	return (0);
-}
-
-//Directory functs
+// Directory functions
 DIR_ITER *nitroFSDirOpen(struct _reent *r, DIR_ITER *dirState, const char *path)
 {
 	struct nitroDIRStruct *dirStruct = (struct nitroDIRStruct *)dirState->dirStruct; //this makes it lots easier!
