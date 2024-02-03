@@ -113,9 +113,9 @@ int main(int argc, char **argv) {
 		mepFound = (*(vu32*)(0x08240000) == 1);
 	}
 	// Check for DS Debug RAM or DSi RAM
-	*(vu32*)(0x02403FFC) = 1;
-	*(vu32*)(0x02003FFC) = 0;
-	dsDebugRam = (*(vu32*)(0x02003FFC) == 0 && *(vu32*)(0x02403FFC) == 1);
+	*(vu32*)(0x02C03FFC) = 1;
+	*(vu32*)(0x02803FFC) = 0;
+	dsDebugRam = (*(vu32*)(0x02803FFC) == 0 && *(vu32*)(0x02C03FFC) == 1);
 
 	snd();
 
