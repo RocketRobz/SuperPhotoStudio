@@ -107,7 +107,7 @@ void copyPalette(u16 *dst, const u16 *src, int size) {
 		}
 		return;
 	}
-	tonccpy(dst, src, size);
+	tonccpy(dst, src, size*sizeof(u16));
 }
 
 // Initialize GUI.
