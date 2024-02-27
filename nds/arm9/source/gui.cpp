@@ -100,7 +100,7 @@ void applyColorLut(u16 *palette, int size) {
 }
 
 // Copies a palette and applies color LUT if loaded
-void copyPalette(u16 *dst, const u16 *src, int size) {
+void copyPalette16(u16 *dst, const u16 *src, int size) {
 	if (colorTable) {
 		for (int i = 0; i < size; i++) {
 			dst[i] = colorTable[src[i]];
@@ -108,6 +108,17 @@ void copyPalette(u16 *dst, const u16 *src, int size) {
 		return;
 	}
 	tonccpy(dst, src, size*sizeof(u16));
+}
+
+// Copies a palette and applies color LUT if loaded
+void copyPalette(u16 *dst, const u16 *src, int size) {
+	if (colorTable) {
+		for (int i = 0; i < size/sizeof(u16); i++) {
+			dst[i] = colorTable[src[i]];
+		}
+		return;
+	}
+	tonccpy(dst, src, size);
 }
 
 // Initialize GUI.

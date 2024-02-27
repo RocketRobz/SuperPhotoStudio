@@ -70,7 +70,7 @@ extern int bg3Sub;
 
 extern u16* colorTable;
 extern void applyColorLut(u16 *palette, int size);
-extern void copyPalette(u16 *dst, const u16 *src, int size);
+extern void copyPalette16(u16 *dst, const u16 *src, int size);
 
 extern bool showCursor;
 extern int cursorAlpha;
@@ -281,7 +281,7 @@ void updateTitleScreen(const int metalXposBase) {
 		for (int i = 0; i < 256*192; i+=2) {
 			bgGetGfxPtr(bg3Sub)[i/2] += 0x1010;	// Shift pallete 16 colors further
 		}
-		copyPalette(BG_PALETTE_SUB + 0x10, photo_bgPal, 240);
+		copyPalette16(BG_PALETTE_SUB + 0x10, photo_bgPal, 240);
 		titleBottomLoaded = true;
 	}
 }
