@@ -4,6 +4,8 @@
 #include "tonccpy.h"
 #include "TextEntry.h"
 
+extern u16* colorTable;
+
 FontGraphic smallFont;
 FontGraphic largeFont;
 
@@ -24,6 +26,11 @@ void fontInit() {
 		0xC631,
 		0xDEF7,
 	};
+	if (colorTable) {
+		for (int i = 1; i < 4; i++) {
+			palette[i] = colorTable[palette[i]];
+		}
+	}
 	tonccpy(BG_PALETTE, palette, sizeof(palette));
 	tonccpy(BG_PALETTE_SUB, palette, sizeof(palette));
 }

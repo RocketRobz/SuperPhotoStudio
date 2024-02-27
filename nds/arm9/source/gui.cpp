@@ -28,6 +28,7 @@
 #include "screenCommon.hpp"
 #include "fontHandler.h"
 #include "myDSiMode.h"
+#include "getFileSize.h"
 #include "tonccpy.h"
 
 #include "arrow_back.h"
@@ -56,6 +57,8 @@ int bg2Sub;
 int bg3Sub;
 
 u16* gfxSub;
+
+u16* colorTable = NULL;
 
 // Ported from PAlib (obsolete)
 void SetBrightness(u8 screen, s8 bright) {
@@ -87,6 +90,26 @@ void Gui__ChangeBrightness() {
 	SetBrightness(1, (fadecolor==255 ? fadealpha : -fadealpha)/8);
 }
 
+void applyColorLut(u16 *palette, int size) {
+	if (!colorTable) {
+		return;
+	}
+	for (int i = 0; i < size; i++) {
+		palette[i] = colorTable[palette[i]];
+	}
+}
+
+// Copies a palette and applies color LUT if loaded
+void copyPalette(u16 *dst, const u16 *src, int size) {
+	if (colorTable) {
+		for (int i = 0; i < size; i++) {
+			dst[i] = colorTable[src[i]];
+		}
+		return;
+	}
+	tonccpy(dst, src, size);
+}
+
 // Initialize GUI.
 void Gui::init(void) {
 	*(vu16*)0x0400006C |= BIT(14);
@@ -97,18 +120,36 @@ void Gui::init(void) {
 	videoSetMode(MODE_5_2D | DISPLAY_BG3_ACTIVE);
 	videoSetModeSub(MODE_5_2D | DISPLAY_BG3_ACTIVE);
 
-	// Set up enough texture memory for our textures
-	// Bank A is just 128kb and we are using 194 kb of
-	// sprites
 	vramSetBankA(VRAM_A_MAIN_BG);
 	vramSetBankB(VRAM_B_MAIN_BG);
 	vramSetBankC(VRAM_C_SUB_BG);
-	vramSetBankD(VRAM_D_SUB_SPRITE);
-	vramSetBankE(VRAM_E_TEX_PALETTE);
-	vramSetBankF(VRAM_F_TEX_PALETTE_SLOT4);
+	vramSetBankD(VRAM_D_LCD);
 	vramSetBankG(VRAM_G_MAIN_SPRITE);
 	vramSetBankH(VRAM_H_SUB_BG_EXT_PALETTE);
-	vramSetBankI(VRAM_I_SUB_SPRITE_EXT_PALETTE);
+	vramSetBankI(VRAM_I_SUB_SPRITE);
+
+	if (access("/_nds/colorLut/currentSetting.txt", F_OK) == 0) {
+		// Load color LUT
+		char lutName[128] = {0};
+		FILE* file = fopen("/_nds/colorLut/currentSetting.txt", "rb");
+		fread(lutName, 1, 128, file);
+		fclose(file);
+
+		char colorLutPath[256];
+		sprintf(colorLutPath, "/_nds/colorLut/%s.lut", lutName);
+
+		if (getFileSize(colorLutPath) == 0x20000) {
+			colorTable = new u16[0x20000/sizeof(u16)];
+
+			file = fopen(colorLutPath, "rb");
+			fread(colorTable, 1, 0x20000, file);
+			fclose(file);
+
+			tonccpy(VRAM_D, colorTable, 0x20000); // Copy LUT to VRAM
+			delete[] colorTable; // Free up RAM space
+			colorTable = VRAM_D;
+		}
+	}
 
 	bg3Main = bgInit(3, BgType_Bmp16, BgSize_B16_256x256, 0, 0);
 	bgSetPriority(bg3Main, 0);
@@ -129,7 +170,7 @@ void Gui::init(void) {
 
 	// Load back button
 	tonccpy(gfxSub, arrow_backTiles, arrow_backTilesLen);
-	tonccpy(SPRITE_PALETTE_SUB, arrow_backPal, arrow_backPalLen);
+	copyPalette(SPRITE_PALETTE_SUB, arrow_backPal, arrow_backPalLen);
 
 	oamSet(&oamSub, 
 		0,
@@ -150,7 +191,7 @@ void Gui::init(void) {
 	gfxSub = oamAllocateGfx(&oamSub, SpriteSize_32x32, SpriteColorFormat_16Color);
 
 	tonccpy(gfxSub, cursorTiles, cursorTilesLen);
-	tonccpy(SPRITE_PALETTE_SUB+16, cursorPal, cursorPalLen);
+	copyPalette(SPRITE_PALETTE_SUB+16, cursorPal, cursorPalLen);
 
 	oamSet(&oamSub, 
 		1,
@@ -171,7 +212,7 @@ void Gui::init(void) {
 	gfxSub = oamAllocateGfx(&oamSub, SpriteSize_64x64, SpriteColorFormat_16Color);
 
 	tonccpy(gfxSub, item_button0Tiles, item_button0TilesLen);
-	tonccpy(SPRITE_PALETTE_SUB+32, item_button0Pal, item_button0PalLen);
+	copyPalette(SPRITE_PALETTE_SUB+32, item_button0Pal, item_button0PalLen);
 
 	for (int i = 2; i <= 4; i++) {
 	oamSet(&oamSub, 
@@ -236,7 +277,7 @@ void Gui::init(void) {
 	gfxSub = oamAllocateGfx(&oamSub, SpriteSize_64x64, SpriteColorFormat_16Color);
 
 	tonccpy(gfxSub, icon_femaleTiles, icon_femaleTilesLen);
-	tonccpy(SPRITE_PALETTE_SUB+48, icon_femalePal, icon_femalePalLen);
+	copyPalette(SPRITE_PALETTE_SUB+48, icon_femalePal, icon_femalePalLen);
 
 	for (int i = 14; i <= 16; i++) {
 	oamSet(&oamSub, 
@@ -259,7 +300,7 @@ void Gui::init(void) {
 	gfxSub = oamAllocateGfx(&oamSub, SpriteSize_64x64, SpriteColorFormat_16Color);
 
 	tonccpy(gfxSub, icon_maleTiles, icon_maleTilesLen);
-	tonccpy(SPRITE_PALETTE_SUB+64, icon_malePal, icon_malePalLen);
+	copyPalette(SPRITE_PALETTE_SUB+64, icon_malePal, icon_malePalLen);
 
 	for (int i = 17; i <= 19; i++) {
 	oamSet(&oamSub, 
