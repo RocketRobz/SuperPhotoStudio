@@ -1,6 +1,7 @@
 #include "sound.h"
 
 #include "soundbank.h"
+#include "soundbank_bin.h"
 #include "streamingaudio.h"
 #include "string.h"
 #include "tonccpy.h"
@@ -29,7 +30,7 @@ extern char debug_buf[256];
 
 extern volatile u32 sample_delay_count;
 
-char* SFX_DATA = (char*)NULL;
+// char* SFX_DATA = (char*)NULL;
 s8 monoBuffer[STREAMING_BUF_LENGTH] = {0};
 mm_word SOUNDBANK[MSL_BANKSIZE] = {0};
 
@@ -42,20 +43,20 @@ SoundControl::SoundControl()
 	sys.mem_bank = SOUNDBANK;
 	sys.fifo_channel = FIFO_MAXMOD;
 
-	FILE* soundbank_file;
+	/* FILE* soundbank_file;
 
 	soundbank_file = fopen("nitro:/soundbank.bin", "rb");
 
 	SFX_DATA = new char[0x9800];
 	fread(SFX_DATA, 1, 0x9800, soundbank_file);
 
-	fclose(soundbank_file);
+	fclose(soundbank_file); */
 
 	// sprintf(debug_buf, "Read sample length %li for startup", startup_sample_length);
     // nocashMessage(debug_buf);
 
 	mmInit(&sys);
-	mmSoundBankInMemory((mm_addr)SFX_DATA);
+	mmSoundBankInMemory((mm_addr)soundbank_bin);
 
 	mmLoadEffect(SFX_SELECT);
 	mmLoadEffect(SFX_BACK);
