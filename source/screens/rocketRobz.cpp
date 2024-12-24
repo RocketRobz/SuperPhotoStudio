@@ -86,8 +86,8 @@ void RocketRobz::Draw(void) const {
 			}
 		}
 	} else {
-		Gui::DrawStringCentered(0, 48, 0.75, WHITE, this->presentedText);
-		GFX::DrawSprite(sprites_logo_horiHD_idx, 32, 85);
+		Gui::DrawStringCentered(0, 72, 0.50, WHITE, this->presentedText);
+		GFX::DrawSprite(sprites_logo_horizonHD_idx, 16, 95);
 	}
 	if (rr_fadeAlpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(0, 0, 0, rr_fadeAlpha)); // Fade in/out effect
 	if (fadealpha > 0) Gui::Draw_Rect(0, 0, 320, 240, C2D_Color32(fadecolor, fadecolor, fadecolor, fadealpha)); // Fade in/out effect

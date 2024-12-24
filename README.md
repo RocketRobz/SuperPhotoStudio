@@ -18,7 +18,7 @@ The result, *Super Photo Studio*! Take pictures of your favorite all-star charac
 
 # Features
 
-* High-resolution Hori-HD (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
+* High-resolution *Horizon HD* (800px wide mode), exclusive to 3DS, New 3DS, and New 2DS consoles!
 * Pre-rendered characters and backgrounds, as well as music, from     
   * Super Mario     
   * Sonic the Hedgehog     
