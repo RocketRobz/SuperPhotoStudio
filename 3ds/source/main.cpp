@@ -344,15 +344,15 @@ int main()
 
 	saveSettings();
 
-	if (musicStartLoaded) {
-		delete music;
-	}
-	delete music_loop;
-	//delete mus_logos;
-	delete sfx_select;
-	delete sfx_back;
-	delete sfx_highlight;
 	if (dspfirmfound) {
+		/* if (musicStartLoaded) {
+			delete music;
+		}
+		delete music_loop; */
+		//delete mus_logos;
+		delete sfx_select;
+		delete sfx_back;
+		delete sfx_highlight;
 		ndspExit();
 	}
 
