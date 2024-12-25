@@ -123,6 +123,8 @@ int main(int argc, char **argv) {
 		stop();
 	}
 
+	loadSettings();
+
 	mkdir("/_nds", 0777);
 	mkdir("/_nds/SuperPhotoStudio", 0777);
 
