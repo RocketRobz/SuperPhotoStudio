@@ -72,8 +72,6 @@ static void Screenshot_GenerateFilename(int count, char *file_name) {
 	int month = localtime(&t)->tm_mon + 1;
 	int year = localtime(&t)->tm_year + 1900;
 	
-	mkdir("/_nds", 0777);
-	mkdir("/_nds/SuperPhotoStudio", 0777);
 	mkdir("/_nds/SuperPhotoStudio/photos", 0777);
 
 	sprintf(file_name, "/_nds/SuperPhotoStudio/photos/Screenshot_%02d%02d%02d-%i.bmp", year, month, day, count);

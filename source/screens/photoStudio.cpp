@@ -45,6 +45,7 @@
 
 #include <unistd.h>
 
+extern int savedMusicId;
 static bool musicLoaded = false;
 extern void loadMusic(int num);
 
@@ -1024,7 +1025,7 @@ void PhotoStudio::loadChrImage(void) {
 
 void PhotoStudio::Draw(void) const {
 	if (!musicLoaded) {
-		loadMusic(27);
+		loadMusic(savedMusicId);
 		musicLoaded = true;
 	}
 
@@ -1432,7 +1433,8 @@ void PhotoStudio::Draw(void) const {
 		}
 		i2 += 48;
 		GFX::DrawSprite(sprites_item_button_idx, 18, i2-20);
-		Gui::DrawString(32, i2, 0.65, WHITE, "Change Music");
+		Gui::DrawString(32, i2-8, 0.65, WHITE, "Change Music");
+		Gui::DrawString(32, i2+12, 0.50, WHITE, "Relaunch to take effect.");
 	}
 
 	if (subScreenMode != 0) {
@@ -1671,14 +1673,17 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 		if (hDown & KEY_A) {
 			sndSelect();
 			subScreenMode = 0;
+			savedMusicId = getBgmNum();
 			#ifdef NDS
 			redrawText = true;
 			Gui::DrawScreen();
 			ditherlaceOnVBlank = true;
-			#endif
 			extern void Stop_Music(void);
 			Stop_Music();
-			loadMusic(getBgmNum());
+			loadMusic(savedMusicId);
+			extern void saveSettings(void);
+			saveSettings();
+			#endif
 			#ifdef NDS
 			ditherlaceOnVBlank = false;
 			#else

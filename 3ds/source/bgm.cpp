@@ -6,6 +6,7 @@
 extern sound *music;
 extern sound *music_loop;
 extern bool dspfirmfound;
+extern bool musicStartLoaded;
 
 void loadMusic(int num) {
 	if (!dspfirmfound) return;
@@ -225,6 +226,7 @@ void loadMusic(int num) {
 
 	if (access(startName, F_OK) == 0) {
 		music = new sound(startName, 0, false);
+		musicStartLoaded = true;
 	}
 	if (access(loopName, F_OK) == 0) {
 		music_loop = new sound(loopName, 1, true);

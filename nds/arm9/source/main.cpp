@@ -13,6 +13,7 @@
 #include "nitrofs.h"
 #include "sound.h"
 #include "photoStudio.hpp"
+#include "inifile.h"
 #include "productIdent.hpp"
 #include "rocketRobz.hpp"
 #include "screen.hpp"
@@ -25,15 +26,32 @@ bool exiting = false;
 bool rocketRobzScreen = false;
 int delay = 0;
 
+#define settingsIni "sd:/_nds/SuperPhotoStudio/settings.ini"
+
 char verText[32];
 int studioBg = 0;
 int iFps = 60;
+int savedMusicId = 27;
 
 extern int bg3Main;
 extern bool ditherlaceOnVBlank;
 extern bool secondFrame;
 bool renderTop = true;	// Disable to prevent second character from flickering
 bool doScreenshot = false;
+
+void loadSettings(void) {
+	CIniFile settingsini(settingsIni);
+
+	savedMusicId = settingsini.GetInt("SuperPhotoStudio", "MUSIC_ID", savedMusicId);
+}
+
+void saveSettings(void) {
+	CIniFile settingsini(settingsIni);
+
+	savedMusicId = settingsini.GetInt("SuperPhotoStudio", "MUSIC_ID", savedMusicId);
+
+	settingsini.SaveIniFileModified(settingsIni);
+}
 
 static bool streamStarted = false;
 void Play_Music(void) {
@@ -106,6 +124,7 @@ int main(int argc, char **argv) {
 	}
 
 	mkdir("/_nds", 0777);
+	mkdir("/_nds/SuperPhotoStudio", 0777);
 
 	if (!dsiFeatures()) {
 		sysSetCartOwner (BUS_OWNER_ARM9);	// Allow arm9 to access GBA ROM (or in this case, the DS Memory Expansion Pak)

@@ -29,6 +29,7 @@ char verText[32];
 int studioBg = 0;
 bool cinemaWide = false;
 int iFps = 60;
+int savedMusicId = 27;
 
 u8 consoleModel = 0;
 
@@ -43,6 +44,7 @@ bool horiHd = true;
 bool dspfirmfound = false;
 bool exiting = false;
 bool musicPlayStarted = false;
+bool musicStartLoaded = false;
 static bool musicPlaying = false;
 static bool musicLoopPlaying = false;
 static int musicLoopDelay = 0;
@@ -60,6 +62,7 @@ void loadSettings(void) {
 	if (setting > 0) cinemaWide = true;
 	iFps = settingsini.GetInt("SuperPhotoStudio", "FRAME_RATE", iFps);
 	horiHd = settingsini.GetInt("SuperPhotoStudio", "HORI_HD", horiHd);
+	savedMusicId = settingsini.GetInt("SuperPhotoStudio", "MUSIC_ID", savedMusicId);
 }
 
 void saveSettings(void) {
@@ -68,6 +71,7 @@ void saveSettings(void) {
 	//settingsini.SetInt("SuperPhotoStudio", "STUDIO_BG", studioBg);
 	settingsini.SetInt("SuperPhotoStudio", "CINEMA_WIDE", (cinemaWide) ? true : false);
 	settingsini.SetInt("SuperPhotoStudio", "FRAME_RATE", iFps);
+	savedMusicId = settingsini.GetInt("SuperPhotoStudio", "MUSIC_ID", savedMusicId);
 
 	settingsini.SaveIniFileModified(settingsIni);
 }
@@ -86,16 +90,19 @@ void Play_Music(void) {
 	}
 }
 
-void Stop_Music(void) {
+/* void Stop_Music(void) {
 	if (dspfirmfound) {
-		music->~sound();
+		if (musicStartLoaded) {
+			music->~sound();
+			musicStartLoaded = false;
+		}
 		music_loop->~sound();
 	}
 	musicPlayStarted = false;
 	musicPlaying = false;
 	musicLoopPlaying = false;
 	musicLoopDelay = 0;
-}
+} */
 
 /*void musLogos(void) {
 	if (!dspfirmfound) return;
@@ -337,7 +344,10 @@ int main()
 
 	saveSettings();
 
-	//delete music;
+	if (musicStartLoaded) {
+		delete music;
+	}
+	delete music_loop;
 	//delete mus_logos;
 	delete sfx_select;
 	delete sfx_back;
