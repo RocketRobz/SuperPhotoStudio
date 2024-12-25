@@ -14,8 +14,6 @@ static bool chracterSpriteLoaded = false;
 static bool chracterSpriteFound[5] = {false};
 static bool bgSpriteLoaded = false;
 
-extern u8 sysRegion;
-
 extern int studioBg;
 extern u8 settingBits;
 extern bool cinemaWide;
@@ -50,7 +48,7 @@ void GFX::resetCharStatus(int num) {
 }
 
 Result GFX::loadSheets() {
-	sprites			= C2D_SpriteSheetLoad(sysRegion==CFG_REGION_JPN ? "romfs:/gfx/spritesJ.t3x" : "romfs:/gfx/sprites.t3x");
+	sprites			= C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	GFX::loadBgSprite();
 	return 0;
 }

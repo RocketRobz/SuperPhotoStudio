@@ -101,7 +101,7 @@ static u8 bgPageOrder[] = {
 };
 
 static u8 charPageOrder[] = {
-	4,	// Super Photo Studio (Original Characters)
+	4,	// Super All-Star Photo Studio (Original Characters)
 	9,	// Banjo-Kazooie series
 	8,	// Conker series
 	7,	// Jet Force Gemini
@@ -538,9 +538,7 @@ const char* PhotoStudio::NESCharacterNames(int i) const {
 const char* PhotoStudio::superPhotoTitle(void) const {
 	switch (sysRegion) {
 		default:
-			return "Super Photo Studio";
-		case CFG_REGION_JPN:
-			return "Girls Mode: Photo Shoot X-over!";
+			return "Super All-Star Photo Studio";
 	}
 }
 

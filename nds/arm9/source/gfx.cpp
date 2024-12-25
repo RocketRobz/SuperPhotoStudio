@@ -12,8 +12,6 @@
 
 #define charSpriteSize 0x18000
 
-#define sysRegion *(u8*)0x02FFFD70
-
 /// Configuration region values.
 typedef enum
 {
@@ -151,18 +149,18 @@ void GFX::loadSheets() {
 	int metalXpos = 0;
 	int metalYpos = 0;
 
-	int yStart = sysRegion==CFG_REGION_JPN ? 130 : 72;
-	int yEnd = sysRegion==CFG_REGION_JPN ? 160 : 131;
+	int yStart = 80;
+	int yEnd = 139;
 
 	std::vector<unsigned char> image;
 	unsigned width, height;
-	lodepng::decode(image, width, height, sysRegion==CFG_REGION_JPN ? "nitro:/graphics/gui/titleMetalJ.png" : "nitro:/graphics/gui/titleMetal.png");
+	lodepng::decode(image, width, height, "nitro:/graphics/gui/titleMetal.png");
 	for(unsigned i=0;i<image.size()/4;i++) {
 		charSpriteMem[i] = image[i*4]>>3 | (image[(i*4)+1]>>3)<<5 | (image[(i*4)+2]>>3)<<10 | BIT(15);
 	}
 	applyColorLut(charSpriteMem, image.size()/4);
 	image.clear();
-	lodepng::decode(image, width, height, sysRegion==CFG_REGION_JPN ? "nitro:/graphics/gui/titleJ.png" : "nitro:/graphics/gui/title.png");
+	lodepng::decode(image, width, height, "nitro:/graphics/gui/title.png");
 	bool alternatePixel = false;
 	for(unsigned i=0;i<image.size()/4;i++) {
 		if ((int)i >= 256*yStart && (int)i < 256*yEnd) {
@@ -253,8 +251,8 @@ void updateTitleScreen(const int metalXposBase) {
 	int metalXpos = metalXposBase;
 	int metalYpos = 0;
 
-	int yStart = sysRegion==CFG_REGION_JPN ? 130 : 72;
-	int yEnd = sysRegion==CFG_REGION_JPN ? 160 : 131;
+	int yStart = 80;
+	int yEnd = 139;
 
 	for (int i = 256*yStart; i < 256*yEnd; i++) {
 		metalXpos++;
