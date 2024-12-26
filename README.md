@@ -13,7 +13,7 @@ The result, a *Super All-Star Photo Studio*! Take pictures of your favorite all-
 # What is this?
 
 *Super All-Star Photo Studio* is basically an upgraded version of the *Style Savvy* series's photo studio feature, with added characters and locations outside of said series. You can also change the character's expressions and poses, though *Super All-Star Photo Studio* does not support changing expressions.
-    - As of currently, only Grace (from *Style Savvy*) has changeable poses.
+- As of currently, only Grace (from *Style Savvy*) has changeable poses.
 
 # Features
 
