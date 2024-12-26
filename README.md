@@ -35,7 +35,7 @@ The result, a *Super All-Star Photo Studio*! Take pictures of your favorite all-
 
 Info about the character(s) go in the `characters` folder, and must be named something like `NameOfChar.ini` for each character.
 
-## `NameOfChar.ini` example
+### `NameOfChar.ini` example
 
 Male (Blue tie icon):
 
