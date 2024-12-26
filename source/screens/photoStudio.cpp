@@ -1809,7 +1809,9 @@ void PhotoStudio::Logic(u32 hDown, u32 hHeld, touchPosition touch) {
 				#endif
 			} else {
 				sndBack();
+				#ifndef NDS
 				showMessage = true;
+				#endif
 			}
 		}
 
