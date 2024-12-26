@@ -154,10 +154,7 @@ if args.arm7 is not None:
 	arm7File.close()
 
 filer = open(fname, 'rb')
-data = filer.read(0xB0)
-data += b'DoNotZeroFillMem'
-filer.read(0x10)
-data = data + filer.read(0xC0)
+data = filer.read(0x180)
 caddr = 0x180
 
 # DS Data 180 bytes
@@ -226,7 +223,7 @@ if srlHeader.arm7EntryAddress > 0x2400000 and not args.read and args.arm7 is Non
 if "dsi" in args.mode:
 	srlHeaderPatched = srlHeader._replace(
 		dsiflags=					b'\x01\x00',  # disable modcrypt but enable twl
-		unitCode=					b'\x03',
+		unitCode=					b'\x02',
 		)
 
 data1 = pack(srlHeaderFormat, *srlHeaderPatched._asdict().values())
